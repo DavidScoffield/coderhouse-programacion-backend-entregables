@@ -9,7 +9,6 @@ class ProductManager {
     const product = this.products.find((product) => product.id === id)
 
     if (!product) {
-      // throw new Error('Not found')
       console.error('Not found')
     }
 
@@ -19,7 +18,6 @@ class ProductManager {
   addProduct = ({ title, description, price, thumbnail, code, stock }) => {
     // Validate required fields
     if (!title || !description || !price || !thumbnail || !code || !stock) {
-      // throw new Error('Missing data')
       console.error('Missing data')
       return
     }
@@ -28,7 +26,6 @@ class ProductManager {
     const productWithSameCode = this.products.find((product) => product.code === code)
 
     if (productWithSameCode) {
-      // throw new Error('Code already exists')
       console.error('Code already exists')
       return
     }
