@@ -30,7 +30,7 @@ app.get('/products/:pid', async (req, res) => {
   const product = await pm.getProductsById(id)
 
   if (!product) {
-    return res.send(`Product with id "${id}" not exist in list`)
+    return res.send({ error: `Product with id "${id}" not exist in list` })
   }
 
   res.send(product)
