@@ -75,6 +75,7 @@ export default class ProductManager {
     const arrayWithNewProduct = [...products, product]
 
     await this.fsp.writeFile(arrayWithNewProduct)
+    return product
   }
 
   updateProduct = async (
