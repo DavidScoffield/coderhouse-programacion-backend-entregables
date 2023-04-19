@@ -33,7 +33,16 @@ export default class ProductManager {
 
   addProduct = async ({ title, description, price, thumbnail, code, stock, category, status }) => {
     // Validate required fields
-    if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
+    if (
+      !title ||
+      !description ||
+      !price ||
+      !thumbnail ||
+      !code ||
+      !stock ||
+      !category ||
+      status === undefined
+    ) {
       throw new Error('Missing data to create product')
     }
 
