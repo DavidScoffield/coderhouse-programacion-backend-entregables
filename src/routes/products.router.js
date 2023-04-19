@@ -25,13 +25,45 @@ productRouter.get('/:pid', async (req, res) => {
   const { pid } = req.params
   const id = Number(pid)
 
-  const product = await pm.getProductsById(id)
+  try {
+    const product = await pm.getProductsById(id)
+    res.send(product)
+  } catch (error) {
+    res.send({ error: error.message })
+  }
+})
 
-  if (!product) {
-    return res.send({ error: `Product with id "${id}" not exist in list` })
+productRouter.post('/', async (req, res) => {
+  const {
+    title,
+    description,
+    code,
+    price,
+    status = true,
+    stock,
+    category,
+    thumbnail = [],
+  } = req.body
+
+  if (!title || !price || !code || !stock || !category || !price) {
+    return res.status(400).send({ error: 'Missing parameters' })
   }
 
-  res.send(product)
+  try {
+    const product = await pm.addProduct({
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnail,
+    })
+    res.send(product)
+  } catch (error) {
+    res.send({ error: error.message })
+  }
 })
 
 export default productRouter
