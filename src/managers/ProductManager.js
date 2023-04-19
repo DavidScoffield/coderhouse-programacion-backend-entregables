@@ -133,6 +133,7 @@ export default class ProductManager {
     )
 
     await this.fsp.writeFile(arrayWithUpdatedProduct)
+    return product
   }
 
   deleteProduct = async (id) => {
