@@ -25,6 +25,8 @@ productRouter.get('/:pid', async (req, res) => {
   const { pid } = req.params
   const id = Number(pid)
 
+  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
+
   try {
     const product = await pm.getProductsById(id)
     res.send(product)
@@ -69,6 +71,8 @@ productRouter.post('/', async (req, res) => {
 productRouter.put('/:pid', async (req, res) => {
   const { pid } = req.params
   const id = Number(pid)
+
+  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
 
   const { title, description, code, price, status, stock, category, thumbnail } = req.body
 
