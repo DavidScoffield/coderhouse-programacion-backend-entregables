@@ -25,16 +25,16 @@ export default class ProductManager {
 
     if (!product) {
       console.log(`Product with id "${id}" not exist in list`)
+      throw new Error(`Product with id "${id}" not exist in list`)
     }
 
     return product
   }
 
-  addProduct = async ({ title, description, price, thumbnail, code, stock }) => {
+  addProduct = async ({ title, description, price, thumbnail, code, stock, category, status }) => {
     // Validate required fields
-    if (!title || !description || !price || !thumbnail || !code || !stock) {
-      console.log('Missing data to create product')
-      return
+    if (!title || !description || !price || !thumbnail || !code || !stock || !category) {
+      throw new Error('Missing data to create product')
     }
 
     // Get products
@@ -44,8 +44,7 @@ export default class ProductManager {
     const productWithSameCode = products.find((product) => product.code === code)
 
     if (productWithSameCode) {
-      console.log(`Code: "${code}" already exists`)
-      return
+      throw new Error(`Code: "${code}" already exists`)
     }
 
     // Create product id
@@ -59,6 +58,8 @@ export default class ProductManager {
       thumbnail,
       code,
       stock,
+      category,
+      status,
       id,
     }
 
@@ -67,11 +68,22 @@ export default class ProductManager {
     await this.fsp.writeFile(arrayWithNewProduct)
   }
 
-  updateProduct = async (id, { title, description, price, thumbnail, code, stock }) => {
+  updateProduct = async (
+    id,
+    { title, description, price, thumbnail, code, stock, category, status }
+  ) => {
     // Validate required fields
-    if (!title && !description && !price && !thumbnail && !code && !stock) {
-      console.log('Must provide at least one field to update')
-      return
+    if (
+      !title &&
+      !description &&
+      !price &&
+      !thumbnail &&
+      !code &&
+      !stock &&
+      !category &&
+      status === undefined
+    ) {
+      throw new Error('Must provide at least one field to update')
     }
 
     // Get products
@@ -83,16 +95,14 @@ export default class ProductManager {
     )
 
     if (productWithSameCode) {
-      console.log(`Code: "${code}" already exists`)
-      return
+      throw new Error(`Code: "${code}" already exists`)
     }
 
     // Validate product id
     const product = products.find((product) => product.id === id)
 
     if (!product) {
-      console.log(`Product with id "${id}" not found in list for update`)
-      return
+      throw new Error(`Product with id "${id}" not found in list for update`)
     }
 
     // Create product
@@ -103,6 +113,8 @@ export default class ProductManager {
       thumbnail: thumbnail || product.thumbnail,
       code: code || product.code,
       stock: stock || product.stock,
+      category: category || product.category,
+      status: status !== undefined ? status : product.status,
       id,
     }
 
@@ -121,8 +133,7 @@ export default class ProductManager {
     const product = products.find((product) => product.id === id)
 
     if (!product) {
-      console.log(`Product with id "${id}" not found in list for deletion`)
-      return
+      throw new Error(`Product with id "${id}" not found in list for deletion`)
     }
 
     const arrayWithDeletedProduct = products.filter((product) => product.id !== id)
