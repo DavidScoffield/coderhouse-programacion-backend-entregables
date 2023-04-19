@@ -60,7 +60,30 @@ productRouter.post('/', async (req, res) => {
       category,
       thumbnail,
     })
-    res.send(product)
+    res.send({ message: `New product with id "${product.id}" was added` })
+  } catch (error) {
+    res.send({ error: error.message })
+  }
+})
+
+productRouter.put('/:pid', async (req, res) => {
+  const { pid } = req.params
+  const id = Number(pid)
+
+  const { title, description, code, price, status, stock, category, thumbnail } = req.body
+
+  try {
+    const product = await pm.updateProduct(id, {
+      title,
+      description,
+      code,
+      price,
+      status,
+      stock,
+      category,
+      thumbnail,
+    })
+    res.send({ message: `Product "${id}" was successfully updated` })
   } catch (error) {
     res.send({ error: error.message })
   }
