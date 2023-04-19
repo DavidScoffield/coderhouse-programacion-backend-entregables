@@ -60,7 +60,7 @@ productRouter.post('/', async (req, res) => {
       category,
       thumbnail,
     })
-    res.send({ message: `New product with id "${product.id}" was added` })
+    res.status(201).send({ message: `New product with id "${product.id}" was added` })
   } catch (error) {
     res.status(400).send({ error: error.message })
   }
