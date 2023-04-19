@@ -1,10 +1,7 @@
 import { Router } from 'express'
-import { PATH_OF_PRODUCTS } from '../constants/constants.js'
-import ProductManager from '../managers/ProductManager.js'
+import { pm } from '../constants/singletons.js'
 
 const productRouter = Router()
-
-const pm = new ProductManager(PATH_OF_PRODUCTS)
 
 productRouter.get('/', async (req, res) => {
   const { limit } = req.query
@@ -28,7 +25,7 @@ productRouter.get('/:pid', async (req, res) => {
   if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
 
   try {
-    const product = await pm.getProductsById(id)
+    const product = await pm.getProductById(id)
     res.send(product)
   } catch (error) {
     res.status(400).send({ error: error.message })
