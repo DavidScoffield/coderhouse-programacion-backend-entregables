@@ -18,7 +18,7 @@ export default class CartManager {
     }
   }
 
-  getCartsById = async (id) => {
+  getCartById = async (id) => {
     const carts = await this.#getCarts()
 
     const cart = carts.find((cart) => cart.id === id)
