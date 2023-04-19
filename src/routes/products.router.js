@@ -29,7 +29,7 @@ productRouter.get('/:pid', async (req, res) => {
     const product = await pm.getProductsById(id)
     res.send(product)
   } catch (error) {
-    res.send({ error: error.message })
+    res.status(400).send({ error: error.message })
   }
 })
 
@@ -62,7 +62,7 @@ productRouter.post('/', async (req, res) => {
     })
     res.send({ message: `New product with id "${product.id}" was added` })
   } catch (error) {
-    res.send({ error: error.message })
+    res.status(400).send({ error: error.message })
   }
 })
 
@@ -85,7 +85,21 @@ productRouter.put('/:pid', async (req, res) => {
     })
     res.send({ message: `Product "${id}" was successfully updated` })
   } catch (error) {
-    res.send({ error: error.message })
+    res.status(400).send({ error: error.message })
+  }
+})
+
+productRouter.delete('/:pid', async (req, res) => {
+  const { pid } = req.params
+  const id = Number(pid)
+
+  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
+
+  try {
+    await pm.deleteProduct(id)
+    res.send({ message: `Product "${id}" was successfully deleted` })
+  } catch (error) {
+    res.status(400).send({ error: error.message })
   }
 })
 
