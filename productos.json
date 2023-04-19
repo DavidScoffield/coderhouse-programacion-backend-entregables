@@ -6,7 +6,9 @@
     "price": 100,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "1",
-    "stock": 10
+    "stock": 10,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 2,
@@ -15,7 +17,9 @@
     "price": 200,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "2",
-    "stock": 20
+    "stock": 20,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 3,
@@ -24,7 +28,9 @@
     "price": 300,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "3",
-    "stock": 30
+    "stock": 30,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 4,
@@ -33,7 +39,9 @@
     "price": 400,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "4",
-    "stock": 40
+    "stock": 40,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 5,
@@ -42,7 +50,9 @@
     "price": 500,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "5",
-    "stock": 50
+    "stock": 50,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 6,
@@ -51,7 +61,9 @@
     "price": 600,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "6",
-    "stock": 60
+    "stock": 60,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 7,
@@ -60,7 +72,9 @@
     "price": 700,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "7",
-    "stock": 70
+    "stock": 70,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 8,
@@ -69,7 +83,9 @@
     "price": 800,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "8",
-    "stock": 80
+    "stock": 80,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 9,
@@ -78,7 +94,9 @@
     "price": 900,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "9",
-    "stock": 90
+    "stock": 90,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 10,
@@ -87,7 +105,9 @@
     "price": 1000,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "10",
-    "stock": 100
+    "stock": 100,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 11,
@@ -96,7 +116,9 @@
     "price": 1100,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "11",
-    "stock": 110
+    "stock": 110,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 12,
@@ -105,7 +127,9 @@
     "price": 1200,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "12",
-    "stock": 120
+    "stock": 120,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 13,
@@ -114,7 +138,9 @@
     "price": 1300,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "13",
-    "stock": 130
+    "stock": 130,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 14,
@@ -123,7 +149,9 @@
     "price": 1400,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "14",
-    "stock": 140
+    "stock": 140,
+    "status": true,
+    "category": "category test"
   },
   {
     "id": 15,
@@ -132,6 +160,30 @@
     "price": 1500,
     "thumbnail": "https://picsum.photos/200/300",
     "code": "15",
-    "stock": 150
+    "stock": 150,
+    "status": true,
+    "category": "category test"
+  },
+  {
+    "title": "Postman product actualizado",
+    "description": "Producto actualizado desde postman",
+    "price": 1555,
+    "thumbnail": [],
+    "code": "avc123",
+    "stock": 120,
+    "category": "Almacen",
+    "status": true,
+    "id": 16
+  },
+  {
+    "title": "Postman product",
+    "description": "Producto nuevo desde postman",
+    "price": 1555,
+    "thumbnail": [],
+    "code": "avc1213",
+    "stock": 120,
+    "category": "Almacen",
+    "status": false,
+    "id": 17
   }
 ]
