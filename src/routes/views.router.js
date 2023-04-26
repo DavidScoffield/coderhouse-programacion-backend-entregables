@@ -11,4 +11,10 @@ viewRouter.get('/', async (req, res) => {
   })
 })
 
+viewRouter.get('/realtimeproducts', async (req, res) => {
+  res.render('realtimeproducts', {
+    css: 'realTimeProducts',
+  })
+})
+
 export default viewRouter
