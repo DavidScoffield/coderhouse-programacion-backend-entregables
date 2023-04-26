@@ -6,7 +6,10 @@
     <title>{{title}}</title>
     {{! <link rel='stylesheet' href='https://unpkg.com/boltcss/bolt.min.css' /> }}
     <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/water.css@2/out/water.css' />
-    <link rel='stylesheet' href='/css/{{css}}.css' />
+    {{#if css}}
+      <link rel='stylesheet' href='/css/{{css}}.css' />
+    {{/if}}
+
   </head>
   <body>
 
