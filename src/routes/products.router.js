@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { pm } from '../constants/singletons.js'
+import { io } from '../app.js'
 
 const productRouter = Router()
 
@@ -60,6 +61,8 @@ productRouter.post('/', async (req, res) => {
       thumbnail,
     })
     res.status(201).send({ message: `New product with id "${product.id}" was added` })
+
+    io.emit('products', await pm.getProducts())
   } catch (error) {
     res.status(400).send({ error: error.message })
   }
@@ -99,6 +102,7 @@ productRouter.delete('/:pid', async (req, res) => {
   try {
     await pm.deleteProduct(id)
     res.send({ message: `Product "${id}" was successfully deleted` })
+    io.emit('products', await pm.getProducts())
   } catch (error) {
     res.status(400).send({ error: error.message })
   }
