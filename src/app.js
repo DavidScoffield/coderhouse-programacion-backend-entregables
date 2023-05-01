@@ -8,7 +8,9 @@ import viewRouter from './routes/views.router.js'
 import socketIo from './socket.io.js'
 
 const app = express()
-const httpServer = app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+const httpServer = app.listen(PORT, () =>
+  console.log(`Server running on port ${PORT} - Access http://localhost:${PORT}`)
+)
 // Socket.io
 const io = socketIo(httpServer)
 
