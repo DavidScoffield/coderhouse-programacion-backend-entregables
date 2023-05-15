@@ -1,10 +1,10 @@
-import { Schema, model } from 'mongoose'
+import mongoose from 'mongoose'
 
 import Products from './Products.js'
 
 const collection = 'carts'
 
-const cardSchema = new Schema(
+const cardSchema = new mongoose.Schema(
   {
     products: [
       {
@@ -16,4 +16,4 @@ const cardSchema = new Schema(
   { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
 )
 
-export default model(collection, cardSchema)
+export default mongoose.model(collection, cardSchema)

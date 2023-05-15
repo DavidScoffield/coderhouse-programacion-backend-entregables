@@ -1,10 +1,8 @@
-import { Schema, model } from 'mongoose'
-
-import Products from './Products.js'
+import mongoose from 'mongoose'
 
 const collection = 'messages'
 
-const messageSchema = new Schema(
+const messageSchema = new mongoose.Schema(
   {
     user: {
       type: String,
@@ -19,4 +17,4 @@ const messageSchema = new Schema(
   { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
 )
 
-export default model(collection, messageSchema)
+export default mongoose.model(collection, messageSchema)
