@@ -7,14 +7,14 @@ import cartRouter from './routes/carts.router.js'
 import viewRouter from './routes/views.router.js'
 import socketIo from './socket.io.js'
 
-import { MONGO_URI, PORT } from './constants/constants.js'
+import config from './utils/config.js'
 import logger from './utils/logger.js'
 import __dirname from './utils/dirname.js'
 
 // Connection at the DB
-logger.info('🔎🔎 connecting to', MONGO_URI)
+logger.info('🔎🔎 connecting to', config.MONGO_URI)
 mongoose
-  .connect(MONGO_URI)
+  .connect(config.MONGO_URI)
   .then(() => {
     logger.info('✅️✅️ Connections to database succefully')
   })
@@ -23,8 +23,8 @@ mongoose
   })
 
 const app = express()
-const httpServer = app.listen(PORT, () =>
-  console.log(`Server running on port ${PORT} - Access http://localhost:${PORT}`)
+const httpServer = app.listen(config.PORT, () =>
+  console.log(`Server running on port ${config.PORT} - Access http://localhost:${config.PORT}`)
 )
 
 // Socket.io
