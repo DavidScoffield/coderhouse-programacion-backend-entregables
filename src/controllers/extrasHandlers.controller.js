@@ -1,5 +1,5 @@
 const ERROR_HANDLERS = {
-  CastError: (res, error) => res.status(400).json({ error: 'malformatted id' }),
+  CastError: (res, error) => res.status(400).json({ error: 'Malformatted ID' }),
   ValidationError: (res, error) => res.status(409).json({ error: error.message }),
   // TokenExpiredError: (res, error) => res.status(400).json({ error: error.message }),
   // JsonWebTokenError: (res, error) => res.status(400).json({ error: `JWT error: ${error.message}` }),
