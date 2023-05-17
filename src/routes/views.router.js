@@ -1,20 +1,10 @@
 import { Router } from 'express'
-import { pm } from '../constants/singletons.js'
+import viewsController from '../controllers/views.controller.js'
 
 const viewRouter = Router()
 
-viewRouter.get('/', async (req, res) => {
-  const products = await pm.getProducts()
+viewRouter.get('/', viewsController.home)
 
-  res.render('home', {
-    products,
-  })
-})
-
-viewRouter.get('/realtimeproducts', async (req, res) => {
-  res.render('realtimeproducts', {
-    css: 'realTimeProducts',
-  })
-})
+viewRouter.get('/realtimeproducts', viewsController.realTimeProducts)
 
 export default viewRouter
