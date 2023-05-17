@@ -1,5 +1,7 @@
 import { Router } from 'express'
-import { pm } from '../constants/singletons.js'
+import managers from '../utils/persistenceType.js'
+
+const { pm } = managers
 
 const viewRouter = Router()
 
