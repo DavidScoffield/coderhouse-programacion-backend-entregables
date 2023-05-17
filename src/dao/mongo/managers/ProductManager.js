@@ -1,7 +1,9 @@
 import Products from '../models/Products.js'
 
 export default class ProductManager {
-  getProducts = ({ limit }) => {
+  getProducts = (params) => {
+    const limit = params?.limit
+
     if (limit) {
       return Products.find().limit(limit).lean()
     }

@@ -6,16 +6,14 @@ const productRouter = Router()
 productRouter.get('/', async (req, res) => {
   const { limit } = req.query
 
-  const products = await pm.getProducts()
-
-  if (!limit) return res.send(products)
-
   const limitNumber = Number(limit)
 
-  if (!limitNumber || limitNumber <= 0)
+  if (limit && (!limitNumber || limitNumber <= 0))
     return res.status(404).send(`"${limit}" is not a valid limit number`)
 
-  res.send(products.slice(0, limitNumber))
+  const products = await pm.getProducts({ limit: limitNumber })
+
+  res.send(products)
 })
 
 productRouter.get('/:pid', async (req, res) => {
