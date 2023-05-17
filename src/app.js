@@ -10,6 +10,7 @@ import socketIo from './socket.io.js'
 import config from './utils/config.js'
 import logger from './utils/logger.js'
 import __dirname from './utils/dirname.js'
+import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
 
 // Connection at the DB
 logger.info('🔎🔎 connecting to', config.MONGO_URI)
@@ -50,3 +51,8 @@ app.use(express.static(`${__dirname}/public`))
 app.use('/', viewRouter)
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
+
+// Route unknown
+app.use(unknownEndpoint)
+// Error handler
+app.use(errorHandler)
