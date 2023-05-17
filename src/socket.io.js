@@ -1,7 +1,5 @@
 import { Server } from 'socket.io'
-import managers from './utils/persistenceType.js'
-
-const { pm } = managers
+import { pm } from './constants/singletons.js'
 
 export default function (httpServer) {
   const io = new Server(httpServer)

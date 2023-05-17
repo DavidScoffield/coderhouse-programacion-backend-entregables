@@ -1,7 +1,5 @@
 import { Router } from 'express'
-import managers from '../utils/persistenceType.js'
-
-const { cm, pm } = managers
+import { cm, pm } from '../constants/singletons.js'
 
 const cartRouter = Router()
 
