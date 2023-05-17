@@ -17,16 +17,16 @@ productRouter.get('/', async (req, res) => {
 })
 
 productRouter.get('/:pid', async (req, res) => {
-  const { pid } = req.params
-  const id = Number(pid)
+  const { pid: id } = req.params
 
-  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
+  if (!id) return res.status(400).send({ error: `Must to especify an id` })
 
   try {
     const product = await pm.getProductById(id)
     if (!product) return res.status(404).send({ error: `Product with id "${id}" not found` })
     res.send(product)
   } catch (error) {
+    // TODO: Check CastError
     res.status(400).send({ error: error.message })
   }
 })
