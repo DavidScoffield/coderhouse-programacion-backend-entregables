@@ -26,6 +26,7 @@ productRouter.get('/:pid', async (req, res) => {
 
   try {
     const product = await pm.getProductById(id)
+    if (!product) return res.status(404).send({ error: `Product with id "${id}" not found` })
     res.send(product)
   } catch (error) {
     res.status(400).send({ error: error.message })
@@ -44,7 +45,7 @@ productRouter.post('/', async (req, res) => {
     thumbnail = [],
   } = req.body
 
-  if (!title || !price || !code || !stock || !category || !price) {
+  if (!title || !description || !code || !stock || !category || !price) {
     return res.status(400).send({ error: 'Missing parameters' })
   }
 
@@ -59,7 +60,7 @@ productRouter.post('/', async (req, res) => {
       category,
       thumbnail,
     })
-    res.status(201).send({ message: `New product with id "${product.id}" was added` })
+    res.status(201).send({ message: `New product with id "${product._id}" was added` })
 
     req.io.emit('storedProducts', await pm.getProducts())
   } catch (error) {
