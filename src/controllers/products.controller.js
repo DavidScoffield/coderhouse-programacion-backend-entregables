@@ -1,6 +1,8 @@
+import mongoose from 'mongoose'
 import { pm } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { isProductDataValid } from '../utils/validationTypes.js'
+import { castToMongoId } from '../utils/casts.js'
 
 const getProducts = async (req, res, next) => {
   const { limit } = req.query
@@ -19,11 +21,13 @@ const getProducts = async (req, res, next) => {
 }
 
 const getProductById = async (req, res, next) => {
-  const { pid: id } = req.params
+  const { pid } = req.params
 
-  if (!id) return res.status(400).send({ error: `Must to especify an id` })
+  if (!pid) return res.status(400).send({ error: `Must to especify an id` })
 
   try {
+    const id = castToMongoId(pid)
+
     const product = await pm.getProductById(id)
     if (!product) return res.status(404).send({ error: `Product with id "${id}" not found` })
     res.send(product)
@@ -73,6 +77,8 @@ const updateProduct = async (req, res, next) => {
   const { title, description, code, price, status, stock, category, thumbnail } = body
 
   try {
+    const id = castToMongoId(pid)
+
     if (
       !title &&
       !description &&
@@ -88,7 +94,7 @@ const updateProduct = async (req, res, next) => {
 
     const isValid = isProductDataValid(body)
 
-    const updatedProduct = await pm.updateProduct(pid, {
+    const updatedProduct = await pm.updateProduct(id, {
       title,
       description,
       code,
@@ -108,18 +114,20 @@ const updateProduct = async (req, res, next) => {
   }
 }
 
-const deleteProduct = async (req, res) => {
+const deleteProduct = async (req, res, next) => {
   const { pid } = req.params
-  const id = Number(pid)
-
-  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
 
   try {
-    await pm.deleteProduct(id)
-    res.send({ message: `Product "${id}" was successfully deleted` })
-    req.io.emit('storedProducts', await pm.getProducts())
+    const id = castToMongoId(pid)
+
+    const deletedProduct = await pm.deleteProduct(id)
+
+    if (deletedProduct) {
+      res.json({ message: `Product "${deletedProduct._id}" was successfully deleted` })
+      req.io.emit('storedProducts', await pm.getProducts())
+    } else res.status(404).json({ error: `Product with id "${id}" not found` })
   } catch (error) {
-    res.status(400).send({ error: error.message })
+    next(error)
   }
 }
 

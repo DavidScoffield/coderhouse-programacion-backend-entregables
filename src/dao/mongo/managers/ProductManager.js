@@ -52,18 +52,6 @@ export default class ProductManager {
   }
 
   deleteProduct = async (id) => {
-    // Get products
-    const products = await this.getProducts()
-
-    // Validate product id
-    const product = products.find((product) => product.id === id)
-
-    if (!product) {
-      throw new Error(`Product with id "${id}" not found in list for deletion`)
-    }
-
-    const arrayWithDeletedProduct = products.filter((product) => product.id !== id)
-
-    await this.fsp.writeFile(arrayWithDeletedProduct)
+    return Products.findByIdAndDelete(id)
   }
 }
