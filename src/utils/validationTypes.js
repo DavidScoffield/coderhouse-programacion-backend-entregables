@@ -55,11 +55,17 @@ const validations = {
   },
 }
 
+/**
+ * @param {Object} productData
+ 
+ * @returns {boolean}
+ * @throws {ValidationError}
+
+  @description Check if values in productData are valid according to validations object
+ */
 const isProductDataValid = (productData) => {
   const keysProductData = Object.keys(productData)
   const availableValidations = Object.keys(validations)
-
-  const keysToValidate = keysProductData.filter((key) => availableValidations.includes(key))
 
   const { matches, nonMatches } = keysProductData.reduce(
     (result, key) => {
