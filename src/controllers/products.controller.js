@@ -6,7 +6,7 @@ const getProducts = async (req, res, next) => {
   const limitNumber = Number(limit)
 
   if (limit && (!limitNumber || limitNumber <= 0))
-    return res.status(404).send(`"${limit}" is not a valid limit number`)
+    return res.status(404).json({ error: `"${limit}" is not a valid limit number` })
 
   try {
     const products = await pm.getProducts({ limit: limitNumber })
