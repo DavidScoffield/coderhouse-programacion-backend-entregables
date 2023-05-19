@@ -1,4 +1,6 @@
 import { pm } from '../constants/singletons.js'
+import ValidationError from '../errors/ValidationError.js'
+import { isProductDataValid } from '../utils/validationTypes.js'
 
 const getProducts = async (req, res, next) => {
   const { limit } = req.query
@@ -57,24 +59,36 @@ const createProduct = async (req, res) => {
       category,
       thumbnail,
     })
-    res.status(201).send({ message: `New product with id "${product._id}" was added` })
+    res.status(201).json({ message: `New product with id "${product._id}" was added` })
 
     req.io.emit('storedProducts', await pm.getProducts())
   } catch (error) {
-    res.status(400).send({ error: error.message })
+    res.status(400).json({ error: error.message })
   }
 }
 
-const updateProduct = async (req, res) => {
+const updateProduct = async (req, res, next) => {
   const { pid } = req.params
-  const id = Number(pid)
-
-  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${pid}` })
-
-  const { title, description, code, price, status, stock, category, thumbnail } = req.body
+  const { body } = req
+  const { title, description, code, price, status, stock, category, thumbnail } = body
 
   try {
-    const product = await pm.updateProduct(id, {
+    if (
+      !title &&
+      !description &&
+      !price &&
+      !thumbnail &&
+      !code &&
+      !stock &&
+      !category &&
+      status === undefined
+    ) {
+      throw new ValidationError('Must provide at least one field to update', 400)
+    }
+
+    const isValid = isProductDataValid(body)
+
+    const updatedProduct = await pm.updateProduct(pid, {
       title,
       description,
       code,
@@ -84,9 +98,13 @@ const updateProduct = async (req, res) => {
       category,
       thumbnail,
     })
-    res.send({ message: `Product "${id}" was successfully updated` })
+
+    res.json({
+      message: `Product "${updatedProduct._id}" was successfully updated`,
+      payload: updatedProduct,
+    })
   } catch (error) {
-    res.status(400).send({ error: error.message })
+    next(error)
   }
 }
 
