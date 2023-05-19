@@ -1,17 +1,21 @@
-const getCarts = async (req, res) => {
+import { cm } from '../constants/singletons.js'
+import { castToMongoId } from '../utils/casts.js'
+
+const createCart = async (req, res) => {
   const cart = await cm.addCart()
-  res.status(201).json({ message: `Cart with id "${cart.id}" created` })
+  res.status(201).json({ message: `Cart with id "${cart.id}" created`, payload: { cart } })
 }
 
 const getCartById = async (req, res) => {
   const { cid } = req.params
-  const id = Number(cid)
-
-  if (!id || id <= 0) return res.status(400).send({ error: `Invalid id: ${cid}` })
-
   try {
+    const id = castToMongoId(cid)
+
     const cart = await cm.getCartById(id)
-    res.send(cart)
+
+    if (!cart) return res.status(404).send({ error: `Cart with id "${cid}" not exist` })
+
+    res.json(cart)
   } catch (error) {
     res.status(400).send({ error: error.message })
   }
@@ -47,7 +51,7 @@ const addProductToCart = async (req, res) => {
 }
 
 export default {
-  getCarts,
+  createCart,
   getCartById,
   addProductToCart,
 }
