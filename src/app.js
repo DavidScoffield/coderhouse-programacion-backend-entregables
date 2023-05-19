@@ -1,16 +1,16 @@
 import express from 'express'
-import mongoose from 'mongoose'
 import { engine } from 'express-handlebars'
+import mongoose from 'mongoose'
 
-import productRouter from './routes/products.router.js'
 import cartRouter from './routes/carts.router.js'
+import productRouter from './routes/products.router.js'
 import viewRouter from './routes/views.router.js'
 import socketIo from './socket.io.js'
 
-import config from './utils/config.js'
-import logger from './utils/logger.js'
-import __dirname from './utils/dirname.js'
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
+import config from './utils/config.js'
+import __dirname from './utils/dirname.js'
+import logger from './utils/logger.js'
 
 // Connection at the DB
 logger.info('🔎🔎 connecting to', config.MONGO_URI)
