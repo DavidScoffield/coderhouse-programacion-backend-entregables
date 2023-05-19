@@ -62,7 +62,7 @@ const createProduct = async (req, res) => {
       category,
       thumbnail,
     })
-    res.status(201).json({ message: `New product with id "${product._id}" was added` })
+    res.status(201).json({ message: `New product with id "${product.id}" was added` })
 
     req.io.emit('storedProducts', await pm.getProducts())
   } catch (error) {
@@ -105,7 +105,7 @@ const updateProduct = async (req, res, next) => {
     })
 
     res.json({
-      message: `Product "${updatedProduct._id}" was successfully updated`,
+      message: `Product "${updatedProduct.id}" was successfully updated`,
       payload: updatedProduct,
     })
   } catch (error) {
@@ -122,7 +122,7 @@ const deleteProduct = async (req, res, next) => {
     const deletedProduct = await pm.deleteProduct(id)
 
     if (deletedProduct) {
-      res.json({ message: `Product "${deletedProduct._id}" was successfully deleted` })
+      res.json({ message: `Product "${deletedProduct.id}" was successfully deleted` })
       req.io.emit('storedProducts', await pm.getProducts())
     } else res.status(404).json({ error: `Product with id "${id}" not found` })
   } catch (error) {
