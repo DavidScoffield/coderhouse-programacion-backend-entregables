@@ -1,6 +1,6 @@
 import { pm } from '../constants/singletons.js'
 
-const getProducts = async (req, res) => {
+const getProducts = async (req, res, next) => {
   const { limit } = req.query
 
   const limitNumber = Number(limit)
@@ -8,12 +8,15 @@ const getProducts = async (req, res) => {
   if (limit && (!limitNumber || limitNumber <= 0))
     return res.status(404).send(`"${limit}" is not a valid limit number`)
 
-  const products = await pm.getProducts({ limit: limitNumber })
-
-  res.send(products)
+  try {
+    const products = await pm.getProducts({ limit: limitNumber })
+    res.send(products)
+  } catch (error) {
+    next(error)
+  }
 }
 
-const getProductById = async (req, res) => {
+const getProductById = async (req, res, next) => {
   const { pid: id } = req.params
 
   if (!id) return res.status(400).send({ error: `Must to especify an id` })
@@ -23,8 +26,7 @@ const getProductById = async (req, res) => {
     if (!product) return res.status(404).send({ error: `Product with id "${id}" not found` })
     res.send(product)
   } catch (error) {
-    // TODO: Check CastError
-    res.status(400).send({ error: error.message })
+    next(error)
   }
 }
 
