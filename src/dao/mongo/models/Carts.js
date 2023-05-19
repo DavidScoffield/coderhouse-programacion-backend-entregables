@@ -6,12 +6,15 @@ const collection = 'carts'
 
 const cardSchema = new mongoose.Schema(
   {
-    products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: Products,
-      },
-    ],
+    products: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: Products,
+        },
+      ],
+      default: [],
+    },
   },
   { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
 )
