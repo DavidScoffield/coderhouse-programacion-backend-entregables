@@ -64,7 +64,7 @@ const createProduct = async (req, res) => {
     })
     res.status(201).json({ message: `New product with id "${product.id}" was added` })
 
-    req.io.emit('storedProducts', await PM.getProducts())
+    req.io.emit('realTimeProducts:storedProducts', await PM.getProducts())
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -123,7 +123,7 @@ const deleteProduct = async (req, res, next) => {
 
     if (deletedProduct) {
       res.json({ message: `Product "${deletedProduct.id}" was successfully deleted` })
-      req.io.emit('storedProducts', await PM.getProducts())
+      req.io.emit('realTimeProducts:storedProducts', await PM.getProducts())
     } else res.status(404).json({ error: `Product with id "${id}" not found` })
   } catch (error) {
     next(error)

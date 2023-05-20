@@ -16,7 +16,7 @@ const renderProducts = (products) => {
     <td>${product.price}</td>
     <td>${product.stock}</td>
     <td>${product.status ? 'Disponible' : 'No disponible'}</td>
-    <td><button class="delete-button" id="${product.id}">Eliminar</button></td>
+    <td><button class="delete-button" id="${product._id}">Eliminar</button></td>
   </tr>`
     )
     .join('')
@@ -31,11 +31,12 @@ tbody.addEventListener('click', async (e) => {
   if ((clickedElement.tagName = 'BUTTON') && classArray.includes('delete-button')) {
     let result = window.confirm('¿Está seguro de eliminar el producto?')
     if (result) {
-      socket.emit('delete-product', clickedElement.id)
+      socket.emit('realTimeProducts:deleteProduct', clickedElement.id)
     }
   }
 })
 
-socket.on('storedProducts', (products) => {
+socket.on('realTimeProducts:storedProducts', (products) => {
+  console.log(products)
   renderProducts(products)
 })
