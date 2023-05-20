@@ -1,8 +1,8 @@
-import { cm } from '../constants/singletons.js'
+import { CM, PM } from '../constants/singletons.js'
 import { castToMongoId } from '../utils/casts.js'
 
 const createCart = async (req, res) => {
-  const cart = await cm.addCart()
+  const cart = await CM.addCart()
   res.status(201).json({ message: `Cart with id "${cart.id}" created`, payload: { cart } })
 }
 
@@ -11,7 +11,7 @@ const getCartById = async (req, res) => {
   try {
     const id = castToMongoId(cid)
 
-    const cart = await cm.getCartById(id)
+    const cart = await CM.getCartById(id)
 
     if (!cart) return res.status(404).send({ error: `Cart with id "${cid}" not exist` })
 
@@ -21,32 +21,48 @@ const getCartById = async (req, res) => {
   }
 }
 
-const addProductToCart = async (req, res) => {
+const addProductToCart = async (req, res, next) => {
   const { cid, pid } = req.params
-  const cartId = Number(cid)
-  const productId = Number(pid)
-
   const { quantity = 1 } = req.body
 
-  if (!cartId || cartId <= 0) return res.status(400).send({ error: `Invalid cart id: ${cid}` })
-
-  if (!productId || productId <= 0)
-    return res.status(400).send({ error: `Invalid product id: ${pid}` })
+  if (!cid || !pid) return res.status(400).send({ error: `Missing cart or product id` })
 
   try {
-    const requiredProduct = await pm.getProductById(productId)
+    const cartId = castToMongoId(cid)
+    const productId = castToMongoId(pid)
+
+    // Validate if product exist
+    const requiredProduct = await PM.getProductById(productId)
 
     if (!requiredProduct)
       return res.status(400).send({ error: `Product with id "${productId}" not exist` })
 
+    // Validate if cart exist
+    const requiredCart = await CM.getCartById(cartId)
+
+    if (!requiredCart) return res.status(400).send({ error: `Cart with id "${cartId}" not exist` })
+
     // if (requiredProduct.stock < quantity)
     //   return res.status(400).send({ error: `Not enough stock for product with id "${productId}"` })
 
-    const cart = await cm.addProductToCart({ cartId, productId, quantity })
+    const existingProductIndex = requiredCart.products.findIndex(
+      (product) => product._id.toString() === productId.toString()
+    )
 
-    res.json({ message: `Product with id ${productId} was added to cart ${cartId}` })
+    if (existingProductIndex !== -1) {
+      requiredCart.products[existingProductIndex].quantity += quantity
+    } else {
+      requiredCart.products.push({ _id: productId, quantity })
+    }
+
+    const savedCart = await CM.save(requiredCart)
+
+    res.json({
+      message: `Product with id ${productId} was added to cart ${cartId}`,
+      payload: { cart: savedCart },
+    })
   } catch (error) {
-    return res.status(400).send({ error: error.message })
+    next(error)
   }
 }
 

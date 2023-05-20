@@ -9,8 +9,14 @@ const cardSchema = new mongoose.Schema(
     products: {
       type: [
         {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: Products,
+          _id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: Products,
+          },
+          quantity: {
+            type: Number,
+            default: 1,
+          },
         },
       ],
       default: [],
