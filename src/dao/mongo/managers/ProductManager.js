@@ -11,13 +11,10 @@ export default class ProductManager {
     return Products.find().lean()
   }
 
-  getProductById = async (id) => {
-    return Products.findById(id).lean()
-  }
+  getProductById = async (id) => Products.findById(id).lean()
 
   addProduct = async ({ title, description, price, thumbnail, code, stock, category, status }) => {
-    // Create product
-    const product = {
+    return Products.create({
       title,
       description,
       price,
@@ -26,9 +23,7 @@ export default class ProductManager {
       stock,
       category,
       status,
-    }
-
-    return Products.create(product)
+    })
   }
 
   updateProduct = async (
@@ -51,7 +46,5 @@ export default class ProductManager {
     )
   }
 
-  deleteProduct = async (id) => {
-    return Products.findByIdAndDelete(id)
-  }
+  deleteProduct = async (id) => Products.findByIdAndDelete(id)
 }

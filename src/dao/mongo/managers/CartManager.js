@@ -1,13 +1,11 @@
 import Carts from '../models/Carts.js'
 
 export default class CartManager {
-  getCartById = async (id) => {
-    return Carts.findById(id)
-  }
+  getCartById = async (id) => Carts.findById(id)
 
-  addCart = async () => {
-    return Carts.create({})
-  }
+  addCart = async () => Carts.create({})
 
-  save = async (cart) => (await cart.save()).populate('products._id')
+  save = (cart) => cart.save()
+
+  saveAndPopulate = async (cart) => (await cart.save()).populate('products._id')
 }
