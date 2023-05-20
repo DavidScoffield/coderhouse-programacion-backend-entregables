@@ -7,4 +7,6 @@ viewRouter.get('/', viewsController.home)
 
 viewRouter.get('/realtimeproducts', viewsController.realTimeProducts)
 
+viewRouter.get('/chat', viewsController.chat)
+
 export default viewRouter

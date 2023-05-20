@@ -14,4 +14,10 @@ const realTimeProducts = async (req, res) => {
   })
 }
 
-export default { home, realTimeProducts }
+const chat = async (req, res) => {
+  res.render('chat', {
+    // css: 'chat',
+  })
+}
+
+export default { home, realTimeProducts, chat }
