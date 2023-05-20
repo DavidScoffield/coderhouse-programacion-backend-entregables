@@ -1,4 +1,4 @@
-import { pm } from '../constants/singletons.js'
+import { PM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { castToMongoId } from '../utils/casts.js'
 import { isProductDataValid } from '../utils/validationTypes.js'
@@ -12,7 +12,7 @@ const getProducts = async (req, res, next) => {
     return res.status(404).json({ error: `"${limit}" is not a valid limit number` })
 
   try {
-    const products = await pm.getProducts({ limit: limitNumber })
+    const products = await PM.getProducts({ limit: limitNumber })
     res.send(products)
   } catch (error) {
     next(error)
@@ -27,7 +27,7 @@ const getProductById = async (req, res, next) => {
   try {
     const id = castToMongoId(pid)
 
-    const product = await pm.getProductById(id)
+    const product = await PM.getProductById(id)
     if (!product) return res.status(404).send({ error: `Product with id "${id}" not found` })
     res.send(product)
   } catch (error) {
@@ -52,7 +52,7 @@ const createProduct = async (req, res) => {
   }
 
   try {
-    const product = await pm.addProduct({
+    const product = await PM.addProduct({
       title,
       description,
       code,
@@ -64,7 +64,7 @@ const createProduct = async (req, res) => {
     })
     res.status(201).json({ message: `New product with id "${product.id}" was added` })
 
-    req.io.emit('storedProducts', await pm.getProducts())
+    req.io.emit('storedProducts', await PM.getProducts())
   } catch (error) {
     res.status(400).json({ error: error.message })
   }
@@ -93,7 +93,7 @@ const updateProduct = async (req, res, next) => {
 
     const isValid = isProductDataValid(body)
 
-    const updatedProduct = await pm.updateProduct(id, {
+    const updatedProduct = await PM.updateProduct(id, {
       title,
       description,
       code,
@@ -119,11 +119,11 @@ const deleteProduct = async (req, res, next) => {
   try {
     const id = castToMongoId(pid)
 
-    const deletedProduct = await pm.deleteProduct(id)
+    const deletedProduct = await PM.deleteProduct(id)
 
     if (deletedProduct) {
       res.json({ message: `Product "${deletedProduct.id}" was successfully deleted` })
-      req.io.emit('storedProducts', await pm.getProducts())
+      req.io.emit('storedProducts', await PM.getProducts())
     } else res.status(404).json({ error: `Product with id "${id}" not found` })
   } catch (error) {
     next(error)

@@ -1,7 +1,7 @@
-import { pm } from '../constants/singletons.js'
+import { PM } from '../constants/singletons.js'
 
 const home = async (req, res) => {
-  const products = await pm.getProducts()
+  const products = await PM.getProducts()
 
   res.render('home', {
     products,

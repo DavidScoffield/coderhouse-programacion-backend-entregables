@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import { pm } from './constants/singletons.js'
+import { PM } from './constants/singletons.js'
 
 export default function (httpServer) {
   const io = new Server(httpServer)
@@ -7,12 +7,12 @@ export default function (httpServer) {
   io.on('connection', async (socket) => {
     console.log('New connection: ' + socket.id)
 
-    socket.emit('storedProducts', await pm.getProducts())
+    socket.emit('storedProducts', await PM.getProducts())
 
     socket.on('new-product', async (product) => {
-      await pm.addProduct(product)
+      await PM.addProduct(product)
 
-      const products = await pm.getProducts()
+      const products = await PM.getProducts()
 
       io.emit('storedProducts', products)
 
@@ -22,9 +22,9 @@ export default function (httpServer) {
     socket.on('delete-product', async (id) => {
       const idNumber = Number(id)
 
-      await pm.deleteProduct(idNumber)
+      await PM.deleteProduct(idNumber)
 
-      const products = await pm.getProducts()
+      const products = await PM.getProducts()
 
       io.emit('storedProducts', products)
 

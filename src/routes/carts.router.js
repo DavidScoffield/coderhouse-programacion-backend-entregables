@@ -1,5 +1,4 @@
 import { Router } from 'express'
-import { cm, pm } from '../constants/singletons.js'
 import cartsController from '../controllers/carts.controller.js'
 
 const cartRouter = Router()

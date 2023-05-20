@@ -7,7 +7,7 @@ import CartManager from '../dao/mongo/managers/CartManager.js'
 // const pm = new ProductManager(PATH_OF_PRODUCTS)
 // const cm = new CartManager(PATH_OF_CARTS)
 
-const pm = new ProductManager()
-const cm = new CartManager()
+const PM = new ProductManager()
+const CM = new CartManager()
 
-export { pm, cm }
+export { PM, CM }
