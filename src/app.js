@@ -5,9 +5,11 @@ import mongoose from 'mongoose'
 import cartRouter from './routes/carts.router.js'
 import productRouter from './routes/products.router.js'
 import viewRouter from './routes/views.router.js'
-import socketIo from './socket.io.js'
 
+import { Server } from 'socket.io'
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
+import registerChatHandler from './listeners/chatHandler.listener.js'
+import registerRealTimeProductsHandler from './listeners/realTimeProducts.listener.js'
 import config from './utils/config.js'
 import __dirname from './utils/dirname.js'
 import logger from './utils/logger.js'
@@ -29,7 +31,14 @@ const httpServer = app.listen(config.PORT, () =>
 )
 
 // Socket.io
-const io = socketIo(httpServer)
+const io = new Server(httpServer)
+
+io.on('connection', (socket) => {
+  logger.info('New connection: ' + socket.id)
+
+  registerRealTimeProductsHandler(io, socket)
+  registerChatHandler(io, socket)
+})
 
 // Middlewares
 app.use(express.json())
