@@ -1,7 +1,7 @@
 import ValidationError from '../errors/ValidationError.js'
 import logger from './logger.utils.js'
 
-const validations = {
+const productValidations = {
   title: (value) => {
     if (typeof value !== 'string') {
       throw new ValidationError('Title must be a string')
@@ -54,19 +54,47 @@ const validations = {
   },
 }
 
+const isInvalidNumber = (value) => {
+  const parsedValue = Number(value)
+  return value && (isNaN(parsedValue) || parsedValue <= 0)
+}
+
+const paginationParamsValidations = {
+  limit: (limit) => {
+    if (isInvalidNumber(limit)) throw new ValidationError(`"${limit}" is not a valid limit number`)
+
+    return true
+  },
+  page: (page) => {
+    if (isInvalidNumber(page)) throw new ValidationError(`"${page}" is not a valid page number`)
+
+    return true
+  },
+  sort: (sort) => {
+    if (typeof value !== 'string') {
+      throw new ValidationError('Sort must be a string')
+    }
+    if (!['asc', 'desc'].includes(value)) {
+      throw new ValidationError('Sort must be "asc" or "desc"')
+    }
+    return true
+  },
+}
+
 /**
- * @param {Object} productData
+ * @param {Object} data
+ * @param {Object} validations
  
  * @returns {boolean}
  * @throws {ValidationError}
 
-  @description Check if values in productData are valid according to validations object
+  @description Check if values in data are valid according to validations object
  */
-const isProductDataValid = (productData) => {
-  const keysProductData = Object.keys(productData)
+const validateData = (data, validations) => {
+  const keysData = Object.keys(data)
   const availableValidations = Object.keys(validations)
 
-  const { matches, nonMatches } = keysProductData.reduce(
+  const { matches, nonMatches } = keysData.reduce(
     (result, key) => {
       if (availableValidations.includes(key)) {
         result.matches.push(key)
@@ -78,15 +106,21 @@ const isProductDataValid = (productData) => {
     { matches: [], nonMatches: [] }
   )
 
-  if (nonMatches.length > 0)
+  if (nonMatches.length > 0) {
     logger.error(`❓Las keys |${nonMatches.join(',')}| no tienen validador`)
+  }
 
   const validatedValues = matches.reduce((acc, property) => {
-    return { ...acc, [property]: validations[property](productData[property]) }
+    return { ...acc, [property]: validations[property](data[property]) }
   }, {})
 
   // Check if all values in validatedValues are true
   return Object.values(validatedValues).every(Boolean)
 }
 
-export { isProductDataValid }
+const isProductDataValid = (productData) => validateData(productData, productValidations)
+
+const isPaginationParamsValid = (paginationParams) =>
+  validateData(paginationParams, paginationParamsValidations)
+
+export { isProductDataValid, isPaginationParamsValid }
