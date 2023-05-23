@@ -1,6 +1,6 @@
 import { PM } from '../constants/singletons.js'
-import { castToMongoId } from '../utils/casts.js'
-import logger from '../utils/logger.js'
+import { castToMongoId } from '../utils/casts.utils.js'
+import logger from '../utils/logger.utils.js'
 
 const registerRealTimeProductsHandler = async (io, socket) => {
   const saveProduct = async (product) => {
