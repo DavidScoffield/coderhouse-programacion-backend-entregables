@@ -1,60 +1,19 @@
-import express from 'express'
-import { engine } from 'express-handlebars'
-import mongoose from 'mongoose'
+import './config/env.config.js'
+import './config/io.config.js'
+import './config/mongodb.config.js'
 
+import { app } from './config/express.config.js'
+
+// Routers
 import cartRouter from './routes/carts.router.js'
 import productRouter from './routes/products.router.js'
 import viewRouter from './routes/views.router.js'
 
-import { Server } from 'socket.io'
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
-import registerChatHandler from './listeners/chatHandler.listener.js'
-import registerRealTimeProductsHandler from './listeners/realTimeProducts.listener.js'
-import config from './utils/config.js'
-import __dirname from './utils/dirname.js'
-import logger from './utils/logger.js'
-
-// Connection at the DB
-logger.info('🔎🔎 connecting to', config.MONGO_URI)
-mongoose
-  .connect(config.MONGO_URI)
-  .then(() => {
-    logger.info('✅️✅️ Connections to database succefully')
-  })
-  .catch((err) => {
-    logger.info('❌ error connecting to MongoDB:', err.message)
-  })
-
-const app = express()
-const httpServer = app.listen(config.PORT, () =>
-  console.log(`Server running on port ${config.PORT} - Access http://localhost:${config.PORT}`)
-)
-
-// Socket.io
-const io = new Server(httpServer)
-
-io.on('connection', (socket) => {
-  logger.info('New connection: ' + socket.id)
-
-  registerRealTimeProductsHandler(io, socket)
-  registerChatHandler(io, socket)
-})
+import ioMiddleware from './middlewares/io.middleware.js'
 
 // Middlewares
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use((req, res, next) => {
-  req.io = io
-  next()
-})
-
-// Handlebars
-app.engine('handlebars', engine())
-app.set('view engine', 'handlebars')
-app.set('views', `${__dirname}/views`)
-
-// Static folder
-app.use(express.static(`${__dirname}/public`))
+app.use(ioMiddleware)
 
 // Routes
 app.use('/', viewRouter)
