@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 const collection = 'products'
 
@@ -45,5 +46,6 @@ const productSchema = new mongoose.Schema(
 )
 
 productSchema.plugin(uniqueValidator)
+productSchema.plugin(mongoosePaginate)
 
 export default mongoose.model(collection, productSchema)
