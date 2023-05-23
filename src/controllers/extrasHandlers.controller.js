@@ -1,3 +1,5 @@
+import logger from '../utils/logger.js'
+
 const MONGO_SERVER_ERROR_HANDLER = {
   DuplicateKey: (res, error) =>
     res.status(409).json({ error: `Duplicate key error: ${JSON.stringify(error.keyValue)}` }),
@@ -25,7 +27,7 @@ const errorHandler = (err, req, res, next) => {
     return next(err)
   }
 
-  console.log(`❌ ${err.name}, ${err.message}`)
+  logger.error(`❌ ${err.name}, ${err.message}`)
 
   const handleError = ERROR_HANDLERS[err.name] || ERROR_HANDLERS.defaultError
 

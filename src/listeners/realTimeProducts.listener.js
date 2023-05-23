@@ -1,5 +1,6 @@
 import { PM } from '../constants/singletons.js'
 import { castToMongoId } from '../utils/casts.js'
+import logger from '../utils/logger.js'
 
 const registerRealTimeProductsHandler = async (io, socket) => {
   const saveProduct = async (product) => {
@@ -9,7 +10,7 @@ const registerRealTimeProductsHandler = async (io, socket) => {
 
     io.emit('realTimeProducts:storedProducts', products)
 
-    console.log(`Product with id ${product.id} created through socket.io`)
+    logger.info(`Product with id ${product.id} created through socket.io`)
   }
 
   const deleteProduct = async (pid) => {
@@ -21,7 +22,7 @@ const registerRealTimeProductsHandler = async (io, socket) => {
 
     io.emit('realTimeProducts:storedProducts', products)
 
-    console.log(`Product with id ${id} deleted through socket.io`)
+    logger.info(`Product with id ${id} deleted through socket.io`)
   }
 
   socket.emit('realTimeProducts:storedProducts', await PM.getProducts())

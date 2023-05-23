@@ -1,3 +1,5 @@
+import logger from '../../utils/logger.js'
+
 const socket = io()
 
 // DOM elements
@@ -37,6 +39,6 @@ tbody.addEventListener('click', async (e) => {
 })
 
 socket.on('realTimeProducts:storedProducts', (products) => {
-  console.log(products)
+  logger.info(products)
   renderProducts(products)
 })

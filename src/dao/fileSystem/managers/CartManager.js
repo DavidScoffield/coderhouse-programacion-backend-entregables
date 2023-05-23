@@ -1,3 +1,4 @@
+import logger from '../../../utils/logger.js'
 import FileSystemPromises from '../utils/FileSystemPromises.js'
 
 export default class CartManager {
@@ -24,7 +25,7 @@ export default class CartManager {
     const cart = carts.find((cart) => cart.id === id)
 
     if (!cart) {
-      console.log(`Cart with id "${id}" not exist in list`)
+      logger.info(`Cart with id "${id}" not exist in list`)
       throw new Error(`Cart with id "${id}" not exist in list`)
     }
 
@@ -53,7 +54,7 @@ export default class CartManager {
     const cart = carts.find((cart) => cart.id === cartId)
 
     if (!cart) {
-      console.log(`Cart with id "${cartId}" not exist in list`)
+      logger.info(`Cart with id "${cartId}" not exist in list`)
       throw new Error(`Cart with id "${cartId}" not exist in list`)
     }
 

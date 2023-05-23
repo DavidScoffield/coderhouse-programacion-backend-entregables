@@ -1,4 +1,5 @@
 import { promises as fs, existsSync } from 'fs'
+import logger from '../../../utils/logger.js'
 
 export default class FileSystemPromises {
   #path
@@ -11,7 +12,7 @@ export default class FileSystemPromises {
     try {
       return existsSync(this.#path)
     } catch (error) {
-      console.log(error)
+      logger.error(error)
     }
   }
 
@@ -20,7 +21,7 @@ export default class FileSystemPromises {
       const data = await fs.readFile(this.#path, 'utf-8')
       return JSON.parse(data)
     } catch (error) {
-      console.log(error)
+      logger.error(error)
       throw new Error(`Error reading file or file not found: ${this.#path}}`)
     }
   }
@@ -30,7 +31,7 @@ export default class FileSystemPromises {
       const stringifiedData = JSON.stringify(data, null, 2)
       await fs.writeFile(this.#path, stringifiedData)
     } catch (error) {
-      console.log(error)
+      logger.error(error)
       throw new Error('Error writing file')
     }
   }

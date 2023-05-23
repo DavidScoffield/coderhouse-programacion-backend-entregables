@@ -1,4 +1,5 @@
 import ValidationError from '../errors/ValidationError.js'
+import logger from './logger.js'
 
 const validations = {
   title: (value) => {
@@ -46,8 +47,6 @@ const validations = {
     return true
   },
   thumbnail: (value) => {
-    console.log(value)
-
     if (!Array.isArray(value)) {
       throw new ValidationError('Thumbnail must be an array')
     }
@@ -79,7 +78,8 @@ const isProductDataValid = (productData) => {
     { matches: [], nonMatches: [] }
   )
 
-  if (nonMatches.length > 0) console.log(`❓Las keys |${nonMatches.join(',')}| no tienen validador`)
+  if (nonMatches.length > 0)
+    logger.error(`❓Las keys |${nonMatches.join(',')}| no tienen validador`)
 
   const validatedValues = matches.reduce((acc, property) => {
     return { ...acc, [property]: validations[property](productData[property]) }
