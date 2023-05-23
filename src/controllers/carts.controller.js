@@ -1,6 +1,6 @@
 import { CM, PM } from '../constants/singletons.js'
 import { castToMongoId } from '../utils/casts.utils.js'
-import { httpCodes } from '../utils/response.utils.js'
+import { httpCodes, httpStatus } from '../utils/response.utils.js'
 
 const createCart = async (req, res) => {
   const cart = await CM.addCart()
@@ -73,6 +73,7 @@ const deleteProductFromCart = async (req, res, next) => {
     const updatedCart = await CM.removeProductFromCart({ cart: requiredCart, productId })
 
     res.json({
+      status: httpStatus.SUCCESS,
       message: `Product with id ${productId} was deleted from cart ${cartId}`,
       payload: { cart: updatedCart },
     })
@@ -90,7 +91,28 @@ const updateProductQuantityFromCart = async (req, res, next) => {
 }
 
 const deleteAllProductsFromCart = async (req, res, next) => {
-  // TODO: Implement this
+  const { cid } = req.params
+
+  if (!cid) return res.status(httpCodes.BAD_REQUEST).send({ error: `Missing cart id` })
+
+  try {
+    const cartId = castToMongoId(cid)
+
+    // Validate if cart exist
+    const requiredCart = await CM.getCartById(cartId)
+
+    if (!requiredCart) return res.status(400).send({ error: `Cart with id "${cartId}" not exist` })
+
+    const updatedCart = await CM.removeAllProductFromCart(requiredCart)
+
+    res.json({
+      status: httpStatus.SUCCESS,
+      message: `All products of cart ${cartId} was deleted`,
+      payload: { cart: updatedCart },
+    })
+  } catch (e) {
+    next(e)
+  }
 }
 
 export default {

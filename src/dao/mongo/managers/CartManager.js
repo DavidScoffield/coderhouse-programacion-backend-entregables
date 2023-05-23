@@ -16,4 +16,8 @@ export default class CartManager {
     cart.removeProduct(productId)
     return this.save(cart)
   }
+
+  removeAllProductFromCart = (cartId) => {
+    return Carts.findByIdAndUpdate(cartId, { products: [] }, { new: true })
+  }
 }

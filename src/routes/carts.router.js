@@ -15,4 +15,6 @@ cartRouter.put('/:cid', cartsController.updateCartWithProducts)
 
 cartRouter.put('/:cid/products/:pid', cartsController.updateProductQuantityFromCart)
 
+cartRouter.delete('/:cid', cartsController.deleteAllProductsFromCart)
+
 export default cartRouter
