@@ -1,4 +1,5 @@
 import { PM } from '../constants/singletons.js'
+import { httpCodes } from '../utils/response.utils.js'
 
 const check = (req, res) => {
   const healthcheck = {
@@ -11,7 +12,7 @@ const check = (req, res) => {
     res.send(healthcheck)
   } catch (error) {
     healthcheck.message = error
-    res.status(503).send(healthcheck)
+    res.status(httpCodes.SERVICE_UNAVAILABLE).send(healthcheck)
   }
 }
 
