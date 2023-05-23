@@ -1,19 +1,32 @@
 import { PM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { castToMongoId } from '../utils/casts.utils.js'
-import { isProductDataValid } from '../utils/validationTypes.utils.js'
+import { httpStatus } from '../utils/response.utils.js'
+import { isPaginationParamsValid, isProductDataValid } from '../utils/validationTypes.utils.js'
 
 const getProducts = async (req, res, next) => {
-  const { limit } = req.query
-
-  const limitNumber = Number(limit)
-
-  if (limit && (!limitNumber || limitNumber <= 0))
-    return res.status(404).json({ error: `"${limit}" is not a valid limit number` })
+  // TODO: work and filter "query" param
+  const { page = 1, limit = 10, sort } = req.query
 
   try {
-    const products = await PM.getProducts({ limit: limitNumber })
-    res.send(products)
+    const isValid = isPaginationParamsValid({ limit, page, sort })
+
+    const { docs, ...rest } = await PM.getProducts({ limit, page, sort })
+
+    const response = {
+      status: httpStatus.SUCCESS,
+      payload: docs,
+      totalPages: rest.totalPages,
+      prevPage: rest.prevPage,
+      nextPage: rest.nextPage,
+      page: rest.page,
+      hasNextPage: rest.hasNextPage,
+      hasPrevPage: rest.hasPrevPage,
+      prevLink: rest.prevLink,
+      nextLink: rest.nextLink,
+    }
+
+    res.json(response)
   } catch (error) {
     next(error)
   }

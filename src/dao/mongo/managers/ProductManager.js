@@ -1,14 +1,16 @@
 import Products from '../models/Products.js'
 
 export default class ProductManager {
-  getProducts = (params) => {
-    const limit = params?.limit
-
-    if (limit) {
-      return Products.find().limit(limit).lean()
+  getProducts = ({ limit, page, sort, query = {} } = {}) => {
+    const options = {
+      lean: true,
     }
 
-    return Products.find().lean()
+    if (limit) options.limit = limit
+    if (page) options.page = page
+    if (sort) options.sort = { price: sort }
+
+    return Products.paginate(query, options)
   }
 
   getProductById = async (id) => Products.findById(id).lean()

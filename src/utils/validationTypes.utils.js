@@ -71,11 +71,13 @@ const paginationParamsValidations = {
     return true
   },
   sort: (sort) => {
-    if (typeof value !== 'string') {
-      throw new ValidationError('Sort must be a string')
-    }
-    if (!['asc', 'desc'].includes(value)) {
-      throw new ValidationError('Sort must be "asc" or "desc"')
+    if (sort) {
+      if (typeof sort !== 'string') {
+        throw new ValidationError('Sort must be a string')
+      }
+      if (!['asc', 'desc'].includes(sort)) {
+        throw new ValidationError('Sort must be "asc" or "desc"')
+      }
     }
     return true
   },

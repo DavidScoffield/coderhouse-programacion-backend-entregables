@@ -71,6 +71,11 @@ const httpCodes = {
   NETWORK_AUTHENTICATION_REQUIRED: 511,
 }
 
+const httpStatus = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+}
+
 const httpMessages = {
   //Information
   CONTINUE:
@@ -180,4 +185,4 @@ const Response = {
   },
 }
 
-export { Response, httpCodes, httpMessages }
+export { Response, httpCodes, httpMessages, httpStatus }
