@@ -11,3 +11,5 @@
 > #### Endpoints de prueba:
 >
 > Puede importar en postman el archivo `postman_endpoints_export.json` para testear los endpoints desarrollados.
+
+    En `TODO.md` podran encontrar los requerimientos de la entrega .
