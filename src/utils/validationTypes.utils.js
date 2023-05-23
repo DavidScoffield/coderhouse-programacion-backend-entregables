@@ -1,5 +1,5 @@
 import ValidationError from '../errors/ValidationError.js'
-import logger from './logger.js'
+import logger from './logger.utils.js'
 
 const validations = {
   title: (value) => {

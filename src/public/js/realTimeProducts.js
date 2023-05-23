@@ -1,4 +1,4 @@
-import logger from '../../utils/logger.js'
+import logger from '../../utils/logger.utils.js'
 
 const socket = io()
 

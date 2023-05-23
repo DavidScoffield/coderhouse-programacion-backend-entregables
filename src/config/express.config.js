@@ -1,7 +1,7 @@
 import express from 'express'
 import { engine } from 'express-handlebars'
-import { __src } from '../utils/dirname.js'
-import logger from '../utils/logger.js'
+import { __src } from '../utils/dirname.utils.js'
+import logger from '../utils/logger.utils.js'
 
 const app = express()
 

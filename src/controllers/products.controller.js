@@ -1,7 +1,7 @@
 import { PM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
-import { castToMongoId } from '../utils/casts.js'
-import { isProductDataValid } from '../utils/validationTypes.js'
+import { castToMongoId } from '../utils/casts.utils.js'
+import { isProductDataValid } from '../utils/validationTypes.utils.js'
 
 const getProducts = async (req, res, next) => {
   const { limit } = req.query

@@ -1,4 +1,4 @@
-import logger from '../../../utils/logger.js'
+import logger from '../../../utils/logger.utils.js'
 import FileSystemPromises from '../utils/FileSystemPromises.js'
 
 export default class ProductManager {
