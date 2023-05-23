@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
-
 import Products from './Products.js'
+
+import CustomError from '../../../errors/CustomError.js'
 
 const collection = 'carts'
 
@@ -34,5 +35,25 @@ cardSchema.pre('save', function () {
 cardSchema.pre(/^find/, function () {
   this.populate('products._id')
 })
+
+cardSchema.methods.addProduct = function (product, quantity) {
+  const index = this.products.findIndex((p) => p._id._id.equals(product._id))
+
+  if (index === -1) {
+    this.products.push({ _id: product, quantity })
+  } else {
+    this.products[index].quantity += quantity
+  }
+}
+
+cardSchema.methods.removeProduct = function (product) {
+  const index = this.products.findIndex((p) => p._id._id.equals(product._id))
+
+  if (index === -1) {
+    throw new CustomError(`Product with id ${product._id} not exist in cart`)
+  }
+
+  this.products.splice(index, 1)
+}
 
 export default mongoose.model(collection, cardSchema)

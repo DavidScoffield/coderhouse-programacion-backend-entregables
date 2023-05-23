@@ -6,4 +6,14 @@ export default class CartManager {
   addCart = async () => Carts.create({})
 
   save = (cart) => cart.save()
+
+  addProductToCart = async ({ cart, productId, quantity }) => {
+    cart.addProduct(productId, quantity)
+    return this.save(cart)
+  }
+
+  removeProductFromCart = ({ cart, productId }) => {
+    cart.removeProduct(productId)
+    return this.save(cart)
+  }
 }
