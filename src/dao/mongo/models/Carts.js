@@ -25,4 +25,14 @@ const cardSchema = new mongoose.Schema(
   { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
 )
 
+// populate ('products._id') in save method
+cardSchema.pre('save', function () {
+  this.populate('products._id')
+})
+
+// populate('products._id') in any find method
+cardSchema.pre(/^find/, function () {
+  this.populate('products._id')
+})
+
 export default mongoose.model(collection, cardSchema)

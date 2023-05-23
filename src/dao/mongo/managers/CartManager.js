@@ -6,6 +6,4 @@ export default class CartManager {
   addCart = async () => Carts.create({})
 
   save = (cart) => cart.save()
-
-  saveAndPopulate = async (cart) => (await cart.save()).populate('products._id')
 }
