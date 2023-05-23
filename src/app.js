@@ -8,6 +8,7 @@ import { app } from './config/express.config.js'
 import cartRouter from './routes/carts.router.js'
 import productRouter from './routes/products.router.js'
 import viewRouter from './routes/views.router.js'
+import healthcheckRouter from './routes/healthcheck.router.js'
 
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
 import ioMiddleware from './middlewares/io.middleware.js'
@@ -16,6 +17,7 @@ import ioMiddleware from './middlewares/io.middleware.js'
 app.use(ioMiddleware)
 
 // Routes
+app.use('/healthcheck', healthcheckRouter)
 app.use('/', viewRouter)
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
