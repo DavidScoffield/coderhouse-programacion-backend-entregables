@@ -1,5 +1,6 @@
 import ValidationError from '../errors/ValidationError.js'
 import logger from './logger.utils.js'
+import { mappedStatus } from './mappedParams.util.js'
 
 const productValidations = {
   title: (value) => {
@@ -29,8 +30,9 @@ const productValidations = {
   },
   status: (value) => {
     if (typeof value !== 'boolean') {
-      throw new ValidationError('Status must be a boolean')
+      throw new ValidationError('Status must be a "true" or "false"')
     }
+
     return true
   },
   stock: (value) => {

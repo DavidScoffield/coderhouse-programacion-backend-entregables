@@ -1,17 +1,27 @@
 import { PM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { castToMongoId } from '../utils/casts.utils.js'
+import { mappedStatus } from '../utils/mappedParams.util.js'
 import { httpStatus } from '../utils/response.utils.js'
 import { isPaginationParamsValid, isProductDataValid } from '../utils/validationTypes.utils.js'
 
 const getProducts = async (req, res, next) => {
-  // TODO: work and filter "query" param
-  const { page = 1, limit = 10, sort } = req.query
+  const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
+
+  const productDataToValidate = {}
+  if (category) productDataToValidate.category = category
+  if (status !== undefined) productDataToValidate.status = mappedStatus[status]
 
   try {
-    const isValid = isPaginationParamsValid({ limit, page, sort })
+    const isValidPaginationParams = isPaginationParamsValid({ limit, page, sort })
+    const isValidSearchParams = isProductDataValid(productDataToValidate)
 
-    const { docs, ...rest } = await PM.getProducts({ limit, page, sort })
+    const { docs, ...rest } = await PM.getProducts({
+      limit,
+      page,
+      sort,
+      query: productDataToValidate,
+    })
 
     const response = {
       status: httpStatus.SUCCESS,
