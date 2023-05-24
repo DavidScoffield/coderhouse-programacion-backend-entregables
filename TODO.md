@@ -28,15 +28,15 @@
 
 ## Se debe entregar
 
-- [ ] Con base en nuestra implementación actual de productos, modificar el método GET / para que cumpla con los siguientes puntos:
+- [x] Con base en nuestra implementación actual de productos, modificar el método GET / para que cumpla con los siguientes puntos:
 
   - Deberá poder recibir por query params un limit (opcional), una page (opcional), un sort (opcional) y un query (opcional)
-    - -limit permitirá devolver sólo el número de elementos solicitados al momento de la petición, en caso de no recibir limit, éste será de 10.
-    - page permitirá devolver la página que queremos buscar, en caso de no recibir page, ésta será de 1
-    - query, el tipo de elemento que quiero buscar (es decir, qué filtro aplicar), en caso de no recibir query, realizar la búsqueda general
-    - sort: asc/desc, para realizar ordenamiento ascendente o descendente por precio, en caso de no recibir sort, no realizar ningún ordenamiento
+    - ✅ -limit permitirá devolver sólo el número de elementos solicitados al momento de la petición, en caso de no recibir limit, éste será de 10.
+    - ✅ page permitirá devolver la página que queremos buscar, en caso de no recibir page, ésta será de 1
+    - #### ❓query, el tipo de elemento que quiero buscar (es decir, qué filtro aplicar), en caso de no recibir query, realizar la búsqueda general
+    - ✅ sort: asc/desc, para realizar ordenamiento ascendente o descendente por precio, en caso de no recibir sort, no realizar ningún ordenamiento
 
-- [ ] El método GET deberá devolver un objeto con el siguiente formato:
+- [x] El método GET deberá devolver un objeto con el siguiente formato:
 
 ```Json
 {
@@ -53,15 +53,15 @@
 }
 ```
 
-> Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio.
+> #### ❓ Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio.
 
 - [ ] Además, agregar al router de carts los siguientes endpoints:
 
-  - DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
-  - PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
-  - PUT api/carts/:cid/products/:pid deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
-  - DELETE api/carts/:cid deberá eliminar todos los productos del carrito
-  - Esta vez, para el modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. Modificar la ruta /:cid para que al traer todos los productos, los traiga completos mediante un “populate”. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados.
+  - ✅ DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
+  - ❓PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
+  - ✅ PUT api/carts/:cid/products/:pid deberá poder actualizar SÓLO la cantidad de ejemplares del producto por cualquier cantidad pasada desde req.body
+  - ✅ DELETE api/carts/:cid deberá eliminar todos los productos del carrito
+  - ✅ Esta vez, para el modelo de Carts, en su propiedad products, el id de cada producto generado dentro del array tiene que hacer referencia al modelo de Products. Modificar la ruta /:cid para que al traer todos los productos, los traiga completos mediante un “populate”. De esta manera almacenamos sólo el Id, pero al solicitarlo podemos desglosar los productos asociados.
 
 - [ ] Crear una vista en el router de views ‘/products’ para visualizar todos los productos con su respectiva paginación. Cada producto mostrado puede resolverse de dos formas:
 

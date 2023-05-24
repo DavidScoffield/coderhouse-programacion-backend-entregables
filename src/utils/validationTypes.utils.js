@@ -56,7 +56,7 @@ const productValidations = {
 
 const isInvalidNumber = (value) => {
   const parsedValue = Number(value)
-  return value && (isNaN(parsedValue) || parsedValue <= 0)
+  return value !== undefined && (isNaN(parsedValue) || parsedValue <= 0)
 }
 
 const paginationParamsValidations = {
@@ -79,6 +79,16 @@ const paginationParamsValidations = {
         throw new ValidationError('Sort must be "asc" or "desc"')
       }
     }
+    return true
+  },
+}
+
+const commonParamsValidations = {
+  quantity: (quantity) => {
+    if (isInvalidNumber(quantity)) {
+      throw new ValidationError(`"${quantity}" is not a valid quantity number`)
+    }
+
     return true
   },
 }
@@ -125,4 +135,6 @@ const isProductDataValid = (productData) => validateData(productData, productVal
 const isPaginationParamsValid = (paginationParams) =>
   validateData(paginationParams, paginationParamsValidations)
 
-export { isProductDataValid, isPaginationParamsValid }
+const isCommonParamsValid = (params) => validateData(params, commonParamsValidations)
+
+export { isProductDataValid, isPaginationParamsValid, isCommonParamsValid }

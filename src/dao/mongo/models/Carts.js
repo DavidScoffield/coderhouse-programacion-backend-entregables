@@ -47,6 +47,7 @@ cardSchema.methods.addProduct = function (product, quantity) {
 }
 
 cardSchema.methods.removeProduct = function (product) {
+  //! Problem when product was removed from db (TypeError, Cannot read properties of null (reading '_id'))
   const index = this.products.findIndex((p) => p._id._id.equals(product._id))
 
   if (index === -1) {

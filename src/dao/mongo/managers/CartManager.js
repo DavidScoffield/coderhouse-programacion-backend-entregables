@@ -20,4 +20,12 @@ export default class CartManager {
   removeAllProductFromCart = (cartId) => {
     return Carts.findByIdAndUpdate(cartId, { products: [] }, { new: true })
   }
+
+  updateQuantityOfProductInCart = ({ cartId, productId, quantity }) => {
+    return Carts.findOneAndUpdate(
+      { _id: cartId, 'products._id': productId },
+      { $set: { 'products.$.quantity': quantity } },
+      { new: true }
+    )
+  }
 }

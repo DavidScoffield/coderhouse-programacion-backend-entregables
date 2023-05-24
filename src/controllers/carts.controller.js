@@ -1,6 +1,7 @@
 import { CM, PM } from '../constants/singletons.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
+import { isCommonParamsValid } from '../utils/validationTypes.utils.js'
 
 const createCart = async (req, res) => {
   const cart = await CM.addCart()
@@ -87,7 +88,36 @@ const updateCartWithProducts = async (req, res, next) => {
 }
 
 const updateProductQuantityFromCart = async (req, res, next) => {
-  // TODO: Implement this
+  const { cid, pid } = req.params
+  const { quantity } = req.body
+
+  if (!cid || !pid || quantity === undefined)
+    return res
+      .status(httpCodes.BAD_REQUEST)
+      .send({ error: `Missing cart, product id or quantity to update` })
+
+  try {
+    const isValid = isCommonParamsValid({ quantity })
+
+    const cartId = castToMongoId(cid)
+    const productId = castToMongoId(pid)
+
+    const updatedCart = await CM.updateQuantityOfProductInCart({ cartId, productId, quantity })
+
+    if (!updatedCart)
+      res.status(httpCodes.BAD_REQUEST).send({
+        status: httpStatus.ERROR,
+        error: `Product with id "${productId}" not exist in cart`,
+      })
+
+    res.json({
+      status: httpStatus.SUCCESS,
+      message: `Product with id ${productId} was updated in cart ${cartId}`,
+      payload: { cart: updatedCart },
+    })
+  } catch (e) {
+    next(e)
+  }
 }
 
 const deleteAllProductsFromCart = async (req, res, next) => {
