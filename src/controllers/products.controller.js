@@ -3,7 +3,8 @@ import ValidationError from '../errors/ValidationError.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
 import { httpStatus } from '../utils/response.utils.js'
-import { isPaginationParamsValid, isProductDataValid } from '../utils/validationTypes.utils.js'
+import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
+import { isProductDataValid } from '../utils/validations/products.validations.util.js'
 
 const getProducts = async (req, res, next) => {
   const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
