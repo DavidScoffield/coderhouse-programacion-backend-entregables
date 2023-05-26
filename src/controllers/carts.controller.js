@@ -1,7 +1,8 @@
 import { CM, PM } from '../constants/singletons.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
-import { isCommonParamsValid } from '../utils/validationTypes.utils.js'
+import { validateProductArray } from '../utils/validations/carts.validation.util.js'
+import { isCommonParamsValid } from '../utils/validations/products.validations.util.js'
 
 const createCart = async (req, res) => {
   const cart = await CM.addCart()
@@ -84,7 +85,56 @@ const deleteProductFromCart = async (req, res, next) => {
 }
 
 const updateCartWithProducts = async (req, res, next) => {
-  // TODO: Implement this
+  const { cid } = req.params
+  const { products } = req.body
+
+  try {
+    // Validate if cart exist
+    const cartId = castToMongoId(cid)
+    const requiredCart = await CM.getCartById(cartId)
+
+    if (!requiredCart)
+      return res.status(httpCodes.BAD_REQUEST).send({ error: `Cart with id "${cartId}" not exist` })
+
+    // Check if products array is valid, i.e. id's are valid (they are ObjectId) and quantity is valid
+    const { valids: productsWithValidTypes, invalids: productsWithInvalidsTypes } =
+      validateProductArray(products)
+
+    // Check if the products exist in the database
+    const { valids, invalids } = await productsWithValidTypes.reduce(
+      async (accPromise, product) => {
+        const acc = await accPromise
+        const { id } = product
+        const productExists = await PM.getProductById(id)
+
+        if (!productExists) {
+          product.reason = `Product with id "${id}" not exist`
+          acc.invalids.push(product)
+        } else {
+          acc.valids.push(product)
+        }
+        return acc
+      },
+      { valids: [], invalids: [...productsWithInvalidsTypes] }
+    )
+
+    // Map the products to the required format
+    const productsToSave = valids.map(({ id, quantity }) => ({ _id: id, quantity }))
+
+    // Update cart with the complete array of products
+    const updatedCart = await CM.updateCartWithProducts({ cartId, products: productsToSave })
+
+    // Create response
+    const response = {
+      status: httpStatus.SUCCESS,
+      message: `Cart with id ${cartId} was updated`,
+      payload: { cart: updatedCart, invalidsProducts: invalids },
+    }
+
+    res.json(response)
+  } catch (e) {
+    next(e)
+  }
 }
 
 const updateProductQuantityFromCart = async (req, res, next) => {

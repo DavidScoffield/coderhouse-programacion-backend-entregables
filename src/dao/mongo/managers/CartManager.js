@@ -28,4 +28,8 @@ export default class CartManager {
       { new: true }
     )
   }
+
+  updateCartWithProducts = async ({ cartId, products }) => {
+    return Carts.findByIdAndUpdate(cartId, { products }, { new: true }).lean()
+  }
 }
