@@ -9,4 +9,6 @@ viewRouter.get('/realtimeproducts', viewsController.realTimeProducts)
 
 viewRouter.get('/chat', viewsController.chat)
 
+viewRouter.get('/cart/:cid', viewsController.cart)
+
 export default viewRouter

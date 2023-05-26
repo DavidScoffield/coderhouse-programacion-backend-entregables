@@ -1,0 +1,13 @@
+<div>
+  <h2>{{_id.title}}</h2>
+  <p>{{_id.description}}</p>
+  <p>Precio: ${{_id.price}}</p>
+  <p>Stock: {{_id.stock}}</p>
+  <p>Categoria: {{_id.category}}</p>
+  {{#if _id.status}}
+    <p>Estado: Disponible</p>
+  {{else}}
+    <p>Estado: No disponible</p>
+  {{/if}}
+  <p>Cantidad disponible: {{quantity}}</p>
+</div>
