@@ -1,7 +1,7 @@
 import Carts from '../models/Carts.js'
 
 export default class CartManager {
-  getCartById = async (id) => Carts.findById(id).lean()
+  getCartById = async (id, { lean = false } = {}) => Carts.findById(id, null, { lean })
 
   addCart = async () => Carts.create({})
 

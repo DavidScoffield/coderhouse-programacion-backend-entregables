@@ -1,0 +1,33 @@
+<section class='filters-products'>
+  <div>
+    <label for='category'>Categoría:</label>
+    <select name='category'>
+      <option value='0'>Todas</option>
+      {{#each categories}}
+        <option value='{{this.id}}'>{{this.name}}</option>
+      {{/each}}
+    </select>
+  </div>
+
+  <div>
+    <label for='category'>Disponibilidad:</label>
+    <select>
+      <option value='0'>Sin filtro</option>
+      <option value='true'>Disponible</option>
+      <option value='false'>No disponible</option>
+    </select>
+  </div>
+
+  <div>
+    <label for='sort'>Ordenar por precio:</label>
+    <select name='sort' id='sort'>
+      <option value='asc'>Ascendente</option>
+      <option value='desc'>Descendente</option>
+    </select>
+  </div>
+
+  <div>
+    <label for='limit'>Mostrar:</label>
+    <input type='number' name='limit' id='limit' value='10' min='1' max='100' />
+  </div>
+</section>

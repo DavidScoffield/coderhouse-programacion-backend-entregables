@@ -1,0 +1,42 @@
+<h1>Productos</h1>
+
+{{> filterProducts}}
+<table>
+  <thead>
+    <tr>
+      <th>Título</th>
+      <th>Código</th>
+      <th>Categoría</th>
+      <th>Descripción</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody id="table-body">
+    {{#each products}}
+      <tr >
+        <td>{{this.title}}</td>
+        <td>{{this.code}}</td>
+        <td>{{this.category}}</td>
+        <td>{{this.description}}</td>
+        <td>{{this.price}}</td>
+        <td>{{this.stock}}</td>
+        {{#if this.status}}
+          <td>Disponible</td>
+        {{else}}
+          <td>No disponible</td>
+        {{/if}}
+        <td>
+          <button product-id={{this._id}} class="btn-add-to-cart" style="font-size: small; padding: 5px 8px">Agregar en carrito</button> 
+        </td>
+      </tr>
+    {{/each}}
+
+  </tbody>
+</table>
+
+{{> pagination}}
+
+<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>

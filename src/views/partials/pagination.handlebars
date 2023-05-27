@@ -1,0 +1,37 @@
+<div class='pagination'>
+  {{#if hasPrevPage}}
+    <a
+      href='/products?page={{prevPage}}&&limit={{limit}}&&sort={{sort}}&&category={{category}}&&status={{status}}'
+      class='link-pagination'
+    >
+      <button>
+        Anterior
+      </button>
+    </a>
+  {{else}}
+    <a class='link-pagination' disabled='true'>
+      <button disabled>
+        Anterior
+      </button>
+    </a>
+  {{/if}}
+
+  <span>{{page}} / {{totalPages}}</span>
+  {{#if hasNextPage}}
+
+    <a
+      href='/products?page={{nextPage}}&&limit={{limit}}&&sort={{sort}}&&category={{category}}&&status={{status}}'
+      class='link-pagination'
+    >
+      <button>
+        Siguiente
+      </button>
+    </a>
+  {{else}}
+    <a class='link-pagination' disabled='true'>
+      <button disabled>
+        Siguiente
+      </button>
+    </a>
+  {{/if}}
+</div>
