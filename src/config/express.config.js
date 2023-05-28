@@ -16,7 +16,6 @@ app.use(express.static(`${__src}/public`))
 const hbs = create({
   helpers: {
     equal: (a, b) => a === b,
-    hello: () => 'Hello',
   },
 })
 
