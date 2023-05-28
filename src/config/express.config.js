@@ -1,5 +1,5 @@
 import express from 'express'
-import { engine } from 'express-handlebars'
+import { engine, create } from 'express-handlebars'
 import { __src } from '../utils/dirname.utils.js'
 import logger from '../utils/logger.utils.js'
 
@@ -13,7 +13,15 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(`${__src}/public`))
 
 // Handlebars
-app.engine('handlebars', engine())
+const hbs = create({
+  helpers: {
+    equal: (a, b) => a === b,
+    hello: () => 'Hello',
+  },
+})
+
+app.engine('handlebars', hbs.engine)
+
 app.set('view engine', 'handlebars')
 app.set('views', `${__src}/views`)
 
