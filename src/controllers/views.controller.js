@@ -32,6 +32,8 @@ const products = async (req, res, next) => {
     const isValidPaginationParams = isPaginationParamsValid({ limit, page, sort })
     const isValidSearchParams = isProductDataValid(productDataToValidate)
 
+    const listCategories = await PM.getCategories()
+
     const { docs, ...rest } = await PM.getProducts({
       limit,
       page,
@@ -55,6 +57,7 @@ const products = async (req, res, next) => {
       ...response,
       css: ['pagination', 'filterProducts'],
       js: ['products', 'filterProducts', 'pagination'],
+      listCategories,
       limit,
       sort,
       category,

@@ -49,4 +49,8 @@ export default class ProductManager {
   }
 
   deleteProduct = async (id) => Products.findByIdAndDelete(id)
+
+  getCategories = async () => {
+    return Products.distinct('category')
+  }
 }

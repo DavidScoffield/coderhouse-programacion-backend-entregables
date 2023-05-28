@@ -2,12 +2,13 @@
 
   <input style="display: none;" hidden="true" type='number' name='page' id='page' value={{page}} />
 
+
   <div>
     <label for='category'>Categoría:</label>
     <select name='category' id='category'>
-      <option value='0'>Todas</option>
-      {{#each categories}}
-        <option value='{{this.id}}'>{{this.name}}</option>
+      <option value='0'>Sin filtro</option>
+      {{#each listCategories as |categoryOption|}}
+        <option value='{{categoryOption}}' {{#if (equal categoryOption ../category)}}selected{{/if}}>{{categoryOption}}</option>
       {{/each}}
     </select>
   </div>
@@ -25,8 +26,8 @@
     <label for='sort'>Ordenar por precio:</label>
     <select name='sort' id='sort'>
       <option value='0'>Sin filtro</option>
-      <option value='asc' {{#if (equal category 'asc')}}selected{{/if}}>Ascendente</option>
-      <option value='desc' {{#if (equal category 'desc')}}selected{{/if}}>Descendente</option>
+      <option value='asc' {{#if (equal sort 'asc')}}selected{{/if}}>Ascendente</option>
+      <option value='desc' {{#if (equal sort 'desc')}}selected{{/if}}>Descendente</option>
     </select>
   </div>
 
