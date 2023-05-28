@@ -1,7 +1,10 @@
-<section class='filters-products'>
+<form class='filters-products' id='form-filter-products'>
+
+  <input style="display: none;" hidden="true" type='number' name='page' id='page' value={{page}} />
+
   <div>
     <label for='category'>Categoría:</label>
-    <select name='category'>
+    <select name='category' id='category'>
       <option value='0'>Todas</option>
       {{#each categories}}
         <option value='{{this.id}}'>{{this.name}}</option>
@@ -10,24 +13,29 @@
   </div>
 
   <div>
-    <label for='category'>Disponibilidad:</label>
-    <select>
+    <label for='status'>Disponibilidad:</label>
+    <select name='status' id='status'>
       <option value='0'>Sin filtro</option>
-      <option value='true'>Disponible</option>
-      <option value='false'>No disponible</option>
+      <option value='true' {{#if (equal status 'true')}}selected{{/if}}>Disponible</option>
+      <option value='false' {{#if (equal status 'false')}}selected{{/if}}>No disponible</option>
     </select>
   </div>
 
   <div>
     <label for='sort'>Ordenar por precio:</label>
     <select name='sort' id='sort'>
-      <option value='asc'>Ascendente</option>
-      <option value='desc'>Descendente</option>
+      <option value='0'>Sin filtro</option>
+      <option value='asc' {{#if (equal category 'asc')}}selected{{/if}}>Ascendente</option>
+      <option value='desc' {{#if (equal category 'desc')}}selected{{/if}}>Descendente</option>
     </select>
   </div>
 
   <div>
     <label for='limit'>Mostrar:</label>
-    <input type='number' name='limit' id='limit' value='10' min='1' max='100' />
+    <input type='number' name='limit' id='limit' value={{limit}} min='1' max='100' />
   </div>
-</section>
+
+  <div>
+    <input type='submit' value='Filtrar' style='background-color: #3528b8;' />
+  </div>
+</form>

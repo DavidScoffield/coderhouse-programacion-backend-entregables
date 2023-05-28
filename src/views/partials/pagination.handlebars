@@ -1,9 +1,6 @@
 <div class='pagination'>
   {{#if hasPrevPage}}
-    <a
-      href='/products?page={{prevPage}}&&limit={{limit}}&&sort={{sort}}&&category={{category}}&&status={{status}}'
-      class='link-pagination'
-    >
+    <a href='/products?page={{prevPage}}' class='link-pagination' id='prev-page'>
       <button>
         Anterior
       </button>
@@ -19,10 +16,7 @@
   <span>{{page}} / {{totalPages}}</span>
   {{#if hasNextPage}}
 
-    <a
-      href='/products?page={{nextPage}}&&limit={{limit}}&&sort={{sort}}&&category={{category}}&&status={{status}}'
-      class='link-pagination'
-    >
+    <a href='/products?page={{nextPage}}' class='link-pagination' id='next-page'>
       <button>
         Siguiente
       </button>

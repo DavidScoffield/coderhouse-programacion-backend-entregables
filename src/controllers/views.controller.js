@@ -1,5 +1,7 @@
 import { CM, PM } from '../constants/singletons.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
+import { isProductDataValid } from '../utils/validations/products.validations.util.js'
+import { mappedStatus } from '../utils/mappedParams.util.js'
 
 const home = async (req, res) => {
   const products = await PM.getProducts()
@@ -20,17 +22,21 @@ const chat = async (req, res) => {
 }
 
 const products = async (req, res, next) => {
-  const { page = 1, limit = 10, sort } = req.query
+  const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
+
+  const productDataToValidate = {}
+  if (category) productDataToValidate.category = category
+  if (status !== undefined && status !== '') productDataToValidate.status = mappedStatus[status]
 
   try {
     const isValidPaginationParams = isPaginationParamsValid({ limit, page, sort })
-
-    const products = await PM.getProducts({ limit, page, sort })
+    const isValidSearchParams = isProductDataValid(productDataToValidate)
 
     const { docs, ...rest } = await PM.getProducts({
       limit,
       page,
       sort,
+      query: productDataToValidate,
     })
 
     const response = {
@@ -48,9 +54,11 @@ const products = async (req, res, next) => {
     res.render('products', {
       ...response,
       css: ['pagination', 'filterProducts'],
-      js: ['products'],
+      js: ['products', 'filterProducts', 'pagination'],
       limit,
       sort,
+      category,
+      status,
     })
   } catch (e) {
     next(e)
