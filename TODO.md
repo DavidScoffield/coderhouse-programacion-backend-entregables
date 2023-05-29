@@ -55,7 +55,7 @@
 
 > Se deberá poder buscar productos por categoría o por disponibilidad, y se deberá poder realizar un ordenamiento de estos productos de manera ascendente o descendente por precio.
 
-- [ ] Además, agregar al router de carts los siguientes endpoints:
+- [x] Además, agregar al router de carts los siguientes endpoints:
 
   - ✅ DELETE api/carts/:cid/products/:pid deberá eliminar del carrito el producto seleccionado.
   - ✅ PUT api/carts/:cid deberá actualizar el carrito con un arreglo de productos con el formato especificado arriba.
