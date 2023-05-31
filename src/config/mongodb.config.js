@@ -1,3 +1,4 @@
+import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
 import logger from '../utils/logger.utils.js'
 
@@ -14,3 +15,13 @@ const connection = mongoose
   .catch((err) => {
     logger.info('❌ error connecting to MongoDB:', err.message)
   })
+
+const sessionStore = MongoStore.create({
+  mongoUrl: MONGO_URI,
+  mongoOptions: {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+})
+
+export { sessionStore, connection as mongooseConnection }
