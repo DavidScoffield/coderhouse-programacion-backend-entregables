@@ -224,7 +224,7 @@
 					"response": []
 				},
 				{
-					"name": "/api/carts/:cid/product/:pid",
+					"name": "/api/carts/:cid/products/:pid",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -238,7 +238,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid/product/:pid",
+							"raw": "http://localhost:8080/api/carts/:cid/products/:pid",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -248,7 +248,7 @@
 								"api",
 								"carts",
 								":cid",
-								"product",
+								"products",
 								":pid"
 							],
 							"variable": [
