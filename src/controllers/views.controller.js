@@ -1,4 +1,4 @@
-import { CM, PM } from '../constants/singletons.js'
+import { CM, PM, UM } from '../constants/singletons.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
@@ -78,4 +78,41 @@ const cart = async (req, res) => {
   })
 }
 
-export default { home, realTimeProducts, chat, products, cart }
+const register = async (req, res) => {
+  if (req.session.user) return res.redirect('/products')
+
+  res.render('register', {
+    js: ['register'],
+    css: ['general'],
+  })
+}
+const login = async (req, res) => {
+  if (req.session.user) return res.redirect('/products')
+
+  res.render('login', {
+    css: ['general'],
+    js: ['login'],
+  })
+}
+
+const profile = async (req, res) => {
+  if (!req.session.user) return res.redirect('/login')
+
+  let userData
+  try {
+    userData = await UM.getUserByEmail(req.session.user.email)
+    userData = await userData.toJSON()
+  } catch (e) {
+    console.log(e)
+  }
+
+  res.render('profile', {
+    user: {
+      ...userData,
+      name: req.session.user.name,
+      email: req.session.user.email,
+    },
+  })
+}
+
+export default { home, realTimeProducts, chat, products, cart, register, login, profile }

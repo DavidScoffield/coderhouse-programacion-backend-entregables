@@ -13,4 +13,10 @@ viewRouter.get('/products', viewsController.products)
 
 viewRouter.get('/cart/:cid', viewsController.cart)
 
+viewRouter.get('/register', viewsController.register)
+
+viewRouter.get('/login', viewsController.login)
+
+viewRouter.get('/profile', viewsController.profile)
+
 export default viewRouter
