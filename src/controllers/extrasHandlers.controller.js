@@ -1,4 +1,5 @@
 import logger from '../utils/logger.utils.js'
+import { httpCodes } from '../utils/response.utils.js'
 
 const MONGO_SERVER_ERROR_HANDLER = {
   DuplicateKey: (res, error) =>
@@ -14,7 +15,8 @@ const ERROR_HANDLERS = {
     MONGO_SERVER_ERROR_HANDLER[error.codeName](res, error) ||
     MONGO_SERVER_ERROR_HANDLER.defaultError(res, error),
   CustomError: (res, error) => res.status(error.status).json({ error: error.message }),
-  ValidationError: (res, error) => res.status(error.status).json({ error: error.message }),
+  ValidationError: (res, error) =>
+    res.status(error.status || httpCodes.CONFLICT).json({ error: error.message }),
   defaultError: (res) => res.status(500).end(),
 }
 
