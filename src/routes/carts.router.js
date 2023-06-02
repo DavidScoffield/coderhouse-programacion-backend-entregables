@@ -7,7 +7,7 @@ cartRouter.post('/', cartsController.createCart)
 
 cartRouter.get('/:cid', cartsController.getCartById)
 
-cartRouter.post('/:cid/product/:pid', cartsController.addProductToCart)
+cartRouter.post('/:cid/products/:pid', cartsController.addProductToCart)
 
 cartRouter.delete('/:cid/products/:pid', cartsController.deleteProductFromCart)
 
