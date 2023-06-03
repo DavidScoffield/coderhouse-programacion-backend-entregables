@@ -7,4 +7,6 @@ sessionRouter.post('/register', sessionController.register)
 
 sessionRouter.post('/login', sessionController.login)
 
+sessionRouter.get('/logout', sessionController.logout)
+
 export default sessionRouter

@@ -35,4 +35,17 @@ const login = async (req, res, next) => {
   res.send({ status: httpStatus.SUCCESS, message: 'Usuario logeado correctamente', payload: user })
 }
 
-export default { register, login }
+const logout = (req, res, next) => {
+  req.session.destroy((err) => {
+    if (err) {
+      return res
+        .status(httpCodes.INTERNAL_SERVER_ERROR)
+        .send({ status: httpStatus.ERROR, message: 'Error al cerrar sesión' })
+    }
+
+    res.clearCookie('connect.sid')
+    res.send({ status: httpStatus.SUCCESS, message: 'Sesión cerrada correctamente' })
+  })
+}
+
+export default { register, login, logout }
