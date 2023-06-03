@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
+import { hashPassword, isValidPassword } from '../../../utils/bcrypt'
 
 const collection = 'users'
 
@@ -43,6 +44,14 @@ userSchema.methods.toJSON = function () {
   delete user.password
   delete user.__v
   return user
+}
+
+userSchema.statics.hashPassword = (password) => {
+  return hashPassword(password)
+}
+
+userSchema.statics.isValidPassword = (password, hash) => {
+  return isValidPassword(password, hash)
 }
 
 export default mongoose.model(collection, userSchema)
