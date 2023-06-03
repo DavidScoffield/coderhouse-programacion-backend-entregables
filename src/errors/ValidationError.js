@@ -4,6 +4,6 @@ export default class ValidationError extends Error {
   constructor(message, status) {
     super(message)
     this.name = 'ValidationError'
-    this.status = status || httpCodes.UNPROCESSABLE_ENTITY
+    this.status = status || httpCodes.BAD_REQUEST
   }
 }
