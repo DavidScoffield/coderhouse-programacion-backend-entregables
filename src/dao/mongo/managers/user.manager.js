@@ -2,7 +2,7 @@ import Users from '../models/Users.js'
 import { hashPassword, isValidPassword } from '../../../utils/bcrypt.js'
 
 export default class UserManager {
-  addUser = async ({ firstName, lastName, email, age, password }) => {
+  addUser = ({ firstName, lastName, email, age, password }) => {
     return Users.create({
       firstName,
       lastName,
@@ -12,17 +12,11 @@ export default class UserManager {
     })
   }
 
-  getUser = async ({ email, password }) => {
-    const user = await this.getUserByEmail(email)
-
-    if (!user) return null
-
-    if (!isValidPassword(password, user.password)) return null
-
-    return user
+  getUserByEmail = (email, { lean = false } = {}) => {
+    return Users.findOne({ email }, null, { lean })
   }
 
-  getUserByEmail = async (email, { lean = false } = {}) => {
-    return Users.findOne({ email }, null, { lean })
+  updateUser = (userId, data, { lean = false } = {}) => {
+    return Users.findByIdAndUpdate(userId, data, { new: true, lean: lean })
   }
 }

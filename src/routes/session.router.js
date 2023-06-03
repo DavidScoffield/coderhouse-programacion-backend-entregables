@@ -9,4 +9,6 @@ sessionRouter.post('/login', sessionController.login)
 
 sessionRouter.get('/logout', sessionController.logout)
 
+sessionRouter.put('/restorePassword', sessionController.restorePassword)
+
 export default sessionRouter

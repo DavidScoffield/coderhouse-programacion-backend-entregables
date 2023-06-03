@@ -1,5 +1,6 @@
 import { UM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
+import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
 
@@ -24,9 +25,9 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { email, password } = req.body
   try {
-    const user = await UM.getUser({ email, password })
+    const user = await UM.getUserByEmail(email)
 
-    if (!user)
+    if (!user || !isValidPassword(password, user.password))
       return res
         .status(httpCodes.BAD_REQUEST)
         .send({ status: httpStatus.ERROR, message: 'Usuario o contraseña incorrectas' })
@@ -59,4 +60,26 @@ const logout = (req, res, next) => {
   })
 }
 
-export default { register, login, logout }
+const restorePassword = async (req, res, next) => {
+  const { email, password } = req.body
+
+  try {
+    const user = await UM.getUserByEmail(email)
+
+    if (!user) throw new ValidationError('El email no está registrado')
+
+    const hashedPassword = hashPassword(password)
+
+    const updatedUser = await UM.updateUser(user._id, { password: hashedPassword })
+
+    res.send({
+      status: httpStatus.SUCCESS,
+      message: 'Contraseña actualizada correctamente',
+      payload: updatedUser,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
+
+export default { register, login, logout, restorePassword }

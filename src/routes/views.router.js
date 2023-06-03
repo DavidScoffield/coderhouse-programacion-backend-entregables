@@ -17,6 +17,8 @@ viewRouter.get('/register', viewsController.register)
 
 viewRouter.get('/login', viewsController.login)
 
+viewRouter.get('/restorePassword', viewsController.restorePassword)
+
 viewRouter.get('/profile', viewsController.profile)
 
 export default viewRouter

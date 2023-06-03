@@ -115,4 +115,22 @@ const profile = async (req, res) => {
   })
 }
 
-export default { home, realTimeProducts, chat, products, cart, register, login, profile }
+const restorePassword = async (req, res) => {
+  if (req.session.user) return res.redirect('/products')
+
+  res.render('restorePassword', {
+    js: ['restorePassword'],
+  })
+}
+
+export default {
+  home,
+  realTimeProducts,
+  chat,
+  products,
+  cart,
+  register,
+  login,
+  profile,
+  restorePassword,
+}
