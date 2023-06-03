@@ -85,14 +85,12 @@ const register = async (req, res) => {
 
   res.render('register', {
     js: ['register'],
-    css: ['general'],
   })
 }
 const login = async (req, res) => {
   if (req.session.user) return res.redirect('/products')
 
   res.render('login', {
-    css: ['general'],
     js: ['login'],
   })
 }
