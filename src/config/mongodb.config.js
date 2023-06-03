@@ -22,6 +22,7 @@ const sessionStore = MongoStore.create({
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },
+  ttl: 60 * 60 * 24, // 1 day
 })
 
 export { sessionStore, connection as mongooseConnection }
