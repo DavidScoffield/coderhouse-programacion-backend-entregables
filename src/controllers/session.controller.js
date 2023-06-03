@@ -9,6 +9,10 @@ const register = async (req, res, next) => {
   try {
     isUsersDataValid({ firstName, lastName, email, age, password })
 
+    const userExists = await UM.getUserByEmail(email)
+
+    if (userExists) throw new ValidationError('El email ya está registrado')
+
     const user = await UM.addUser({ firstName, lastName, age, email, password })
 
     res.send({ status: httpStatus.SUCCESS, payload: user })
@@ -19,20 +23,27 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body
+  try {
+    const user = await UM.getUser({ email, password })
 
-  const user = await UM.getUser({ email, password })
+    if (!user)
+      return res
+        .status(httpCodes.BAD_REQUEST)
+        .send({ status: httpStatus.ERROR, message: 'Usuario o contraseña incorrectas' })
 
-  if (!user)
-    return res
-      .status(httpCodes.BAD_REQUEST)
-      .send({ status: httpStatus.ERROR, message: 'Usuario o contraseña incorrectas' })
+    req.session.user = {
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+    }
 
-  req.session.user = {
-    name: `${user.firstName} ${user.lastName}`,
-    email: user.email,
+    res.send({
+      status: httpStatus.SUCCESS,
+      message: 'Usuario logeado correctamente',
+      payload: user,
+    })
+  } catch (error) {
+    next(error)
   }
-
-  res.send({ status: httpStatus.SUCCESS, message: 'Usuario logeado correctamente', payload: user })
 }
 
 const logout = (req, res, next) => {
