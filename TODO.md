@@ -11,7 +11,7 @@
 - [x] Agregar a la vista de productos un mensaje de bienvenida con los datos del usuario
 - [ ] Agregar un sistema de roles, de manera que si colocamos en el login como correo **adminCoder@coder.com**, y la contraseña adminCod3r123, el usuario de la sesión además tenga un campo
 - [ ] Todos los usuarios que no sean admin deberán contar con un rol “usuario”.
-- [ ] Implementar botón de “logout” para destruir la sesión y redirigir a la vista de login
+- [x] Implementar botón de “logout” para destruir la sesión y redirigir a la vista de login
 
 ---
 
