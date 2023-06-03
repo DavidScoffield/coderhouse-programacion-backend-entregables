@@ -13,9 +13,9 @@ export default class ProductManager {
     return Products.paginate(query, options)
   }
 
-  getProductById = async (id) => Products.findById(id).lean()
+  getProductById = (id) => Products.findById(id).lean()
 
-  addProduct = async ({ title, description, price, thumbnail, code, stock, category, status }) => {
+  addProduct = ({ title, description, price, thumbnail, code, stock, category, status }) => {
     return Products.create({
       title,
       description,
@@ -28,10 +28,7 @@ export default class ProductManager {
     })
   }
 
-  updateProduct = async (
-    id,
-    { title, description, price, thumbnail, code, stock, category, status }
-  ) => {
+  updateProduct = (id, { title, description, price, thumbnail, code, stock, category, status }) => {
     return Products.findByIdAndUpdate(
       id,
       {
@@ -48,9 +45,9 @@ export default class ProductManager {
     )
   }
 
-  deleteProduct = async (id) => Products.findByIdAndDelete(id)
+  deleteProduct = (id) => Products.findByIdAndDelete(id)
 
-  getCategories = async () => {
+  getCategories = () => {
     return Products.distinct('category')
   }
 }

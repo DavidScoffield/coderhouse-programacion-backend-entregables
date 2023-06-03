@@ -1,13 +1,13 @@
 import Carts from '../models/Carts.js'
 
 export default class CartManager {
-  getCartById = async (id, { lean = false } = {}) => Carts.findById(id, null, { lean })
+  getCartById = (id, { lean = false } = {}) => Carts.findById(id, null, { lean })
 
-  addCart = async () => Carts.create({})
+  addCart = () => Carts.create({})
 
   save = (cart) => cart.save()
 
-  addProductToCart = async ({ cart, productId, quantity }) => {
+  addProductToCart = ({ cart, productId, quantity }) => {
     cart.addProduct(productId, quantity)
     return this.save(cart)
   }
@@ -29,7 +29,7 @@ export default class CartManager {
     )
   }
 
-  updateCartWithProducts = async ({ cartId, products }) => {
+  updateCartWithProducts = ({ cartId, products }) => {
     return Carts.findByIdAndUpdate(cartId, { products }, { new: true }).lean()
   }
 }
