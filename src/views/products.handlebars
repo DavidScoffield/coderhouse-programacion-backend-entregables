@@ -1,3 +1,16 @@
+{{#if user}}
+  <script>
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timer: 4000,
+      title: `Bienvenido {{user.name}}`,
+      icon: 'success',
+    })
+  </script>
+{{/if}}
+
 <h1>Productos</h1>
 
 {{> filterProducts}}

@@ -22,6 +22,7 @@ const chat = async (req, res) => {
 }
 
 const products = async (req, res, next) => {
+  const { user } = req.session
   const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
 
   const productDataToValidate = {}
@@ -62,6 +63,7 @@ const products = async (req, res, next) => {
       sort,
       category,
       status,
+      user,
     })
   } catch (e) {
     next(e)
