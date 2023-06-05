@@ -30,7 +30,7 @@ form.addEventListener('submit', async function (event) {
       position: 'top-end',
       showConfirmButton: false,
       timer: 2000,
-      title: 'Error al logearse',
+      title: 'Error al iniciar sesión',
       text: `${e.message}`,
       icon: 'error',
     })
