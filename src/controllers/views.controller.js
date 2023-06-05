@@ -81,23 +81,17 @@ const cart = async (req, res) => {
 }
 
 const register = async (req, res) => {
-  if (req.session.user) return res.redirect('/products')
-
   res.render('register', {
     js: ['register'],
   })
 }
 const login = async (req, res) => {
-  if (req.session.user) return res.redirect('/products')
-
   res.render('login', {
     js: ['login'],
   })
 }
 
 const profile = async (req, res) => {
-  if (!req.session.user) return res.redirect('/login')
-
   let userData
   try {
     userData = await UM.getUserByEmail(req.session.user.email)
@@ -116,8 +110,6 @@ const profile = async (req, res) => {
 }
 
 const restorePassword = async (req, res) => {
-  if (req.session.user) return res.redirect('/products')
-
   res.render('restorePassword', {
     js: ['restorePassword'],
   })
