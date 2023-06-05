@@ -4,7 +4,7 @@ import { privacy, PRIVACY_TYPES } from '../middlewares/privacy.middleware.js'
 
 const viewRouter = Router()
 
-viewRouter.get('/', viewsController.home)
+viewRouter.get('/', [privacy(PRIVACY_TYPES.PRIVATE)], viewsController.home)
 
 viewRouter.get('/realtimeproducts', viewsController.realTimeProducts)
 
