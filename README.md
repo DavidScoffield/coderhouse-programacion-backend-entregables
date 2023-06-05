@@ -16,53 +16,35 @@
 - Con **NODE**: Ejecutar el comando `npm run start` (ejecuta el archivo _app.js_ con node)
 - CON **NODEMON**: Ejecutar el comando `npm run dev` (ejecuta el archivo _app.js_ con nodemon)
 
-## Estructura de archivos
+## Estructura de carpetas
 
 ```bash
-├.
-├── ...
+.
+├── extras
 └── src
-    ├── app.js
     ├── config
-    │   ├── ...
     ├── constants
-    │   ├── ...
     ├── controllers
-    │   ├── ...
     ├── dao
     │   ├── fileSystem
     │   │   ├── managers
-    │   │   │   ...
     │   │   └── utils
-    │   │       ...
     │   └── mongo
     │       ├── managers
-    │       │   └── ...
     │       └── models
-    │           └── ...
     ├── errors
-    │   ├── ...
     ├── listeners
-    │   ├── ...
     ├── middlewares
-    │   └── ...
     ├── public
     │   ├── css
-    │   │   └──...
     │   └── js
-    │       └── ...
     ├── routes
-    │   ├── ...
     ├── utils
-    │   ├── ...
     │   └── validations
-    │       └── ...
     └── views
-        ├── ...
         ├── layouts
-        │   └── ...
         └── partials
-            └── ...
+
 ```
 
 ---
@@ -76,6 +58,10 @@
 | GET              | /chat             |          |                  |                                     | HTML       |
 | GET              | /products         |          |                  | limit, page, sort, category, status | HTML       |
 | GET              | /cart/:cid        |          |                  | cid: Cart ID                        | HTML       |
+| GET              | /register         |          |                  |                                     | HTML       |
+| GET              | /login            |          |                  |                                     | HTML       |
+| GET              | /restorePassword  |          |                  |                                     | HTML       |
+| GET              | /profile          |          |                  |                                     | HTML       |
 
 ## Documentación de la API:
 
@@ -94,6 +80,10 @@
 | PUT              | /api/carts/:cid               | Object   |                                     | cid : Cart ID                   | Object     |
 | PUT              | /api/carts/:cid/products/:pid | Object   |                                     | cid : Cart ID, pid : Product ID | Object     |
 | DELETE           | /api/carts/:cid               |          |                                     | cid : Cart ID, pid : Product ID | Object     |
+| POST             | /api/sessions/register        | Object   |                                     |                                 | Object     |
+| POST             | /api/sessions/login           | Object   |                                     |                                 | Object     |
+| GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
+| PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
 
 ### + GET /healthcheck
 
@@ -253,6 +243,46 @@ Elimina un carrito a partir de un ID de Carrito dado.
 #### Path variables
 
 - **cid**: ID del carrito
+
+### + POST /api/sessions/register
+
+Permite registrar un usuario. Recibe un objeto a través del body y retorna un objeto con los valores ingresados junto con el ID de usuario asignado.
+
+#### Body
+
+```js
+firstName: String | Required
+lastName: String | Required
+email: String | Required | Unique
+age: Integer | Required
+password: String | Required
+```
+
+### + POST /api/sessions/login
+
+Permite loguear un usuario. Recibe un objeto a través del body y retorna un objeto con los valores ingresados junto con el ID de usuario asignado.
+
+#### Body
+
+```js
+email: String | Required
+password: String | Required
+```
+
+### + GET /api/sessions/logout
+
+Desloguea al usuario actual. Elimina la sesión del usuario.
+
+### + PUT /api/sessions/restorePassword
+
+Permite restaurar la contraseña de un usuario. Recibe un objeto a través del body y actualiza la contraseña del usuario especificado.
+
+#### Body
+
+```js
+email: String | Required
+password: String | Required
+```
 
 ##
 
