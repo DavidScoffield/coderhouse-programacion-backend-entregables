@@ -24,6 +24,7 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   const { email, password } = req.body
+
   try {
     const user = await UM.getUserByEmail(email)
 
@@ -33,8 +34,10 @@ const login = async (req, res, next) => {
         .send({ status: httpStatus.ERROR, message: 'Usuario o contraseña incorrectas' })
 
     req.session.user = {
+      id: user._id,
       name: `${user.firstName} ${user.lastName}`,
       email: user.email,
+      role: user.role,
     }
 
     res.send({
