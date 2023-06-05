@@ -6,7 +6,10 @@
       <li><a href='/chat'>Chat</a></li>
     </ul>
     <div class='navbar-buttons'>
-      <p class='navbar-user'>{{user.name}}</p>
+      <div class='navbar-info'>
+        <p class='navbar-user'>{{user.name}}</p>
+        <p class='navbar-role'>Rol: {{user.role}}</p>
+      </div>
       <button class='logout-button' id='logout-button'>Cerrar Sesión</button>
     </div>
   </nav>
