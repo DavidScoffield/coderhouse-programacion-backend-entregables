@@ -14,8 +14,8 @@ const getProducts = async (req, res, next) => {
   if (status !== undefined) productDataToValidate.status = mappedStatus[status]
 
   try {
-    const isValidPaginationParams = isPaginationParamsValid({ limit, page, sort })
-    const isValidSearchParams = isProductDataValid(productDataToValidate)
+    isPaginationParamsValid({ limit, page, sort })
+    isProductDataValid(productDataToValidate)
 
     const { docs, ...rest } = await PM.getProducts({
       limit,
@@ -115,7 +115,7 @@ const updateProduct = async (req, res, next) => {
       throw new ValidationError('Must provide at least one field to update', 400)
     }
 
-    const isValid = isProductDataValid(body)
+    isProductDataValid(body)
 
     const updatedProduct = await PM.updateProduct(id, {
       title,

@@ -5,7 +5,7 @@ const validateProductArray = (products) => {
     (acc, product) => {
       const { id, quantity } = product
       try {
-        const isValid = isCommonParamsValid({ id, quantity })
+        isCommonParamsValid({ id, quantity })
         acc.valids.push(product)
       } catch (error) {
         const { message } = error
