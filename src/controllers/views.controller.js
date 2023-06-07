@@ -30,8 +30,8 @@ const products = async (req, res, next) => {
   if (status !== undefined && status !== '') productDataToValidate.status = mappedStatus[status]
 
   try {
-    const isValidPaginationParams = isPaginationParamsValid({ limit, page, sort })
-    const isValidSearchParams = isProductDataValid(productDataToValidate)
+    isPaginationParamsValid({ limit, page, sort })
+    isProductDataValid(productDataToValidate)
 
     const listCategories = await PM.getCategories()
 

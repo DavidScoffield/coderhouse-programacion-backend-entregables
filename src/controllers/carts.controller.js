@@ -147,7 +147,7 @@ const updateProductQuantityFromCart = async (req, res, next) => {
       .send({ error: `Missing cart, product id or quantity to update` })
 
   try {
-    const isValid = isCommonParamsValid({ quantity })
+    isCommonParamsValid({ quantity })
 
     const cartId = castToMongoId(cid)
     const productId = castToMongoId(pid)
