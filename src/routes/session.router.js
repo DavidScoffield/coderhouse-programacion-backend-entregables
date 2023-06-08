@@ -1,12 +1,36 @@
 import { Router } from 'express'
 import sessionController from '../controllers/session.controller.js'
 import checkAdminLogin from '../middlewares/checkAdminLogin.middleware.js'
+import passport from 'passport'
 
 const sessionRouter = Router()
 
-sessionRouter.post('/register', sessionController.register)
+sessionRouter.post(
+  '/register',
+  [
+    passport.authenticate('register', {
+      failureRedirect: '/api/sessions/registerFail',
+      failureMessage: true,
+    }),
+  ],
+  sessionController.register
+)
 
-sessionRouter.post('/login', [checkAdminLogin], sessionController.login)
+sessionRouter.get('/registerFail', sessionController.authenticationFail)
+
+sessionRouter.post(
+  '/login',
+  [
+    checkAdminLogin,
+    passport.authenticate('login', {
+      failureRedirect: '/api/sessions/loginFail',
+      failureMessage: true,
+    }),
+  ],
+  sessionController.login
+)
+
+sessionRouter.get('/loginFail', sessionController.authenticationFail)
 
 sessionRouter.get('/logout', sessionController.logout)
 

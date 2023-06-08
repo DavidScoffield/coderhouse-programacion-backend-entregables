@@ -2,52 +2,32 @@ import { UM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
-import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
 
 const register = async (req, res, next) => {
-  const { firstName, lastName, email, age, password } = req.body
+  const { user } = req
 
-  try {
-    isUsersDataValid({ firstName, lastName, email, age, password })
-
-    const userExists = await UM.getUserByEmail(email)
-
-    if (userExists) throw new ValidationError('El email ya está registrado')
-
-    const user = await UM.addUser({ firstName, lastName, age, email, password })
-
-    res.send({ status: httpStatus.SUCCESS, payload: user })
-  } catch (error) {
-    next(error)
-  }
+  res.send({
+    status: httpStatus.SUCCESS,
+    message: 'Usuario registrado correctamente',
+    payload: user,
+  })
 }
 
 const login = async (req, res, next) => {
-  const { email, password } = req.body
+  const { user } = req
 
-  try {
-    const user = await UM.getUserByEmail(email)
+  res.send({
+    status: httpStatus.SUCCESS,
+    message: 'Usuario logueado correctamente',
+    payload: user,
+  })
+}
 
-    if (!user || !isValidPassword(password, user.password))
-      return res
-        .status(httpCodes.BAD_REQUEST)
-        .send({ status: httpStatus.ERROR, message: 'Usuario o contraseña incorrectas' })
+const authenticationFail = (req, res, next) => {
+  const { messages } = req.session
+  const message = messages.at(-1)
 
-    req.session.user = {
-      id: user._id,
-      name: `${user.firstName} ${user.lastName}`,
-      email: user.email,
-      role: user.role,
-    }
-
-    res.send({
-      status: httpStatus.SUCCESS,
-      message: 'Usuario logeado correctamente',
-      payload: user,
-    })
-  } catch (error) {
-    next(error)
-  }
+  res.status(httpCodes.BAD_REQUEST).send({ status: httpStatus.ERROR, message: message })
 }
 
 const logout = (req, res, next) => {
@@ -85,4 +65,4 @@ const restorePassword = async (req, res, next) => {
   }
 }
 
-export default { register, login, logout, restorePassword }
+export default { register, login, logout, restorePassword, authenticationFail }

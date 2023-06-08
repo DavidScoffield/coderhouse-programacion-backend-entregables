@@ -5,6 +5,8 @@ import { __src } from '../utils/dirname.utils.js'
 import logger from '../utils/logger.utils.js'
 import { sessionStore } from './mongodb.config.js'
 import { PORT, SECRET_SESSION } from '../constants/envVars.js'
+import initializePassportStrategies from './passport.config.js'
+import passport from 'passport'
 
 const app = express()
 
@@ -34,6 +36,11 @@ app.engine('handlebars', hbs.engine)
 
 app.set('view engine', 'handlebars')
 app.set('views', `${__src}/views`)
+
+// Passport
+initializePassportStrategies()
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Listener
 const httpServer = app.listen(PORT, () =>
