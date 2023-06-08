@@ -1,8 +1,8 @@
 import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
 import logger from '../utils/logger.utils.js'
+import { MONGO_DB_NAME, MONGO_HOST, MONGO_PASS, MONGO_USER } from '../constants/envVars.js'
 
-const { MONGO_USER, MONGO_PASS, MONGO_HOST, MONGO_DB_NAME } = process.env
 const MONGO_URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}?retryWrites=true&w=majority`
 
 // Connection at the DB

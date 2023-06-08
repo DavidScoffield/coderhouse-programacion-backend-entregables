@@ -4,11 +4,9 @@ import session from 'express-session'
 import { __src } from '../utils/dirname.utils.js'
 import logger from '../utils/logger.utils.js'
 import { sessionStore } from './mongodb.config.js'
+import { PORT, SECRET_SESSION } from '../constants/envVars.js'
 
 const app = express()
-
-const PORT = process.env.PORT || 8080
-const SECRET_SESSION = process.env.SECRET_SESSION || 'secret'
 
 // Middlewares
 app.use(express.json())
