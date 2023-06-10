@@ -1,17 +1,14 @@
-# Implementación de login
+# Refactor a nuestro login
 
 ## Consigna
 
-- Ajustar nuestro servidor principal para trabajar con un sistema de login.
+- Con base en el login de nuestro entregable anterior, refactorizar para incluir los nuevos conceptos.
 
 ## Aspectos a incluir
 
-- [x] Deberá contar con todas las vistas realizadas en el hands on lab, así también como las rutas de router para procesar el registro y el login.
-- [x] Una vez completado el login, realizar la redirección directamente a la vista de productos.
-- [x] Agregar a la vista de productos un mensaje de bienvenida con los datos del usuario
-- [x] Agregar un sistema de roles, de manera que si colocamos en el login como correo **adminCoder@coder.com**, y la contraseña adminCod3r123, el usuario de la sesión además tenga un campo
-- [x] Todos los usuarios que no sean admin deberán contar con un rol “usuario”.
-- [x] Implementar botón de “logout” para destruir la sesión y redirigir a la vista de login
+- [x] Se deberá contar con un hasheo de contraseña utilizando bcrypt
+- [x] Se deberá contar con una implementación de passport, tanto para register como para login.
+- [x] Implementar el método de autenticación de GitHub a la vista de login.
 
 ---
 
@@ -21,19 +18,15 @@
 
 ### Sugerencias
 
-- Recuerda que las vistas son importantes, más no el diseño, concéntrate en la funcionalidad de las sesiones antes que en la presentación.
-- Cuida las redirecciones a las múltiples vistas.
+- El testeo se realizará de manera muy similar al anterior, puedes consultar el documento de testing aquí:
 
 ---
 
 ## Testing
 
 - [x] Al cargar el proyecto, éste deberá comenzar en la pantalla de login
-- [x] Al no tener un usuario, primero se creará un usuario, para esto, la pantalla de login deberá tener un link de redirección “Regístrate”
-- [x] El proceso de registro deberá guardar en la base de datos al usuario
-- [x] Se regresará al proceso de login y se colocarán las credenciales de manera incorrecta, esto para probar que no se pueda avanzar a la siguiente pantalla.
-- [x] Posteriormente, se colocarán las credenciales de manera correcta, esto para corroborar que se cree una sesión correctamente y que se haga una redirección a la vista de productos.
-- [x] La vista de productos tendrá en una parte de arriba de la página el mensaje “Bienvenido” seguido de los datos del usuario que se haya logueado (NO mostrar password). Es importante que se visualice el “rol” para ver que aparezca “usuario” o “user”
-- [x] Se presionará el botón de logout y se destruirá la sesión, notando cómo nos redirige a login.
-- [x] Se ingresarán las credenciales específicas de admin indicadas en las diapositivas, el login debe redirigir correctamente y mostrar en los datos del rol: “admin” haciendo referencia a la correcta gestión de roles.
-- [x] Se revisará que el admin NO viva en base de datos, sino que sea una validación que se haga de manera interna en el código.
+- [x] Al no tener un usuario registrado aún, se procederá a hacer un registro, por lo que la pantalla de login debe tener un link de “regístrate”, el cual nos redireccione a la pantalla de registro.
+- [x] Al registrarme con los datos solicitados, se revisará la contraseña guardada en la base de datos, cuidando que ésta esté correctamente hasheada.
+- [x] Se realizará el proceso de login con las mismas credenciales con las que se registró el usuario, corroborando que el login funcione correctamente y redirija a la pantalla principal.
+- [x] Además, la pantalla de login deberá contar con un botón “entrar con Github” el cual al hacer click nos permita entrar directamente a la página con los datos obtenidos de Github.
+- [x] Se corroborará en la base de datos que el nuevo usuario “creado con Github” cuente con un password vacío.
