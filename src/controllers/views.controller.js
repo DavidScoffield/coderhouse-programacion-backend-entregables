@@ -88,6 +88,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   res.render('login', {
     js: ['login'],
+    css: ['login'],
   })
 }
 

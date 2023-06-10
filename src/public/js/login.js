@@ -1,4 +1,5 @@
 const form = document.getElementById('loginForm')
+const githubButton = document.getElementById('githubButton')
 
 form.addEventListener('submit', async function (event) {
   event.preventDefault()
@@ -35,4 +36,8 @@ form.addEventListener('submit', async function (event) {
       icon: 'error',
     })
   }
+})
+
+githubButton.addEventListener('click', (e) => {
+  window.location.replace('/api/sessions/github')
 })

@@ -32,6 +32,19 @@ sessionRouter.post(
 
 sessionRouter.get('/loginFail', sessionController.authenticationFail)
 
+sessionRouter.get('/github', [passport.authenticate('github')], () => {})
+
+sessionRouter.get(
+  '/githubcallback',
+  [
+    passport.authenticate('github', {
+      failureRedirect: '/login',
+      failureMessage: true,
+    }),
+  ],
+  sessionController.githubCallback
+)
+
 sessionRouter.get('/logout', sessionController.logout)
 
 sessionRouter.put('/restorePassword', sessionController.restorePassword)

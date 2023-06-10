@@ -1,10 +1,18 @@
 import passport from 'passport'
 import { Strategy as LocalStrategy } from 'passport-local'
-import { UM } from '../constants/singletons.js'
-import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
-import { isValidPassword } from '../utils/bcrypt.js'
-import { ADMIN_USER } from '../constants/envVars.js'
+import GithubStrategy from 'passport-github2'
+
 import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
+import {
+  ADMIN_USER,
+  GITHUB_CALLBACK_URL,
+  GITHUB_CLIENT_ID,
+  GITHUB_CLIENT_SECRET,
+} from '../constants/envVars.js'
+import { UM } from '../constants/singletons.js'
+import { isValidPassword } from '../utils/bcrypt.js'
+import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
+import logger from '../utils/logger.utils.js'
 
 const initializePassportStrategies = () => {
   passport.use(
@@ -56,39 +64,41 @@ const initializePassportStrategies = () => {
     })
   )
 
-  // passport.use(
-  //   'github',
-  //   new GithubStrategy(
-  //     {
-  //       clientID: 'Iv1.b55c6ef14ccd0d08',
-  //       clientSecret: '5effb2e147aab7053a213c6d57fe02b057c714c9',
-  //       callbackURL: 'http://localhost:8080/api/sessions/githubcallback',
-  //     },
-  //     async (accessToken, refreshToken, profile, done) => {
-  //       try {
-  //         console.log(profile);
-  //         //Tomo los datos que me sirvan.
-  //         const { name, email } = profile._json;
-  //         const user = await userModel.findOne({ email });
-  //         //DEBO GESTIONAR AMBAS LÓGICAS AQUÍ, OMG!!!
-  //         if(!user) {
-  //           //No existe? lo creo entonces.
-  //           const newUser =  {
-  //             first_name: name,
-  //             email,
-  //             password:''
-  //           }
-  //           const result = await userModel.create(newUser);
-  //           done(null,result);
-  //         }
-  //         //Si el usuario ya existía, Qué mejor!!!
-  //         done(null,user);
-  //       } catch (error) {
-  //         done(error);
-  //       }
-  //     }
-  //   )
-  // );
+  passport.use(
+    'github',
+    new GithubStrategy(
+      {
+        clientID: GITHUB_CLIENT_ID,
+        clientSecret: GITHUB_CLIENT_SECRET,
+        callbackURL: GITHUB_CALLBACK_URL,
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          const { name, email } = profile._json
+
+          if (!name || !email) {
+            logger.error('No se pudo obtener la información de GitHub', { email, name })
+            return done(null, false, { message: 'No se pudo obtener la información de GitHub' })
+          }
+
+          const user = await UM.getUserByEmail(email)
+
+          if (!user) {
+            const newUser = {
+              firstName: name,
+              email,
+              password: '',
+            }
+            const result = await UM.addUser(newUser)
+            return done(null, result)
+          }
+          return done(null, user)
+        } catch (error) {
+          done(error)
+        }
+      }
+    )
+  )
 
   passport.serializeUser(function (user, done) {
     return done(null, user.id)

@@ -15,3 +15,8 @@ export const ADMIN_PASS = process.env.ADMIN_PASS
 // # Server credentials
 export const PORT = process.env.SERVER_PORT || 8080
 export const HOST = process.env.SERVER_HOST || 'localhost'
+
+// Github credentials
+export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID
+export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
+export const GITHUB_CALLBACK_URL = process.env.GITHUB_CALLBACK_URL
