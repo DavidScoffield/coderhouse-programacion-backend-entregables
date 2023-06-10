@@ -10,6 +10,19 @@
 
 - Clonar el repositorio
 - Instalar dependencias con `npm install`
+- <u>**IMPORTANTE:**</u> Agregar en el archivo _.env_ las variables de entorno faltantes
+
+  ```.bash
+    # Mongo credentials
+    MONGO_USER=
+    MONGO_PASS=
+    MONGO_HOST=
+
+    # Github credentials
+    GITHUB_CLIENT_ID=
+    GITHUB_CLIENT_SECRET=
+    GITHUB_CALLBACK_URL=
+  ```
 
 ## Ejecutar servidor
 
@@ -22,28 +35,28 @@
 .
 ├── extras
 └── src
-    ├── config
-    ├── constants
-    ├── controllers
-    ├── dao
-    │   ├── fileSystem
-    │   │   ├── managers
-    │   │   └── utils
-    │   └── mongo
-    │       ├── managers
-    │       └── models
-    ├── errors
-    ├── listeners
-    ├── middlewares
-    ├── public
-    │   ├── css
-    │   └── js
-    ├── routes
-    ├── utils
-    │   └── validations
-    └── views
-        ├── layouts
-        └── partials
+  ├── config
+  ├── constants
+  ├── controllers
+  ├── dao
+  │   ├── fileSystem
+  │   │   ├── managers
+  │   │   └── utils
+  │   └── mongo
+  │       ├── managers
+  │       └── models
+  ├── errors
+  ├── listeners
+  ├── middlewares
+  ├── public
+  │   ├── css
+  │   └── js
+  ├── routes
+  ├── utils
+  │   └── validations
+  └── views
+      ├── layouts
+      └── partials
 
 ```
 
