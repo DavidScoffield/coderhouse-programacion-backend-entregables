@@ -3,6 +3,11 @@ import mongoose from 'mongoose'
 import logger from '../utils/logger.utils.js'
 import { MONGO_DB_NAME, MONGO_HOST, MONGO_PASS, MONGO_USER } from '../constants/envVars.js'
 
+if (!MONGO_DB_NAME || !MONGO_HOST || !MONGO_PASS || !MONGO_USER) {
+  logger.error('❌❌❌ Missing MongoDB env vars ❌❌❌')
+  process.exit(1)
+}
+
 const MONGO_URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}?retryWrites=true&w=majority`
 
 // Connection at the DB
