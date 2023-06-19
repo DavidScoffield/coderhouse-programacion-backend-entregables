@@ -2,13 +2,14 @@ import { hashPassword } from '../../../utils/bcrypt.js'
 import Users from '../models/Users.js'
 
 export default class UserManager {
-  addUser = ({ firstName, lastName, email, age, password }) => {
+  addUser = ({ firstName, lastName, email, age, password, cart }) => {
     const user = {
       ...(firstName && { firstName }),
       ...(lastName && { lastName }),
       ...(email && { email }),
       ...(age && { age }),
       ...(password && { password: hashPassword(password) }),
+      ...(cart && { cart }),
     }
 
     return Users.create(user)

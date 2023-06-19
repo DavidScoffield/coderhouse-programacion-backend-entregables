@@ -6,7 +6,7 @@
 
 ## Aspectos a incluir
 
-- [ ] Crear un modelo User el cual contará con los campos:
+- [x] Crear un modelo User el cual contará con los campos:
 
 ```
 first_name:String,

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import uniqueValidator from 'mongoose-unique-validator'
+import Carts from './Carts.js'
 
 const collection = 'users'
 
@@ -28,6 +29,11 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     default: 'user',
+  },
+  cart: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Carts,
+    default: null,
   },
 })
 

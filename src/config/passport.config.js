@@ -9,7 +9,7 @@ import {
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
 } from '../constants/envVars.js'
-import { UM } from '../constants/singletons.js'
+import { CM, UM } from '../constants/singletons.js'
 import { isValidPassword } from '../utils/bcrypt.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
 import logger from '../utils/logger.utils.js'
@@ -32,7 +32,16 @@ const initializePassportStrategies = () => {
 
           if (userExists) return done(null, false, { message: 'El email ya está registrado' })
 
-          const user = await UM.addUser({ firstName, lastName, age, email, password })
+          const newCart = await CM.addCart()
+
+          const user = await UM.addUser({
+            firstName,
+            lastName,
+            age,
+            email,
+            password,
+            cart: newCart,
+          })
 
           return done(null, user)
         } catch (error) {
@@ -84,10 +93,13 @@ const initializePassportStrategies = () => {
           const user = await UM.getUserByEmail(email)
 
           if (!user) {
+            const newCart = await CM.addCart()
+
             const newUser = {
               firstName: name,
               email,
               password: '',
+              cart: newCart,
             }
             const result = await UM.addUser(newUser)
             return done(null, result)
