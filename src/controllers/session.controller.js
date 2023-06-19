@@ -61,6 +61,12 @@ const restorePassword = async (req, res, next) => {
 
     if (!user) throw new ValidationError('El email no está registrado')
 
+    const isSamePassword = isValidPassword(password, user.password)
+    if (isSamePassword)
+      return res
+        .status(httpCodes.BAD_REQUEST)
+        .send({ status: httpStatus.ERROR, error: 'Cannot replace password with current password' })
+
     const hashedPassword = hashPassword(password)
 
     const updatedUser = await UM.updateUser(user._id, { password: hashedPassword })
