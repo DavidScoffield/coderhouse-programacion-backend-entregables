@@ -5,7 +5,8 @@
   "main": "test.js",
   "scripts": {
     "start": "node src/app.js",
-    "dev": "nodemon src/app.js"
+    "dev": "nodemon src/app.js",
+    "lint": "eslint . "
   },
   "keywords": [],
   "author": "David Scoffield",
@@ -27,6 +28,13 @@
     "socket.io": "4.6.1"
   },
   "devDependencies": {
-    "nodemon": "2.0.22"
+    "nodemon": "2.0.22",
+    "eslint": "^8.43.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-config-prettier": "^8.8.0",
+    "prettier": "^2.8.8"
   }
 }
