@@ -1,7 +1,6 @@
-import MongoStore from 'connect-mongo'
 import mongoose from 'mongoose'
-import logger from '../utils/logger.utils.js'
 import { MONGO_DB_NAME, MONGO_HOST, MONGO_PASS, MONGO_USER } from '../constants/envVars.js'
+import logger from '../utils/logger.utils.js'
 
 if (!MONGO_DB_NAME || !MONGO_HOST || !MONGO_PASS || !MONGO_USER) {
   logger.error('❌❌❌ Missing MongoDB env vars ❌❌❌')
@@ -21,13 +20,4 @@ const connection = mongoose
     logger.info('❌ error connecting to MongoDB:', err.message)
   })
 
-const sessionStore = MongoStore.create({
-  mongoUrl: MONGO_URI,
-  mongoOptions: {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
-  ttl: 60 * 60 * 24, // 1 day
-})
-
-export { sessionStore, connection as mongooseConnection }
+export { connection as mongooseConnection }

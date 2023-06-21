@@ -7,6 +7,7 @@ export const MONGO_DB_NAME = process.env.MONGO_DB_NAME
 // # App credentials
 export const PERSISTENCE_TYPE = process.env.PERSISTENCE_TYPE
 export const SECRET_SESSION = process.env.SECRET_SESSION || 'secret'
+export const SECRET_JWT = process.env.SECRET_JWT || 'jwtSecret'
 
 // # Admin credentials
 export const ADMIN_USER = process.env.ADMIN_USER

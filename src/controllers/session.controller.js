@@ -1,7 +1,8 @@
+import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
 import { UM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
-import logger from '../utils/logger.utils.js'
+import { generateToken } from '../utils/jwt.utils.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
 
 const register = async (req, res, next) => {
@@ -17,40 +18,25 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { user } = req
 
-  req.session.user = {
+  const userCookie = {
     name: user.name,
     role: user.role,
     id: user.id,
     email: user.email,
   }
 
-  res.send({
+  const accessToken = generateToken(userCookie)
+
+  res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS).send({
     status: httpStatus.SUCCESS,
     message: 'Usuario logueado correctamente',
-    payload: user,
+    payload: userCookie,
   })
-}
-
-const authenticationFail = (req, res, next) => {
-  const { messages } = req.session
-  const message = messages.at(-1)
-
-  logger.error(message)
-
-  res.status(httpCodes.BAD_REQUEST).send({ status: httpStatus.ERROR, message })
 }
 
 const logout = (req, res, next) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res
-        .status(httpCodes.INTERNAL_SERVER_ERROR)
-        .send({ status: httpStatus.ERROR, message: 'Error al cerrar sesión' })
-    }
-
-    res.clearCookie('connect.sid')
-    res.send({ status: httpStatus.SUCCESS, message: 'Sesión cerrada correctamente' })
-  })
+  res.clearCookie(COOKIE_AUTH)
+  res.send({ status: httpStatus.SUCCESS, message: 'Sesión cerrada correctamente' })
 }
 
 const restorePassword = async (req, res, next) => {
@@ -87,14 +73,18 @@ const restorePassword = async (req, res, next) => {
 const githubCallback = (req, res, next) => {
   const { user } = req
 
-  req.session.user = {
+  const userCookie = {
     id: user.id,
     name: user.firstName,
     role: user.role,
     email: user.email,
   }
 
+  const accessToken = generateToken(userCookie)
+
+  res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS)
+
   res.redirect('/products')
 }
 
-export default { register, login, logout, restorePassword, authenticationFail, githubCallback }
+export default { register, login, logout, restorePassword, githubCallback }

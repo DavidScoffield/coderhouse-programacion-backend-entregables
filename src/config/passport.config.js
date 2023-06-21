@@ -1,18 +1,21 @@
 import passport from 'passport'
-import { Strategy as LocalStrategy } from 'passport-local'
 import GithubStrategy from 'passport-github2'
+import { Strategy as LocalStrategy } from 'passport-local'
+import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt'
 
-import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
 import {
   ADMIN_USER,
   GITHUB_CALLBACK_URL,
   GITHUB_CLIENT_ID,
   GITHUB_CLIENT_SECRET,
+  SECRET_JWT,
 } from '../constants/envVars.js'
 import { CM, UM } from '../constants/singletons.js'
+
 import { isValidPassword } from '../utils/bcrypt.js'
-import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
+import { cookieExtractor } from '../utils/jwt.utils.js'
 import logger from '../utils/logger.utils.js'
+import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
 
 const initializePassportStrategies = () => {
   passport.use(
@@ -112,18 +115,18 @@ const initializePassportStrategies = () => {
     )
   )
 
-  passport.serializeUser(function (user, done) {
-    return done(null, user.id)
-  })
-  passport.deserializeUser(async function (id, done) {
-    if (id === DEFAULT_ADMIN_DATA.id) {
-      return done(null, {
-        ...DEFAULT_ADMIN_DATA,
-      })
-    }
-    const user = await UM.getUserById(id)
-    return done(null, user)
-  })
+  passport.use(
+    'jwt',
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey: SECRET_JWT,
+      },
+      async (payload, done) => {
+        return done(null, payload)
+      }
+    )
+  )
 }
 
 export default initializePassportStrategies
