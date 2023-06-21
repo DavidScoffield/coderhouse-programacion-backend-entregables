@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
-    "lint": "eslint . "
+    "lint": "eslint . ",
+    "checkPrettier": "prettier --check .",
+    "formatPrettier": "prettier --write ."
   },
   "keywords": [],
   "author": "David Scoffield",
