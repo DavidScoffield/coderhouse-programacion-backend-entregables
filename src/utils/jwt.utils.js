@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { SECRET_JWT } from '../constants/envVars.js'
+import { COOKIE_AUTH } from '../constants/constants.js'
 
 export const cookieExtractor = (req) => {
   return req?.cookies?.[COOKIE_AUTH] || null
