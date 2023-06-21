@@ -1,3 +1,5 @@
+/* global Swal */
+
 const form = document.getElementById('loginForm')
 const githubButton = document.getElementById('githubButton')
 
@@ -16,7 +18,7 @@ form.addEventListener('submit', async function (event) {
       },
     })
 
-    const { status, payload, message } = await response.json()
+    const { status, message } = await response.json()
 
     if (status === 'error') {
       throw new Error(message)

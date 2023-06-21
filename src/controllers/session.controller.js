@@ -37,7 +37,7 @@ const authenticationFail = (req, res, next) => {
 
   logger.error(message)
 
-  res.status(httpCodes.BAD_REQUEST).send({ status: httpStatus.ERROR, message: message })
+  res.status(httpCodes.BAD_REQUEST).send({ status: httpStatus.ERROR, message })
 }
 
 const logout = (req, res, next) => {

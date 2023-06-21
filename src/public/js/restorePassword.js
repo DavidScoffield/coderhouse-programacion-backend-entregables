@@ -1,3 +1,5 @@
+/* global Swal */
+
 const form = document.getElementById('restorePasswordForm')
 
 form.addEventListener('submit', async function (event) {

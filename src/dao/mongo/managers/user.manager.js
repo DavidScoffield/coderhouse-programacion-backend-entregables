@@ -20,7 +20,7 @@ export default class UserManager {
   }
 
   updateUser = (userId, data, { lean = false } = {}) => {
-    return Users.findByIdAndUpdate(userId, data, { new: true, lean: lean })
+    return Users.findByIdAndUpdate(userId, data, { new: true, lean })
   }
 
   getUserById = (userId, { lean = false } = {}) => {

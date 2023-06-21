@@ -77,7 +77,7 @@ const httpStatus = {
 }
 
 const httpMessages = {
-  //Information
+  // Information
   CONTINUE:
     'The server has received the initial part of the request and requires the client to continue with the request.',
   SWITCHING_PROTOCOLS: "The server is switching protocols according to the client's request.",

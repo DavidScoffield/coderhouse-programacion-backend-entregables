@@ -1,3 +1,5 @@
+/* global Swal */
+
 // select element from DOM where id = logoutButton
 const logoutButton = document.getElementById('logout-button')
 

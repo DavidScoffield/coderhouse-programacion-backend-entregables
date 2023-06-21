@@ -1,4 +1,3 @@
-import { PM } from '../constants/singletons.js'
 import { httpCodes } from '../utils/response.utils.js'
 
 const check = (req, res) => {

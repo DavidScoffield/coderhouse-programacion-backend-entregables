@@ -1,3 +1,5 @@
+import logger from '../logger.utils.js'
+
 const isInvalidNumber = (value) => {
   const parsedValue = Number(value)
   return value !== undefined && (isNaN(parsedValue) || parsedValue <= 0)

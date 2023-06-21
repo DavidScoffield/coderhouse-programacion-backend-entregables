@@ -1,3 +1,5 @@
+/* global io */
+
 import logger from '../../utils/logger.utils.js'
 
 const socket = io()
@@ -31,7 +33,7 @@ tbody.addEventListener('click', async (e) => {
   const clickedElement = e.target
   const classArray = Array.from(clickedElement.classList)
   if ((clickedElement.tagName = 'BUTTON') && classArray.includes('delete-button')) {
-    let result = window.confirm('¿Está seguro de eliminar el producto?')
+    const result = window.confirm('¿Está seguro de eliminar el producto?')
     if (result) {
       socket.emit('realTimeProducts:deleteProduct', clickedElement.id)
     }

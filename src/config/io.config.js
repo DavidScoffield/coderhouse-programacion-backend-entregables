@@ -3,6 +3,7 @@ import { httpServer } from './express.config.js'
 
 import registerChatHandler from '../listeners/chatHandler.listener.js'
 import registerRealTimeProductsHandler from '../listeners/realTimeProducts.listener.js'
+import logger from '../utils/logger.utils.js'
 
 // Socket.io
 const io = new Server(httpServer)

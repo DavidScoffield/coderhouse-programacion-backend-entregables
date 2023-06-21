@@ -2,7 +2,7 @@ import { isInvalidNumber, validateData } from './generic.validations.util.js'
 import ValidationError from '../../errors/ValidationError.js'
 
 const isEmail = (value) => {
-  const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
+  const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
   return emailRegex.test(value)
 }
 

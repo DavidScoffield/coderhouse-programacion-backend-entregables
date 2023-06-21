@@ -1,3 +1,5 @@
+/* global Swal */
+
 // Recuperar CID (actualmente hardcodeado)
 const cid = '64679c70db83fc11a4f2df62'
 

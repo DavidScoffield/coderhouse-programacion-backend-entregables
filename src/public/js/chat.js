@@ -1,3 +1,4 @@
+/* global Swal, io */
 const socket = io({
   autoConnect: false,
 })

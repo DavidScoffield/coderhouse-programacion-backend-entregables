@@ -1,3 +1,5 @@
+/* global Swal */
+
 const form = document.getElementById('registerForm')
 
 form.addEventListener('submit', async function (event) {
@@ -21,7 +23,7 @@ form.addEventListener('submit', async function (event) {
       throw new Error(error)
     }
 
-    const { status, payload } = await response.json()
+    const { status } = await response.json()
 
     if (status === 'success') {
       window.location.replace('/login')
