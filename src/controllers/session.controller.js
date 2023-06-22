@@ -3,13 +3,12 @@ import { UM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken } from '../utils/jwt.utils.js'
-import { httpCodes, httpStatus } from '../utils/response.utils.js'
+import { httpCodes } from '../utils/response.utils.js'
 
 const register = async (req, res, next) => {
   const { user } = req
 
-  res.send({
-    status: httpStatus.SUCCESS,
+  res.sendSuccessWithPayload({
     message: 'Usuario registrado correctamente',
     payload: user,
   })
@@ -27,8 +26,7 @@ const login = async (req, res, next) => {
 
   const accessToken = generateToken(userCookie)
 
-  res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS).send({
-    status: httpStatus.SUCCESS,
+  res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS).sendSuccessWithPayload({
     message: 'Usuario logueado correctamente',
     payload: userCookie,
   })
@@ -36,7 +34,7 @@ const login = async (req, res, next) => {
 
 const logout = (req, res, next) => {
   res.clearCookie(COOKIE_AUTH)
-  res.send({ status: httpStatus.SUCCESS, message: 'Sesión cerrada correctamente' })
+  res.sendSuccess('Sesión cerrada correctamente')
 }
 
 const restorePassword = async (req, res, next) => {
@@ -50,8 +48,8 @@ const restorePassword = async (req, res, next) => {
     if (user.password) {
       const isSamePassword = isValidPassword(password, user.password)
       if (isSamePassword)
-        return res.status(httpCodes.BAD_REQUEST).send({
-          status: httpStatus.ERROR,
+        return res.sendCustomError({
+          code: httpCodes.BAD_REQUEST,
           error: 'Cannot replace password with current password',
         })
     }
@@ -60,8 +58,7 @@ const restorePassword = async (req, res, next) => {
 
     const updatedUser = await UM.updateUser(user._id, { password: hashedPassword })
 
-    res.send({
-      status: httpStatus.SUCCESS,
+    res.sendSuccessWithPayload({
       message: 'Contraseña actualizada correctamente',
       payload: updatedUser,
     })
