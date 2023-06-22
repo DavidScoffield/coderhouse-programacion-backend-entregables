@@ -1,7 +1,4 @@
-export const PRIVACY_TYPES = {
-  PRIVATE: 'PRIVATE',
-  NO_AUTH: 'NO_AUTH',
-}
+import { PRIVACY_TYPES } from '../constants/constants.js'
 
 const STRATEGIES = {
   [PRIVACY_TYPES.PRIVATE]: (user, res, next) => {
@@ -16,7 +13,7 @@ const STRATEGIES = {
 
 export const privacy = (privacyType) => {
   return async (req, res, next) => {
-    const { user } = req.session
+    const { user } = req
     const strategyFn = STRATEGIES[privacyType]
     strategyFn(user, res, next)
   }

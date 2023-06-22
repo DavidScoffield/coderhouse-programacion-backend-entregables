@@ -1,15 +1,29 @@
 import passport from 'passport'
-import { httpCodes, httpStatus } from './response.utils.js'
+import loggerUtils from './logger.utils.js'
 
-export const passportCall = (strategy, options = {}) => {
+export const passportCall = (strategy, { redirect, strategyType } = {}) => {
   return async (req, res, next) => {
     passport.authenticate(strategy, (error, user, info) => {
       if (error) return next(error)
+
+      if (!strategyType) {
+        loggerUtils.error(`❓ Route ${req.url} doesn't have defined a strategyType`)
+        return res.sendInternalError()
+      }
+
       if (!user) {
-        if (options.redirect) return res.redirect(options.redirect)
-        return res
-          .status(httpCodes.UNAUTHORIZED)
-          .send({ status: httpStatus.ERROR, error: info.message || info.toString() })
+        const message = info.message || info.toString()
+
+        switch (strategyType) {
+          case 'jwt':
+            if (redirect) return res.redirect(redirect)
+
+            req.error = message
+            return next()
+
+          case 'locals':
+            return res.sendUnauthorized(message)
+        }
       }
       req.user = user
       next()

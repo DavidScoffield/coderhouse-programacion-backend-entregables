@@ -1,20 +1,40 @@
-import { Router } from 'express'
+import { PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import sessionController from '../controllers/session.controller.js'
 import checkAdminLogin from '../middlewares/checkAdminLogin.middleware.js'
 import { passportCall } from '../utils/passport.utils.js'
+import BaseRouter from './BaseRouter.js'
 
-const sessionRouter = Router()
+export default class SessionRouter extends BaseRouter {
+  init() {
+    this.post(
+      '/register',
+      [PRIVACY_TYPES.NO_AUTH],
+      passportCall('register', { strategyType: 'locals' }),
+      sessionController.register
+    )
 
-sessionRouter.post('/register', [passportCall('register')], sessionController.register)
+    this.post(
+      '/login',
+      [PRIVACY_TYPES.NO_AUTH],
+      checkAdminLogin,
+      passportCall('login', { strategyType: 'locals' }),
+      sessionController.login
+    )
 
-sessionRouter.post('/login', [checkAdminLogin, passportCall('login')], sessionController.login)
+    this.get(
+      '/github',
+      [PRIVACY_TYPES.NO_AUTH],
+      passportCall('github', { strategyType: 'locals' }),
+      () => {}
+    )
 
-sessionRouter.get('/github', [passportCall('github')], () => {})
+    this.get(
+      '/githubcallback',
+      [PRIVACY_TYPES.NO_AUTH],
+      passportCall('github', { strategyType: 'locals' }),
+      sessionController.githubCallback
+    )
 
-sessionRouter.get('/githubcallback', [passportCall('github')], sessionController.githubCallback)
-
-sessionRouter.get('/logout', sessionController.logout)
-
-sessionRouter.put('/restorePassword', sessionController.restorePassword)
-
-export default sessionRouter
+    this.get('/logout', [...Object.values(USER_ROLES)], sessionController.logout)
+  }
+}
