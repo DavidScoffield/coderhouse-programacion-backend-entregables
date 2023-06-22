@@ -3,24 +3,31 @@ import { httpCodes } from '../utils/response.utils.js'
 
 const MONGO_SERVER_ERROR_HANDLER = {
   DuplicateKey: (res, error) =>
-    res.status(409).json({ error: `Duplicate key error: ${JSON.stringify(error.keyValue)}` }),
-  defaultError: (res, error) => res.status(400).json({ error: error.menssage }),
+    res.sendCustomError({
+      code: httpCodes.CONFLICT,
+      error: `Duplicate key error: ${JSON.stringify(error.keyValue)}`,
+    }),
+
+  defaultError: (res, error) =>
+    res.sendCustomError({ code: httpCodes.BAD_REQUEST, error: error.message }),
 }
 
 const ERROR_HANDLERS = {
-  CastError: (res, error) => res.status(400).json({ error: 'Malformatted ID' }),
-  MongoError: (res, error) => res.status(400).json({ error: `Mongo error: ${error.message}` }),
+  CastError: (res, error) =>
+    res.sendCustomError({ code: httpCodes.BAD_REQUEST, error: 'Malformatted ID' }),
+  MongoError: (res, error) =>
+    res.sendCustomError({ code: httpCodes.BAD_REQUEST, error: `Mongo error: ${error.message}` }),
   MongoServerError: (res, error) =>
     MONGO_SERVER_ERROR_HANDLER[error.codeName](res, error) ||
     MONGO_SERVER_ERROR_HANDLER.defaultError(res, error),
-  CustomError: (res, error) => res.status(error.status).json({ error: error.message }),
+  CustomError: (res, error) => res.sendCustomError({ code: error.status, error: error.message }),
   ValidationError: (res, error) =>
-    res.status(error.status || httpCodes.CONFLICT).json({ error: error.message }),
-  defaultError: (res) => res.status(500).end(),
+    res.sendCustomError({ code: error.status || httpCodes.CONFLICT, error: error.message }),
+  defaultError: (res) => res.sendInternalError("We're sorry, something went wrong"),
 }
 
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: 'unknown endpoint' })
+  res.status(httpCodes.NOT_FOUND).send({ error: 'unknown endpoint' })
 }
 
 const errorHandler = (err, req, res, next) => {

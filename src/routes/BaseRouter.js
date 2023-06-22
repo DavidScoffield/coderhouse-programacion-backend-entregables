@@ -44,21 +44,22 @@ export default class BaseRouter {
   }
 
   generateCustomResponses = (req, res, next) => {
-    res.sendSuccess = (message) => res.send({ status: httpStatus.SUCCESS, message })
+    res.sendSuccess = (message) => res.json({ status: httpStatus.SUCCESS, message })
 
-    res.sendSuccessWithPayload = (payload) => res.send({ status: httpStatus.SUCCESS, payload })
+    res.sendSuccessWithPayload = ({ message, payload }) =>
+      res.json({ status: httpStatus.SUCCESS, payload, message })
 
     res.sendInternalError = (error) =>
-      res.status(httpCodes.INTERNAL_SERVER_ERROR).send({ status: httpStatus.ERROR, error })
+      res.status(httpCodes.INTERNAL_SERVER_ERROR).json({ status: httpStatus.ERROR, error })
 
     res.sendUnauthorized = (error) =>
-      res.status(httpCodes.UNAUTHORIZED).send({ status: httpStatus.ERROR, error })
+      res.status(httpCodes.UNAUTHORIZED).json({ status: httpStatus.ERROR, error })
 
     res.sendForbidden = (error) =>
-      res.status(httpCodes.FORBIDDEN).send({ status: httpStatus.ERROR, error })
+      res.status(httpCodes.FORBIDDEN).json({ status: httpStatus.ERROR, error })
 
-    res.sendCustom = ({ code, status, message, payload }) =>
-      res.status(code).send({ status, message, payload })
+    res.sendCustomError = ({ code, error }) =>
+      res.status(code).json({ status: httpStatus.ERROR, error })
 
     next()
   }
