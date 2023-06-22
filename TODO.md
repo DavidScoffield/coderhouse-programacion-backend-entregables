@@ -15,7 +15,7 @@ email:String (único)
 age:Number,
 password:String(Hash)
 cart:Id con referencia a Carts
-role:String(default:’user’)
+role:String(default:’USER’)
 ```
 
 - [x] Desarrollar las estrategias de Passport para que funcionen con este modelo de usuarios
