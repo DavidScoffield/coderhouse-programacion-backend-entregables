@@ -9,7 +9,7 @@ logoutButton.addEventListener('click', async (e) => {
       method: 'GET',
     })
 
-    const { status, message } = await response.json()
+    const { status, error } = await response.json()
 
     if (status === 'success') {
       window.location.replace('/login')
@@ -17,7 +17,7 @@ logoutButton.addEventListener('click', async (e) => {
       Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: message,
+        text: error,
       })
     }
   } catch (error) {

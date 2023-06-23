@@ -17,10 +17,10 @@ form.addEventListener('submit', async function (event) {
       },
     })
 
-    const { status, message } = await response.json()
+    const { status, error } = await response.json()
 
     if (status === 'error') {
-      throw new Error(message)
+      throw new Error(error)
     }
 
     if (status === 'success') {
