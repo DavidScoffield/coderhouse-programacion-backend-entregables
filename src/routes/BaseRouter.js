@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { passportCall } from '../utils/passport.utils.js'
-import { POLICIES_STRATEGIES } from '../utils/policiesStrategies.util.js'
+import { POLICY_STRATEGIES } from '../utils/policiesStrategies.util.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
 
 export default class BaseRouter {
@@ -74,7 +74,7 @@ export default class BaseRouter {
     return (req, res, next) => {
       const { user } = req
 
-      const strategyFn = POLICIES_STRATEGIES[policies[0]]
+      const strategyFn = POLICY_STRATEGIES[policies[0]]
 
       if (strategyFn !== undefined) {
         return strategyFn(user, res, next)

@@ -1,6 +1,6 @@
 import { PRIVACY_TYPES } from '../constants/constants.js'
 
-export const POLICIES_STRATEGIES = {
+export const POLICY_STRATEGIES = {
   [PRIVACY_TYPES.PUBLIC]: (user, res, next) => next(),
   [PRIVACY_TYPES.NO_AUTH]: (user, res, next) => {
     if (user) res.sendUnauthorized('Unauthorized')
