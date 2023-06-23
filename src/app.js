@@ -5,8 +5,7 @@ import './config/mongodb.config.js'
 import { app } from './config/express.config.js'
 
 // Routers
-import { productRouter, sessionRouter } from './routes/index.js'
-import cartRouter from './routes/carts.router.js'
+import { cartRouter, productRouter, sessionRouter } from './routes/index.js'
 import viewRouter from './routes/views.router.js'
 import healthcheckRouter from './routes/healthcheck.router.js'
 
