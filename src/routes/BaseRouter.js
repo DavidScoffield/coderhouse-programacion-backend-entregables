@@ -61,6 +61,9 @@ export default class BaseRouter {
     res.sendNotFound = ({ error }) =>
       res.status(httpCodes.NOT_FOUND).json({ status: httpStatus.ERROR, error })
 
+    res.sendBadRequest = ({ error }) =>
+      res.status(httpCodes.BAD_REQUEST).json({ status: httpStatus.ERROR, error })
+
     res.sendCustomError = ({ code, error }) =>
       res.status(code).json({ status: httpStatus.ERROR, error })
 
