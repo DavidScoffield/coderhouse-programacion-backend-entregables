@@ -58,6 +58,9 @@ export default class BaseRouter {
     res.sendForbidden = (error) =>
       res.status(httpCodes.FORBIDDEN).json({ status: httpStatus.ERROR, error })
 
+    res.sendNotFound = ({ error }) =>
+      res.status(httpCodes.NOT_FOUND).json({ status: httpStatus.ERROR, error })
+
     res.sendCustomError = ({ code, error }) =>
       res.status(code).json({ status: httpStatus.ERROR, error })
 
