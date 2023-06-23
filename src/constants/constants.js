@@ -10,7 +10,6 @@ export const COOKIES_OPTIONS = {
 
 export const PRIVACY_TYPES = {
   PUBLIC: 'PUBLIC',
-  PRIVATE: 'PRIVATE',
   NO_AUTH: 'NO_AUTH',
 }
 

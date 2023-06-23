@@ -1,10 +1,12 @@
 import { Router } from 'express'
 import viewsController from '../controllers/views.controller.js'
-import { privacy, PRIVACY_TYPES } from '../middlewares/privacy.middleware.js'
+import { privacy } from '../middlewares/privacy.middleware.js'
+import { passportCall } from '../utils/passport.utils.js'
+import { PRIVACY_TYPES } from '../constants/constants.js'
 
 const viewRouter = Router()
 
-viewRouter.get('/', [privacy(PRIVACY_TYPES.PRIVATE)], viewsController.home)
+viewRouter.get('/', [passportCall('jwt'), privacy(PRIVACY_TYPES.PRIVATE)], viewsController.home)
 
 viewRouter.get('/realtimeproducts', viewsController.realTimeProducts)
 
@@ -24,6 +26,10 @@ viewRouter.get(
   viewsController.restorePassword
 )
 
-viewRouter.get('/profile', [privacy(PRIVACY_TYPES.PRIVATE)], viewsController.profile)
+viewRouter.get(
+  '/profile',
+  [passportCall('jwt', { redirect: '/login' }), privacy(PRIVACY_TYPES.PRIVATE)],
+  viewsController.profile
+)
 
 export default viewRouter

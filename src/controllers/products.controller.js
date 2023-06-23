@@ -129,7 +129,7 @@ const updateProduct = async (req, res, next) => {
     })
 
     res.json({
-      message: `Product "${updatedProduct.id}" was successfully updated`,
+      message: `Product "${updatedProduct._id}" was successfully updated`,
       payload: updatedProduct,
     })
   } catch (error) {
