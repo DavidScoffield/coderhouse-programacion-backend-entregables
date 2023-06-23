@@ -11,6 +11,8 @@ export const COOKIES_OPTIONS = {
 export const PRIVACY_TYPES = {
   PUBLIC: 'PUBLIC',
   NO_AUTH: 'NO_AUTH',
+  PRIVATE_VIEW: 'PRIVATE_VIEW',
+  NO_AUTH_VIEW: 'NO_AUTH_VIEW',
 }
 
 export const USER_ROLES = {

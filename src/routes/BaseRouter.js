@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { passportCall } from '../utils/passport.utils.js'
+import { POLICIES_STRATEGIES } from '../utils/policiesStrategies.util.js'
 import { httpCodes, httpStatus } from '../utils/response.utils.js'
-import { PRIVACY_TYPES } from '../constants/constants.js'
 
 export default class BaseRouter {
   constructor() {
@@ -72,11 +72,13 @@ export default class BaseRouter {
 
   handlePolicies = (policies) => {
     return (req, res, next) => {
-      if (policies[0] === PRIVACY_TYPES.PUBLIC) return next()
-
       const { user } = req
-      if (policies[0] === PRIVACY_TYPES.NO_AUTH && user) return res.sendUnauthorized('Unauthorized')
-      if (policies[0] === PRIVACY_TYPES.NO_AUTH && !user) return next()
+
+      const strategyFn = POLICIES_STRATEGIES[policies[0]]
+
+      if (strategyFn !== undefined) {
+        return strategyFn(user, res, next)
+      }
 
       if (!user) return res.sendUnauthorized(req.error)
 
@@ -93,7 +95,6 @@ export default class BaseRouter {
       } catch (error) {
         // eslint-disable-next-line no-unused-vars
         const [req, res, next] = params
-        // res.sendInternalError(error)
         // TODO: test errors
         next(error)
       }
