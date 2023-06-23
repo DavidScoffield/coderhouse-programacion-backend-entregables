@@ -1,27 +1,25 @@
 import { CM, PM } from '../constants/singletons.js'
 import { castToMongoId } from '../utils/casts.utils.js'
-import { httpCodes, httpStatus } from '../utils/response.utils.js'
 import { validateProductArray } from '../utils/validations/carts.validation.util.js'
 import { isCommonParamsValid } from '../utils/validations/products.validations.util.js'
 
 const createCart = async (req, res) => {
   const cart = await CM.addCart()
-  res.status(201).json({ message: `Cart with id "${cart.id}" created`, payload: { cart } })
+  res.sendSuccessWithPayload({ message: `Cart with id "${cart.id}" created`, payload: { cart } })
 }
 
-const getCartById = async (req, res) => {
+const getCartById = async (req, res, next) => {
   const { cid } = req.params
   try {
     const id = castToMongoId(cid)
 
     const cart = await CM.getCartById(id)
 
-    if (!cart)
-      return res.status(httpCodes.NOT_FOUND).send({ error: `Cart with id "${cid}" not exist` })
+    if (!cart) return res.sendNotFound({ error: `Cart with id "${cid}" not exist` })
 
-    res.json(cart)
+    res.sendSuccessWithPayload({ message: `Cart with id "${cid}" found`, payload: { cart } })
   } catch (error) {
-    res.status(400).send({ error: error.message })
+    next(error)
   }
 }
 
@@ -29,7 +27,7 @@ const addProductToCart = async (req, res, next) => {
   const { cid, pid } = req.params
   const { quantity = 1 } = req.body
 
-  if (!cid || !pid) return res.status(400).send({ error: `Missing cart or product id` })
+  if (!cid || !pid) return res.sendBadRequest({ error: `Missing cart or product id` })
 
   try {
     const cartId = castToMongoId(cid)
@@ -39,16 +37,16 @@ const addProductToCart = async (req, res, next) => {
     const requiredProduct = await PM.getProductById(productId)
 
     if (!requiredProduct)
-      return res.status(400).send({ error: `Product with id "${productId}" not exist` })
+      return res.sendBadRequest({ error: `Product with id "${productId}" not exist` })
 
     // Validate if cart exist
     const requiredCart = await CM.getCartById(cartId)
 
-    if (!requiredCart) return res.status(400).send({ error: `Cart with id "${cartId}" not exist` })
+    if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
     const savedCart = await CM.addProductToCart({ cart: requiredCart, productId, quantity })
 
-    res.json({
+    res.sendSuccessWithPayload({
       message: `Product with id ${productId} was added to cart ${cartId}`,
       payload: { cart: savedCart },
     })
@@ -60,8 +58,7 @@ const addProductToCart = async (req, res, next) => {
 const deleteProductFromCart = async (req, res, next) => {
   const { cid, pid } = req.params
 
-  if (!cid || !pid)
-    return res.status(httpCodes.BAD_REQUEST).send({ error: `Missing cart or product id` })
+  if (!cid || !pid) return res.sendBadRequest({ error: `Missing cart or product id` })
 
   try {
     const cartId = castToMongoId(cid)
@@ -70,12 +67,11 @@ const deleteProductFromCart = async (req, res, next) => {
     // Validate if cart exist
     const requiredCart = await CM.getCartById(cartId)
 
-    if (!requiredCart) return res.status(400).send({ error: `Cart with id "${cartId}" not exist` })
+    if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
     const updatedCart = await CM.removeProductFromCart({ cart: requiredCart, productId })
 
-    res.json({
-      status: httpStatus.SUCCESS,
+    res.sendSuccessWithPayload({
       message: `Product with id ${productId} was deleted from cart ${cartId}`,
       payload: { cart: updatedCart },
     })
@@ -93,8 +89,7 @@ const updateCartWithProducts = async (req, res, next) => {
     const cartId = castToMongoId(cid)
     const requiredCart = await CM.getCartById(cartId)
 
-    if (!requiredCart)
-      return res.status(httpCodes.BAD_REQUEST).send({ error: `Cart with id "${cartId}" not exist` })
+    if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
     // Check if products array is valid, i.e. id's are valid (they are ObjectId) and quantity is valid
     const { valids: productsWithValidTypes, invalids: productsWithInvalidsTypes } =
@@ -124,14 +119,10 @@ const updateCartWithProducts = async (req, res, next) => {
     // Update cart with the complete array of products
     const updatedCart = await CM.updateCartWithProducts({ cartId, products: productsToSave })
 
-    // Create response
-    const response = {
-      status: httpStatus.SUCCESS,
+    res.sendSuccessWithPayload({
       message: `Cart with id ${cartId} was updated`,
       payload: { cart: updatedCart, invalidsProducts: invalids },
-    }
-
-    res.json(response)
+    })
   } catch (e) {
     next(e)
   }
@@ -142,9 +133,7 @@ const updateProductQuantityFromCart = async (req, res, next) => {
   const { quantity } = req.body
 
   if (!cid || !pid || quantity === undefined)
-    return res
-      .status(httpCodes.BAD_REQUEST)
-      .send({ error: `Missing cart, product id or quantity to update` })
+    return res.sendBadRequest({ error: `Missing cart, product id or quantity to update` })
 
   try {
     isCommonParamsValid({ quantity })
@@ -155,13 +144,11 @@ const updateProductQuantityFromCart = async (req, res, next) => {
     const updatedCart = await CM.updateQuantityOfProductInCart({ cartId, productId, quantity })
 
     if (!updatedCart)
-      res.status(httpCodes.BAD_REQUEST).send({
-        status: httpStatus.ERROR,
+      res.sendBadRequest({
         error: `Product with id "${productId}" not exist in cart`,
       })
 
-    res.json({
-      status: httpStatus.SUCCESS,
+    res.sendSuccessWithPayload({
       message: `Product with id ${productId} was updated in cart ${cartId}`,
       payload: { cart: updatedCart },
     })
@@ -173,7 +160,7 @@ const updateProductQuantityFromCart = async (req, res, next) => {
 const deleteAllProductsFromCart = async (req, res, next) => {
   const { cid } = req.params
 
-  if (!cid) return res.status(httpCodes.BAD_REQUEST).send({ error: `Missing cart id` })
+  if (!cid) return res.sendBadRequest({ error: `Missing cart id` })
 
   try {
     const cartId = castToMongoId(cid)
@@ -181,12 +168,11 @@ const deleteAllProductsFromCart = async (req, res, next) => {
     // Validate if cart exist
     const requiredCart = await CM.getCartById(cartId)
 
-    if (!requiredCart) return res.status(400).send({ error: `Cart with id "${cartId}" not exist` })
+    if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
     const updatedCart = await CM.removeAllProductFromCart(requiredCart)
 
-    res.json({
-      status: httpStatus.SUCCESS,
+    res.sendSuccessWithPayload({
       message: `All products of cart ${cartId} was deleted`,
       payload: { cart: updatedCart },
     })
