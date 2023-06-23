@@ -8,10 +8,10 @@ const check = (req, res) => {
     timestamp: Date.now(),
   }
   try {
-    res.send(healthcheck)
+    res.sendSuccessWithPayload({ payload: healthcheck })
   } catch (error) {
-    healthcheck.message = error
-    res.status(httpCodes.SERVICE_UNAVAILABLE).send(healthcheck)
+    healthcheck.message = error.message || error.toString()
+    res.sendCustomError({ code: httpCodes.SERVICE_UNAVAILABLE, error: healthcheck })
   }
 }
 

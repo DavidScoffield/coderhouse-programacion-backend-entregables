@@ -1,8 +1,9 @@
-import { Router } from 'express'
+import { PRIVACY_TYPES } from '../constants/constants.js'
 import healthcheckController from '../controllers/healthcheck.controller.js'
+import BaseRouter from './BaseRouter.js'
 
-const healthcheckRouter = Router()
-
-healthcheckRouter.get('/', healthcheckController.check)
-
-export default healthcheckRouter
+export default class HealthcheckRouter extends BaseRouter {
+  init() {
+    this.get('/', [PRIVACY_TYPES.PUBLIC], healthcheckController.check)
+  }
+}

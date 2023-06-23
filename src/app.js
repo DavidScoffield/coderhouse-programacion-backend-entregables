@@ -5,9 +5,8 @@ import './config/mongodb.config.js'
 import { app } from './config/express.config.js'
 
 // Routers
-import { cartRouter, productRouter, sessionRouter } from './routes/index.js'
+import { cartRouter, healthcheckRouter, productRouter, sessionRouter } from './routes/index.js'
 import viewRouter from './routes/views.router.js'
-import healthcheckRouter from './routes/healthcheck.router.js'
 
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
 import ioMiddleware from './middlewares/io.middleware.js'
