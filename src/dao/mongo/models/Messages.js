@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
+  { timestamps: { createdAt: 'create_at', updatedAt: 'update_at' } }
 )
 
 export default mongoose.model(collection, messageSchema)

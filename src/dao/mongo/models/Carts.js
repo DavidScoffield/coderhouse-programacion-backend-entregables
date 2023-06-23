@@ -23,7 +23,7 @@ const cardSchema = new mongoose.Schema(
       default: [],
     },
   },
-  { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
+  { timestamps: { createdAt: 'create_at', updatedAt: 'update_at' } }
 )
 
 // populate ('products._id') in save method

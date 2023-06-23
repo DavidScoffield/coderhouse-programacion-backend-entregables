@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: { createdAt: 'create_ad', updatedAt: 'update_ad' } }
+  { timestamps: { createdAt: 'create_at', updatedAt: 'update_at' } }
 )
 
 productSchema.plugin(uniqueValidator)
