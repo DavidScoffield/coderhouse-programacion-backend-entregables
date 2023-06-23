@@ -35,28 +35,29 @@
 .
 ├── extras
 └── src
-  ├── config
-  ├── constants
-  ├── controllers
-  ├── dao
-  │   ├── fileSystem
-  │   │   ├── managers
-  │   │   └── utils
-  │   └── mongo
-  │       ├── managers
-  │       └── models
-  ├── errors
-  ├── listeners
-  ├── middlewares
-  ├── public
-  │   ├── css
-  │   └── js
-  ├── routes
-  ├── utils
-  │   └── validations
-  └── views
-      ├── layouts
-      └── partials
+    ├── config
+    ├── constants
+    ├── controllers
+    ├── dao
+    │   ├── fileSystem
+    │   │   ├── managers
+    │   │   └── utils
+    │   └── mongo
+    │       ├── managers
+    │       └── models
+    ├── errors
+    ├── listeners
+    ├── middlewares
+    ├── public
+    │   ├── assets
+    │   ├── css
+    │   └── js
+    ├── routes
+    ├── utils
+    │   └── validations
+    └── views
+        ├── layouts
+        └── partials
 
 ```
 
@@ -97,6 +98,7 @@
 | POST             | /api/sessions/login           | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
 | PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
+| GET              | /api/sessions/current         |          |                                     |                                 | Object     |
 
 ### + GET /healthcheck
 
@@ -296,6 +298,10 @@ Permite restaurar la contraseña de un usuario. Recibe un objeto a través del b
 email: String | Required
 password: String | Required
 ```
+
+### + GET /api/sessions/current
+
+Retorna un objeto con la información del usuario actual.
 
 ##
 

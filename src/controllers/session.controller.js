@@ -84,4 +84,12 @@ const githubCallback = (req, res, next) => {
   res.redirect('/products')
 }
 
-export default { register, login, logout, restorePassword, githubCallback }
+const current = (req, res, next) => {
+  const { user } = req
+
+  res.sendSuccessWithPayload({
+    payload: user,
+  })
+}
+
+export default { register, login, logout, restorePassword, githubCallback, current }

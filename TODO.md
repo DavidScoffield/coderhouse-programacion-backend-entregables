@@ -19,9 +19,9 @@ role:String(default:’USER’)
 ```
 
 - [x] Desarrollar las estrategias de Passport para que funcionen con este modelo de usuarios
-- [ ] Modificar el sistema de login del usuario para poder trabajar con session o con jwt (a tu elección).
-- [ ] (Sólo para jwt) desarrollar una estrategia “current” para extraer la cookie que contiene el token para obtener el usuario asociado a dicho token, en caso de tener el token, devolver al usuario asociado al token, caso contrario devolver un error de passport, utilizar un extractor de cookie.
-- [ ] Agregar al router /api/sessions/ la ruta /current, la cual utilizará el modelo de sesión que estés utilizando, para poder devolver en una respuesta el usuario actual.
+- [x] Modificar el sistema de login del usuario para poder trabajar con session o con jwt (a tu elección).
+- [x] (Sólo para jwt) desarrollar una estrategia “current” para extraer la cookie que contiene el token para obtener el usuario asociado a dicho token, en caso de tener el token, devolver al usuario asociado al token, caso contrario devolver un error de passport, utilizar un extractor de cookie.
+- [x] Agregar al router /api/sessions/ la ruta /current, la cual utilizará el modelo de sesión que estés utilizando, para poder devolver en una respuesta el usuario actual.
 
 ---
 
