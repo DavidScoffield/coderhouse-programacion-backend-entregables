@@ -24,9 +24,8 @@ const getProducts = async (req, res, next) => {
       query: productDataToValidate,
     })
 
-    const response = {
-      status: httpStatus.SUCCESS,
-      payload: docs,
+    const payload = {
+      products: docs,
       totalPages: rest.totalPages,
       prevPage: rest.prevPage,
       nextPage: rest.nextPage,
@@ -37,7 +36,7 @@ const getProducts = async (req, res, next) => {
       nextLink: rest.nextLink,
     }
 
-    res.json(response)
+    res.sendSuccessWithPayload({ message: 'Products found', payload })
   } catch (error) {
     next(error)
   }
@@ -52,14 +51,15 @@ const getProductById = async (req, res, next) => {
     const id = castToMongoId(pid)
 
     const product = await PM.getProductById(id)
-    if (!product) return res.status(404).send({ error: `Product with id "${id}" not found` })
-    res.send(product)
+    if (!product) return res.sendNotFound({ error: `Product with id "${id}" not found` })
+
+    res.sendSuccessWithPayload({ payload: product })
   } catch (error) {
     next(error)
   }
 }
 
-const createProduct = async (req, res) => {
+const createProduct = async (req, res, next) => {
   const {
     title,
     description,
@@ -72,7 +72,7 @@ const createProduct = async (req, res) => {
   } = req.body
 
   if (!title || !description || !code || !stock || !category || !price) {
-    return res.status(400).send({ error: 'Missing parameters' })
+    return res.sendCustomError({ code: httpStatus.BAD_REQUEST, error: 'Missing parameters' })
   }
 
   try {
@@ -86,11 +86,11 @@ const createProduct = async (req, res) => {
       category,
       thumbnail,
     })
-    res.status(201).json({ message: `New product with id "${product.id}" was added` })
+    res.sendSuccess(`New product with id "${product.id}" was added`)
 
     req.io.emit('realTimeProducts:storedProducts', await PM.getProducts())
   } catch (error) {
-    res.status(400).json({ error: error.message })
+    next(error)
   }
 }
 
@@ -128,7 +128,7 @@ const updateProduct = async (req, res, next) => {
       thumbnail,
     })
 
-    res.json({
+    res.sendSuccessWithPayload({
       message: `Product "${updatedProduct._id}" was successfully updated`,
       payload: updatedProduct,
     })
@@ -146,9 +146,11 @@ const deleteProduct = async (req, res, next) => {
     const deletedProduct = await PM.deleteProduct(id)
 
     if (deletedProduct) {
-      res.json({ message: `Product "${deletedProduct.id}" was successfully deleted` })
+      res.sendSuccess(`Product "${deletedProduct.id}" was successfully deleted`)
       req.io.emit('realTimeProducts:storedProducts', await PM.getProducts())
-    } else res.status(404).json({ error: `Product with id "${id}" not found` })
+    } else {
+      res.sendNotFound({ error: `Product with id "${id}" not found` })
+    }
   } catch (error) {
     next(error)
   }
