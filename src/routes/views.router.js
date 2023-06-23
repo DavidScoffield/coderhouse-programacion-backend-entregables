@@ -1,35 +1,25 @@
-import { Router } from 'express'
-import viewsController from '../controllers/views.controller.js'
-import { privacy } from '../middlewares/privacy.middleware.js'
-import { passportCall } from '../utils/passport.utils.js'
 import { PRIVACY_TYPES } from '../constants/constants.js'
+import viewsController from '../controllers/views.controller.js'
+import BaseRouter from './BaseRouter.js'
 
-const viewRouter = Router()
+export default class ViewRouter extends BaseRouter {
+  init() {
+    this.get('/', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.home)
 
-viewRouter.get('/', [passportCall('jwt'), privacy(PRIVACY_TYPES.PRIVATE)], viewsController.home)
+    this.get('/realtimeproducts', [PRIVACY_TYPES.PUBLIC], viewsController.realTimeProducts)
 
-viewRouter.get('/realtimeproducts', viewsController.realTimeProducts)
+    this.get('/chat', [PRIVACY_TYPES.PUBLIC], viewsController.chat)
 
-viewRouter.get('/chat', viewsController.chat)
+    this.get('/products', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.products)
 
-viewRouter.get('/products', [privacy(PRIVACY_TYPES.PRIVATE)], viewsController.products)
+    this.get('/cart/:cid', [PRIVACY_TYPES.PUBLIC], viewsController.cart)
 
-viewRouter.get('/cart/:cid', viewsController.cart)
+    this.get('/register', [PRIVACY_TYPES.NO_AUTH_VIEW], viewsController.register)
 
-viewRouter.get('/register', [privacy(PRIVACY_TYPES.NO_AUTH)], viewsController.register)
+    this.get('/login', [PRIVACY_TYPES.NO_AUTH_VIEW], viewsController.login)
 
-viewRouter.get('/login', [privacy(PRIVACY_TYPES.NO_AUTH)], viewsController.login)
+    this.get('/restorePassword', [PRIVACY_TYPES.NO_AUTH_VIEW], viewsController.restorePassword)
 
-viewRouter.get(
-  '/restorePassword',
-  [privacy(PRIVACY_TYPES.NO_AUTH)],
-  viewsController.restorePassword
-)
-
-viewRouter.get(
-  '/profile',
-  [passportCall('jwt', { redirect: '/login' }), privacy(PRIVACY_TYPES.PRIVATE)],
-  viewsController.profile
-)
-
-export default viewRouter
+    this.get('/profile', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.profile)
+  }
+}

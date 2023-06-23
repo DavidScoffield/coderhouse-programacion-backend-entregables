@@ -5,8 +5,13 @@ import './config/mongodb.config.js'
 import { app } from './config/express.config.js'
 
 // Routers
-import { cartRouter, healthcheckRouter, productRouter, sessionRouter } from './routes/index.js'
-import viewRouter from './routes/views.router.js'
+import {
+  cartRouter,
+  healthcheckRouter,
+  productRouter,
+  sessionRouter,
+  viewRouter,
+} from './routes/index.js'
 
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
 import ioMiddleware from './middlewares/io.middleware.js'
@@ -15,8 +20,8 @@ import ioMiddleware from './middlewares/io.middleware.js'
 app.use(ioMiddleware)
 
 // Routes
-app.use('/healthcheck', healthcheckRouter)
 app.use('/', viewRouter)
+app.use('/healthcheck', healthcheckRouter)
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/api/sessions', sessionRouter)

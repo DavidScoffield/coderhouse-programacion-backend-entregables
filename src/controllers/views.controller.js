@@ -22,7 +22,7 @@ const chat = async (req, res) => {
 }
 
 const products = async (req, res, next) => {
-  const { user } = req.session
+  const { user } = req
   const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
 
   const productDataToValidate = {}
@@ -95,7 +95,7 @@ const login = async (req, res) => {
 const profile = async (req, res) => {
   let userData
   try {
-    userData = await UM.getUserByEmail(req.session.user.email)
+    userData = await UM.getUserByEmail(req.user.email)
     userData = await userData.toJSON()
   } catch (e) {
     console.log(e)
@@ -104,8 +104,8 @@ const profile = async (req, res) => {
   res.render('profile', {
     user: {
       ...userData,
-      name: req.session.user.name,
-      email: req.session.user.email,
+      name: req.user.name,
+      email: req.user.email,
     },
   })
 }
