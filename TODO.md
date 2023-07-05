@@ -2,33 +2,25 @@
 
 ## Consigna
 
-- Continuar sobre el proyecto que has trabajado para tu ecommerce y configurar los siguientes elementos:
+- Con base en las clases previamente vistas, realizar los cambios necesarios en tu proyecto para que se base en un modelo de capas.
 
 ## Aspectos a incluir
 
-- [x] Crear un modelo User el cual contará con los campos:
+- [ ] El proyecto debe contar con capas de:
 
-```
-first_name:String,
-last_name:String,
-email:String (único)
-age:Number,
-password:String(Hash)
-cart:Id con referencia a Carts
-role:String(default:’USER’)
-```
+  - routing
+  - controlador
+  - dao
+  - vistas bien separadas
+  - y con las responsabilidades correctamente delegadas.
 
-- [x] Desarrollar las estrategias de Passport para que funcionen con este modelo de usuarios
-- [x] Modificar el sistema de login del usuario para poder trabajar con session o con jwt (a tu elección).
-- [x] (Sólo para jwt) desarrollar una estrategia “current” para extraer la cookie que contiene el token para obtener el usuario asociado a dicho token, en caso de tener el token, devolver al usuario asociado al token, caso contrario devolver un error de passport, utilizar un extractor de cookie.
-- [x] Agregar al router /api/sessions/ la ruta /current, la cual utilizará el modelo de sesión que estés utilizando, para poder devolver en una respuesta el usuario actual.
+- [ ] Además, mover del proyecto todas las partes importantes y comprometedoras en un archivo .env para poder leerlo bajo variables de entorno en un archivo config.js
+      Formato
 
 ---
 
 ### Formato
 
-- Link al repositorio de Github sin node_modules
+- Link al repositorio de Github para poder clonar, además. adjunto el archivo .env para poder relacionar las variables de entorno.
 
-### Sugerencias
-
-- Te recomendamos trabajar con el modelo de sesión con el cual te sientas más cómodo (sessions / jwt)
+<!-- ### Sugerencias -->
