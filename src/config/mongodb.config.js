@@ -9,15 +9,29 @@ if (!MONGO_DB_NAME || !MONGO_HOST || !MONGO_PASS || !MONGO_USER) {
 
 const MONGO_URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}?retryWrites=true&w=majority`
 
-// Connection at the DB
-logger.info('🔎🔎 connecting to', MONGO_URI)
-const connection = mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    logger.info('✅️✅️ Connections to database succefully')
-  })
-  .catch((err) => {
-    logger.info('❌ error connecting to MongoDB:', err.message)
-  })
+class MongoSingleton {
+  static #instance
 
-export { connection as mongooseConnection }
+  constructor() {
+    logger.info('🔎🔎 connecting to', MONGO_URI)
+    mongoose
+      .connect(MONGO_URI)
+      .then(() => {
+        logger.info('✅️✅️ Connections to Mongo database succefully')
+      })
+      .catch((err) => {
+        logger.info('❌ error connecting to MongoDB:', err.message)
+      })
+  }
+
+  static getInstance() {
+    if (!this.#instance) {
+      MongoSingleton.#instance = new MongoSingleton()
+    }
+    return this.#instance
+  }
+}
+
+const connection = MongoSingleton.getInstance()
+
+export { connection as mongooseConnection, MongoSingleton }
