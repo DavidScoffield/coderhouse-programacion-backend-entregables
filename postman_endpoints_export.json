@@ -525,7 +525,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/sessions/logout",
+							"raw": "http://localhost:8080/api/sessions/current",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -534,7 +534,7 @@
 							"path": [
 								"api",
 								"sessions",
-								"logout"
+								"current"
 							]
 						}
 					},
