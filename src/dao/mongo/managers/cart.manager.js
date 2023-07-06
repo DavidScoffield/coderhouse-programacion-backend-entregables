@@ -5,16 +5,16 @@ export default class CartManager {
 
   addCart = () => Carts.create({})
 
-  save = (cart) => cart.save()
+  saveCart = (cart) => cart.save()
 
   addProductToCart = ({ cart, productId, quantity }) => {
     cart.addProduct(productId, quantity)
-    return this.save(cart)
+    return this.saveCart(cart)
   }
 
   removeProductFromCart = ({ cart, productId }) => {
     cart.removeProduct(productId)
-    return this.save(cart)
+    return this.saveCart(cart)
   }
 
   removeAllProductFromCart = (cartId) => {
