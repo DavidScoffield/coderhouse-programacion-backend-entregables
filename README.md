@@ -1,5 +1,16 @@
 ![Banner](extras/PRODUCT_MANAGER_BANNER.jpg)
 
+## Objetivo
+
+Desarrollar el backend de un ecommerce totalmente funcional aplicando los conocimientos provistos por el curso de Coderhouse de Programación Backend con Node.js.
+
+## Patrones de diseño utilizados
+
+- **Singleton**: Se utiliza para la conexión a la base de datos de MongoDB.
+- **DAO**: Se utiliza para el acceso a datos.
+- **Repository**: Se utiliza para el acceso a datos como capa de servicios.
+- **Factory**: Se utiliza para el manejo de la persistencia de los datos, en base a la configuración del archivo _.env_.
+
 ## Intrucciones de instalación
 
 > #### Requisitos:
@@ -52,13 +63,13 @@
     │   ├── assets
     │   ├── css
     │   └── js
+    ├── repositories
     ├── routes
     ├── utils
     │   └── validations
     └── views
         ├── layouts
         └── partials
-
 ```
 
 ---
