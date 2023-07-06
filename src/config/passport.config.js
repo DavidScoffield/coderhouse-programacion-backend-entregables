@@ -10,12 +10,12 @@ import {
   GITHUB_CLIENT_SECRET,
   SECRET_JWT,
 } from '../constants/envVars.js'
-import { CM, UM } from '../constants/singletons.js'
 
 import { isValidPassword } from '../utils/bcrypt.js'
 import { cookieExtractor } from '../utils/jwt.utils.js'
 import logger from '../utils/logger.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
+import { cartRepository, userRepository } from '../repositories/index.js'
 
 const initializePassportStrategies = () => {
   passport.use(
@@ -31,13 +31,13 @@ const initializePassportStrategies = () => {
         try {
           isUsersDataValid({ firstName, lastName, email, age, password })
 
-          const userExists = await UM.getUserByEmail(email)
+          const userExists = await userRepository.getUserByEmail(email)
 
           if (userExists) return done(null, false, { message: 'El email ya está registrado' })
 
-          const newCart = await CM.addCart()
+          const newCart = await cartRepository.addCart()
 
-          const user = await UM.addUser({
+          const user = await userRepository.addUser({
             firstName,
             lastName,
             age,
@@ -58,7 +58,7 @@ const initializePassportStrategies = () => {
     'login',
     new LocalStrategy({ usernameField: 'email' }, async (email, password, done) => {
       try {
-        const existUser = await UM.getUserByEmail(email)
+        const existUser = await userRepository.getUserByEmail(email)
 
         if (!existUser || !isValidPassword(password, existUser.password))
           return done(null, false, { message: 'Usuario o contraseña incorrectas' })
@@ -93,10 +93,10 @@ const initializePassportStrategies = () => {
             return done(null, false, { message: 'No se pudo obtener la información de GitHub' })
           }
 
-          const user = await UM.getUserByEmail(email)
+          const user = await userRepository.getUserByEmail(email)
 
           if (!user) {
-            const newCart = await CM.addCart()
+            const newCart = await cartRepository.addCart()
 
             const newUser = {
               firstName: name,
@@ -104,7 +104,7 @@ const initializePassportStrategies = () => {
               password: '',
               cart: newCart,
             }
-            const result = await UM.addUser(newUser)
+            const result = await userRepository.addUser(newUser)
             return done(null, result)
           }
           return done(null, user)

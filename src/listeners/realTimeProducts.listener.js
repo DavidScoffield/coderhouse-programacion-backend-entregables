@@ -1,12 +1,12 @@
-import { PM } from '../constants/singletons.js'
+import { productRepository } from '../repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import logger from '../utils/logger.utils.js'
 
 const registerRealTimeProductsHandler = async (io, socket) => {
   const saveProduct = async (product) => {
-    await PM.addProduct(product)
+    await productRepository.addProduct(product)
 
-    const products = await PM.getProducts()
+    const products = await productRepository.getProducts()
 
     io.emit('realTimeProducts:storedProducts', products)
 
@@ -16,16 +16,16 @@ const registerRealTimeProductsHandler = async (io, socket) => {
   const deleteProduct = async (pid) => {
     const id = castToMongoId(pid)
 
-    await PM.deleteProduct(id)
+    await productRepository.deleteProduct(id)
 
-    const products = await PM.getProducts()
+    const products = await productRepository.getProducts()
 
     io.emit('realTimeProducts:storedProducts', products)
 
     logger.info(`Product with id ${id} deleted through socket.io`)
   }
 
-  socket.emit('realTimeProducts:storedProducts', await PM.getProducts())
+  socket.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
   socket.on('realTimeProducts:newProduct', saveProduct)
   socket.on('realTimeProducts:deleteProduct', deleteProduct)
 }
