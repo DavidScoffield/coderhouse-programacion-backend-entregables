@@ -27,4 +27,9 @@ export const DEFAULT_ADMIN_DATA = {
   email: '...',
 }
 
+export const VALIDS_PERSISTENCE_TYPES = {
+  MONGO: 'mongo',
+  FS: 'fs',
+}
+
 export const COOKIE_AUTH = 'authToken'

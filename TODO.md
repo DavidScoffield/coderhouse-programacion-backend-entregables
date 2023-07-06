@@ -33,5 +33,5 @@
 - [x] DAO Pattern para el acceso a datos
   - homologar los metodos
 - [x] Repository Pattern para el acceso a datos (capa de servicios)
+- [x] (opcional) Factory Pattern para la creación de objetos
 - [ ] (opcional) DTO Pattern para la transferencia de datos
-- [ ] (opcional) Factory Pattern para la creación de objetos
