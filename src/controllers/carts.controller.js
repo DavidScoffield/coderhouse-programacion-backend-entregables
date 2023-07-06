@@ -1,10 +1,10 @@
-import { CM, PM } from '../constants/singletons.js'
+import { cartRepository, productRepository } from '../repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { validateProductArray } from '../utils/validations/carts.validation.util.js'
 import { isCommonParamsValid } from '../utils/validations/products.validations.util.js'
 
 const createCart = async (req, res) => {
-  const cart = await CM.addCart()
+  const cart = await cartRepository.addCart()
   res.sendSuccessWithPayload({ message: `Cart with id "${cart.id}" created`, payload: { cart } })
 }
 
@@ -13,7 +13,7 @@ const getCartById = async (req, res, next) => {
   try {
     const id = castToMongoId(cid)
 
-    const cart = await CM.getCartById(id)
+    const cart = await cartRepository.getCartById(id)
 
     if (!cart) return res.sendNotFound({ error: `Cart with id "${cid}" not exist` })
 
@@ -34,17 +34,21 @@ const addProductToCart = async (req, res, next) => {
     const productId = castToMongoId(pid)
 
     // Validate if product exist
-    const requiredProduct = await PM.getProductById(productId)
+    const requiredProduct = await productRepository.getProductById(productId)
 
     if (!requiredProduct)
       return res.sendBadRequest({ error: `Product with id "${productId}" not exist` })
 
     // Validate if cart exist
-    const requiredCart = await CM.getCartById(cartId)
+    const requiredCart = await cartRepository.getCartById(cartId)
 
     if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
-    const savedCart = await CM.addProductToCart({ cart: requiredCart, productId, quantity })
+    const savedCart = await cartRepository.addProductToCart({
+      cart: requiredCart,
+      productId,
+      quantity,
+    })
 
     res.sendSuccessWithPayload({
       message: `Product with id ${productId} was added to cart ${cartId}`,
@@ -65,11 +69,14 @@ const deleteProductFromCart = async (req, res, next) => {
     const productId = castToMongoId(pid)
 
     // Validate if cart exist
-    const requiredCart = await CM.getCartById(cartId)
+    const requiredCart = await cartRepository.getCartById(cartId)
 
     if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
-    const updatedCart = await CM.removeProductFromCart({ cart: requiredCart, productId })
+    const updatedCart = await cartRepository.removeProductFromCart({
+      cart: requiredCart,
+      productId,
+    })
 
     res.sendSuccessWithPayload({
       message: `Product with id ${productId} was deleted from cart ${cartId}`,
@@ -87,7 +94,7 @@ const updateCartWithProducts = async (req, res, next) => {
   try {
     // Validate if cart exist
     const cartId = castToMongoId(cid)
-    const requiredCart = await CM.getCartById(cartId)
+    const requiredCart = await cartRepository.getCartById(cartId)
 
     if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
@@ -100,7 +107,7 @@ const updateCartWithProducts = async (req, res, next) => {
       async (accPromise, product) => {
         const acc = await accPromise
         const { id } = product
-        const productExists = await PM.getProductById(id)
+        const productExists = await productRepository.getProductById(id)
 
         if (!productExists) {
           product.reason = `Product with id "${id}" not exist`
@@ -117,7 +124,10 @@ const updateCartWithProducts = async (req, res, next) => {
     const productsToSave = valids.map(({ id, quantity }) => ({ _id: id, quantity }))
 
     // Update cart with the complete array of products
-    const updatedCart = await CM.updateCartWithProducts({ cartId, products: productsToSave })
+    const updatedCart = await cartRepository.updateCartWithProducts({
+      cartId,
+      products: productsToSave,
+    })
 
     res.sendSuccessWithPayload({
       message: `Cart with id ${cartId} was updated`,
@@ -141,7 +151,11 @@ const updateProductQuantityFromCart = async (req, res, next) => {
     const cartId = castToMongoId(cid)
     const productId = castToMongoId(pid)
 
-    const updatedCart = await CM.updateQuantityOfProductInCart({ cartId, productId, quantity })
+    const updatedCart = await cartRepository.updateQuantityOfProductInCart({
+      cartId,
+      productId,
+      quantity,
+    })
 
     if (!updatedCart)
       res.sendBadRequest({
@@ -166,11 +180,11 @@ const deleteAllProductsFromCart = async (req, res, next) => {
     const cartId = castToMongoId(cid)
 
     // Validate if cart exist
-    const requiredCart = await CM.getCartById(cartId)
+    const requiredCart = await cartRepository.getCartById(cartId)
 
     if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
 
-    const updatedCart = await CM.removeAllProductFromCart(requiredCart)
+    const updatedCart = await cartRepository.removeAllProductFromCart(requiredCart)
 
     res.sendSuccessWithPayload({
       message: `All products of cart ${cartId} was deleted`,

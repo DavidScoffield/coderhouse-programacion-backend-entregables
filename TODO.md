@@ -24,3 +24,14 @@
 - Link al repositorio de Github para poder clonar, además. adjunto el archivo .env para poder relacionar las variables de entorno.
 
 <!-- ### Sugerencias -->
+
+#### TODO:
+
+**Patrones**:
+
+- [x] Singleton de conexión a la base de datos de MongoDB
+- [x] DAO Pattern para el acceso a datos
+  - homologar los metodos
+- [x] Repository Pattern para el acceso a datos (capa de servicios)
+- [ ] (opcional) DTO Pattern para la transferencia de datos
+- [ ] (opcional) Factory Pattern para la creación de objetos

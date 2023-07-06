@@ -1,5 +1,5 @@
-import { PM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
+import { productRepository } from '../repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
 import { httpStatus } from '../utils/response.utils.js'
@@ -17,7 +17,7 @@ const getProducts = async (req, res, next) => {
     isPaginationParamsValid({ limit, page, sort })
     isProductDataValid(productDataToValidate)
 
-    const { docs, ...rest } = await PM.getProducts({
+    const { docs, ...rest } = await productRepository.getProducts({
       limit,
       page,
       sort,
@@ -50,7 +50,7 @@ const getProductById = async (req, res, next) => {
   try {
     const id = castToMongoId(pid)
 
-    const product = await PM.getProductById(id)
+    const product = await productRepository.getProductById(id)
     if (!product) return res.sendNotFound({ error: `Product with id "${id}" not found` })
 
     res.sendSuccessWithPayload({ payload: product })
@@ -76,7 +76,7 @@ const createProduct = async (req, res, next) => {
   }
 
   try {
-    const product = await PM.addProduct({
+    const product = await productRepository.addProduct({
       title,
       description,
       code,
@@ -88,7 +88,7 @@ const createProduct = async (req, res, next) => {
     })
     res.sendSuccess(`New product with id "${product.id}" was added`)
 
-    req.io.emit('realTimeProducts:storedProducts', await PM.getProducts())
+    req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
   } catch (error) {
     next(error)
   }
@@ -117,7 +117,7 @@ const updateProduct = async (req, res, next) => {
 
     isProductDataValid(body)
 
-    const updatedProduct = await PM.updateProduct(id, {
+    const updatedProduct = await productRepository.updateProduct(id, {
       title,
       description,
       code,
@@ -143,11 +143,11 @@ const deleteProduct = async (req, res, next) => {
   try {
     const id = castToMongoId(pid)
 
-    const deletedProduct = await PM.deleteProduct(id)
+    const deletedProduct = await productRepository.deleteProduct(id)
 
     if (deletedProduct) {
       res.sendSuccess(`Product "${deletedProduct.id}" was successfully deleted`)
-      req.io.emit('realTimeProducts:storedProducts', await PM.getProducts())
+      req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
     } else {
       res.sendNotFound({ error: `Product with id "${id}" not found` })
     }

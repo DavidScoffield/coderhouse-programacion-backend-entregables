@@ -1,6 +1,6 @@
 import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
-import { UM } from '../constants/singletons.js'
 import ValidationError from '../errors/ValidationError.js'
+import { userRepository } from '../repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken } from '../utils/jwt.utils.js'
 import { httpCodes } from '../utils/response.utils.js'
@@ -41,7 +41,7 @@ const restorePassword = async (req, res, next) => {
   const { email, password } = req.body
 
   try {
-    const user = await UM.getUserByEmail(email)
+    const user = await userRepository.getUserByEmail(email)
 
     if (!user) throw new ValidationError('El email no está registrado')
 
@@ -56,7 +56,7 @@ const restorePassword = async (req, res, next) => {
 
     const hashedPassword = hashPassword(password)
 
-    const updatedUser = await UM.updateUser(user._id, { password: hashedPassword })
+    const updatedUser = await userRepository.updateUser(user._id, { password: hashedPassword })
 
     res.sendSuccessWithPayload({
       message: 'Contraseña actualizada correctamente',

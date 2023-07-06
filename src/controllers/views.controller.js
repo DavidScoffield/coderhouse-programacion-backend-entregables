@@ -1,10 +1,10 @@
-import { CM, PM, UM } from '../constants/singletons.js'
+import { cartRepository, productRepository, userRepository } from '../repositories/index.js'
+import { mappedStatus } from '../utils/mappedParams.util.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'
-import { mappedStatus } from '../utils/mappedParams.util.js'
 
 const home = async (req, res) => {
-  const products = await PM.getProducts()
+  const products = await productRepository.getProducts()
 
   res.render('home', {
     products: products.docs,
@@ -33,9 +33,9 @@ const products = async (req, res, next) => {
     isPaginationParamsValid({ limit, page, sort })
     isProductDataValid(productDataToValidate)
 
-    const listCategories = await PM.getCategories()
+    const listCategories = await productRepository.getCategories()
 
-    const { docs, ...rest } = await PM.getProducts({
+    const { docs, ...rest } = await productRepository.getProducts({
       limit,
       page,
       sort,
@@ -73,7 +73,7 @@ const products = async (req, res, next) => {
 const cart = async (req, res) => {
   const { cid } = req.params
 
-  const cart = await CM.getCartById(cid, { lean: true })
+  const cart = await cartRepository.getCartById(cid, { lean: true })
 
   res.render('cart', {
     cart,
@@ -95,7 +95,7 @@ const login = async (req, res) => {
 const profile = async (req, res) => {
   let userData
   try {
-    userData = await UM.getUserByEmail(req.user.email)
+    userData = await userRepository.getUserByEmail(req.user.email)
     userData = await userData.toJSON()
   } catch (e) {
     console.log(e)
