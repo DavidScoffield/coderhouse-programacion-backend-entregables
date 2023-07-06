@@ -4,7 +4,7 @@
 
 Desarrollar el backend de un ecommerce totalmente funcional aplicando los conocimientos provistos por el curso de Coderhouse de Programación Backend con Node.js.
 
-## Patrones de diseño utilizados(adicionales a los incorporados por Express)
+## Patrones de diseño utilizados(adicionales a los implementados por Express)
 
 - **Singleton**: Se utiliza para la conexión a la base de datos de MongoDB.
 - **DAO**: Se utiliza para el acceso a datos.
