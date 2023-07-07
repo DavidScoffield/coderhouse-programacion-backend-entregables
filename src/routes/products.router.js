@@ -1,4 +1,4 @@
-import { PRIVACY_TYPES } from '../constants/constants.js'
+import { PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import productsController from '../controllers/products.controller.js'
 
 import BaseRouter from './BaseRouter.js'
@@ -9,10 +9,10 @@ export default class ProductRouter extends BaseRouter {
 
     this.get('/:pid', [PRIVACY_TYPES.PUBLIC], productsController.getProductById)
 
-    this.post('/', [PRIVACY_TYPES.PUBLIC], productsController.createProduct)
+    this.post('/', [USER_ROLES.ADMIN], productsController.createProduct)
 
-    this.put('/:pid', [PRIVACY_TYPES.PUBLIC], productsController.updateProduct)
+    this.put('/:pid', [USER_ROLES.ADMIN], productsController.updateProduct)
 
-    this.delete('/:pid', [PRIVACY_TYPES.PUBLIC], productsController.deleteProduct)
+    this.delete('/:pid', [USER_ROLES.ADMIN], productsController.deleteProduct)
   }
 }
