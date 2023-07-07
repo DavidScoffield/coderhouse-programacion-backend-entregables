@@ -20,6 +20,8 @@ export const USER_ROLES = {
   ADMIN: 'ADMIN',
 }
 
+export const ALL_USER_ROLES = Object.values(USER_ROLES)
+
 export const DEFAULT_ADMIN_DATA = {
   id: 0,
   name: 'Admin',

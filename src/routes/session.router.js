@@ -1,4 +1,4 @@
-import { PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
+import { ALL_USER_ROLES, PRIVACY_TYPES } from '../constants/constants.js'
 import sessionController from '../controllers/session.controller.js'
 import checkAdminLogin from '../middlewares/checkAdminLogin.middleware.js'
 import { passportCall } from '../utils/passport.utils.js'
@@ -35,10 +35,10 @@ export default class SessionRouter extends BaseRouter {
       sessionController.githubCallback
     )
 
-    this.get('/logout', [...Object.values(USER_ROLES)], sessionController.logout)
+    this.get('/logout', [ALL_USER_ROLES], sessionController.logout)
 
     this.put('/restorePassword', [PRIVACY_TYPES.NO_AUTH], sessionController.restorePassword)
 
-    this.get('/current', [...Object.values(USER_ROLES)], sessionController.current)
+    this.get('/current', [ALL_USER_ROLES], sessionController.current)
   }
 }
