@@ -16,6 +16,7 @@ import { cookieExtractor } from '../utils/jwt.utils.js'
 import logger from '../utils/logger.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
 import { cartRepository, userRepository } from '../repositories/index.js'
+import SessionUserDTO from '../dto/SessionUserDTO.js'
 
 const initializePassportStrategies = () => {
   passport.use(
@@ -63,13 +64,9 @@ const initializePassportStrategies = () => {
         if (!existUser || !isValidPassword(password, existUser.password))
           return done(null, false, { message: 'Usuario o contraseña incorrectas' })
 
-        const user = {
-          id: existUser._id,
-          name: `${existUser.firstName} ${existUser.lastName}`,
-          email: existUser.email,
-          role: existUser.role,
-        }
-        return done(null, user)
+        const sessionUserDTO = new SessionUserDTO(existUser)
+
+        return done(null, sessionUserDTO)
       } catch (e) {
         done(e)
       }
@@ -106,10 +103,17 @@ const initializePassportStrategies = () => {
               password: '',
               cart: newCart,
             }
+
             const result = await userRepository.addUser(newUser)
-            return done(null, result)
+
+            const sessionUserDTO = new SessionUserDTO(result)
+
+            return done(null, sessionUserDTO)
           }
-          return done(null, user)
+
+          const sessionUserDTO = new SessionUserDTO(user)
+
+          return done(null, sessionUserDTO)
         } catch (error) {
           done(error)
         }
@@ -125,7 +129,9 @@ const initializePassportStrategies = () => {
         secretOrKey: SECRET_JWT,
       },
       async (payload, done) => {
-        return done(null, payload)
+        if (!payload) return done(null, payload)
+
+        return done(null, new SessionUserDTO(payload))
       }
     )
   )

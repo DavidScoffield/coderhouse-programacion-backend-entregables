@@ -17,18 +17,11 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   const { user } = req
 
-  const userCookie = {
-    name: user.name,
-    role: user.role,
-    id: user.id,
-    email: user.email,
-  }
-
-  const accessToken = generateToken(userCookie)
+  const accessToken = generateToken(user.toObject())
 
   res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS).sendSuccessWithPayload({
     message: 'Usuario logueado correctamente',
-    payload: userCookie,
+    payload: user,
   })
 }
 
@@ -70,14 +63,7 @@ const restorePassword = async (req, res, next) => {
 const githubCallback = (req, res, next) => {
   const { user } = req
 
-  const userCookie = {
-    id: user.id,
-    name: user.firstName,
-    role: user.role,
-    email: user.email,
-  }
-
-  const accessToken = generateToken(userCookie)
+  const accessToken = generateToken(user.toObject())
 
   res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS)
 
