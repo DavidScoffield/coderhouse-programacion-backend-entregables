@@ -1,4 +1,4 @@
-import { PRIVACY_TYPES } from '../constants/constants.js'
+import { PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import viewsController from '../controllers/views.controller.js'
 import BaseRouter from './BaseRouter.js'
 
@@ -8,7 +8,7 @@ export default class ViewRouter extends BaseRouter {
 
     this.get('/realtimeproducts', [PRIVACY_TYPES.PUBLIC], viewsController.realTimeProducts)
 
-    this.get('/chat', [PRIVACY_TYPES.PUBLIC], viewsController.chat)
+    this.get('/chat', [USER_ROLES.USER], viewsController.chat)
 
     this.get('/products', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.products)
 
