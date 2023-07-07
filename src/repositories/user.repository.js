@@ -1,3 +1,6 @@
+import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
+import CurrentUserDTO from '../dto/CurrentUserDTO.js'
+
 export default class UserRepository {
   constructor(dao) {
     this.dao = dao
@@ -17,5 +20,13 @@ export default class UserRepository {
 
   getUserById = (userId, { lean } = {}) => {
     return this.dao.getUserById(userId, { lean })
+  }
+
+  getCurrentUser = async (userId) => {
+    if (userId === DEFAULT_ADMIN_DATA.id) return new CurrentUserDTO(DEFAULT_ADMIN_DATA)
+
+    const user = await this.getUserById(userId, { lean: true })
+
+    return new CurrentUserDTO(user)
   }
 }

@@ -95,8 +95,7 @@ const login = async (req, res) => {
 const profile = async (req, res) => {
   let userData
   try {
-    userData = await userRepository.getUserByEmail(req.user.email)
-    userData = await userData.toJSON()
+    userData = await userRepository.getCurrentUser(req.user.id)
   } catch (e) {
     console.log(e)
   }

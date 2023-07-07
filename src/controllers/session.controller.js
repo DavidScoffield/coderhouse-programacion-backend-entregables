@@ -70,11 +70,13 @@ const githubCallback = (req, res, next) => {
   res.redirect('/products')
 }
 
-const current = (req, res, next) => {
+const current = async (req, res, next) => {
   const { user } = req
 
+  const currentUser = await userRepository.getCurrentUser(user.id)
+
   res.sendSuccessWithPayload({
-    payload: user,
+    payload: currentUser,
   })
 }
 
