@@ -35,10 +35,10 @@ export default class SessionRouter extends BaseRouter {
       sessionController.githubCallback
     )
 
-    this.get('/logout', [ALL_USER_ROLES], sessionController.logout)
+    this.get('/logout', [...ALL_USER_ROLES], sessionController.logout)
 
     this.put('/restorePassword', [PRIVACY_TYPES.NO_AUTH], sessionController.restorePassword)
 
-    this.get('/current', [ALL_USER_ROLES], sessionController.current)
+    this.get('/current', [...ALL_USER_ROLES], sessionController.current)
   }
 }
