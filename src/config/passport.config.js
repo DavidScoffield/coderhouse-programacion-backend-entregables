@@ -86,21 +86,23 @@ const initializePassportStrategies = () => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          const { name, email } = profile._json
+          const { name, email, login } = profile._json
 
-          if (!name || !email) {
-            logger.error('No se pudo obtener la información de GitHub', { email, name })
+          const emailGithub = email || login
+
+          if (!name || !emailGithub) {
+            logger.error('No se pudo obtener la información de GitHub', { emailGithub, name })
             return done(null, false, { message: 'No se pudo obtener la información de GitHub' })
           }
 
-          const user = await userRepository.getUserByEmail(email)
+          const user = await userRepository.getUserByEmail(emailGithub)
 
           if (!user) {
             const newCart = await cartRepository.addCart()
 
             const newUser = {
               firstName: name,
-              email,
+              email: emailGithub,
               password: '',
               cart: newCart,
             }
