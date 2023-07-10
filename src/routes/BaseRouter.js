@@ -49,23 +49,23 @@ export default class BaseRouter {
     res.sendSuccessWithPayload = ({ message, payload }) =>
       res.json({ status: httpStatus.SUCCESS, payload, message })
 
-    res.sendInternalError = (error) =>
+    res.sendInternalError = ({ error }) =>
       res.status(httpCodes.INTERNAL_SERVER_ERROR).json({ status: httpStatus.ERROR, error })
 
-    res.sendUnauthorized = (error) =>
-      res.status(httpCodes.UNAUTHORIZED).json({ status: httpStatus.ERROR, error })
+    res.sendUnauthorized = ({ error, payload }) =>
+      res.status(httpCodes.UNAUTHORIZED).json({ status: httpStatus.ERROR, error, payload })
 
-    res.sendForbidden = (error) =>
-      res.status(httpCodes.FORBIDDEN).json({ status: httpStatus.ERROR, error })
+    res.sendForbidden = ({ error, payload }) =>
+      res.status(httpCodes.FORBIDDEN).json({ status: httpStatus.ERROR, error, payload })
 
-    res.sendNotFound = ({ error }) =>
-      res.status(httpCodes.NOT_FOUND).json({ status: httpStatus.ERROR, error })
+    res.sendNotFound = ({ error, payload }) =>
+      res.status(httpCodes.NOT_FOUND).json({ status: httpStatus.ERROR, error, payload })
 
-    res.sendBadRequest = ({ error }) =>
-      res.status(httpCodes.BAD_REQUEST).json({ status: httpStatus.ERROR, error })
+    res.sendBadRequest = ({ error, payload }) =>
+      res.status(httpCodes.BAD_REQUEST).json({ status: httpStatus.ERROR, error, payload })
 
-    res.sendCustomError = ({ code, error }) =>
-      res.status(code).json({ status: httpStatus.ERROR, error })
+    res.sendCustomError = ({ code, error, payload }) =>
+      res.status(code).json({ status: httpStatus.ERROR, error, payload })
 
     next()
   }
@@ -80,9 +80,10 @@ export default class BaseRouter {
         return strategyFn(user, res, next)
       }
 
-      if (!user) return res.sendUnauthorized(req.error)
+      if (!user) return res.sendUnauthorized({ error: req.error })
 
-      if (!policies.includes(user.role.toUpperCase())) return res.sendForbidden('Forbidden')
+      if (!policies.includes(user.role.toUpperCase()))
+        return res.sendForbidden({ error: 'Forbidden' })
 
       next()
     }

@@ -8,7 +8,9 @@ export const passportCall = (strategy, { redirect, strategyType } = {}) => {
 
       if (!strategyType) {
         loggerUtils.error(`❓ Route ${req.url} doesn't have defined a strategyType`)
-        return res.sendInternalError()
+        return res.sendInternalError({
+          error: `Route ${req.url} doesn't have defined a strategyType`,
+        })
       }
 
       if (!user) {
@@ -22,7 +24,7 @@ export const passportCall = (strategy, { redirect, strategyType } = {}) => {
             return next()
 
           case 'locals':
-            return res.sendUnauthorized(message)
+            return res.sendUnauthorized({ error: message })
         }
       }
       req.user = user

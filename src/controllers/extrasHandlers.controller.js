@@ -23,7 +23,7 @@ const ERROR_HANDLERS = {
   CustomError: (res, error) => res.sendCustomError({ code: error.status, error: error.message }),
   ValidationError: (res, error) =>
     res.sendCustomError({ code: error.status || httpCodes.CONFLICT, error: error.message }),
-  defaultError: (res) => res.sendInternalError("We're sorry, something went wrong"),
+  defaultError: (res) => res.sendInternalError({ error: "We're sorry, something went wrong" }),
 }
 
 const unknownEndpoint = (req, res) => {
