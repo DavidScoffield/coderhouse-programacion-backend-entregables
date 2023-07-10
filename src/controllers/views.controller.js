@@ -115,6 +115,20 @@ const restorePassword = async (req, res) => {
   })
 }
 
+const myCart = async (req, res) => {
+  const { user } = req
+
+  const cart = await cartRepository.getCartById(user.cart, { lean: true })
+
+  console.log(JSON.stringify(cart, null, 2))
+  res.render('myCart', {
+    user,
+    cart,
+    css: ['myCart'],
+    js: ['myCart'],
+  })
+}
+
 export default {
   home,
   realTimeProducts,
@@ -125,4 +139,5 @@ export default {
   login,
   profile,
   restorePassword,
+  myCart,
 }
