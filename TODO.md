@@ -19,7 +19,7 @@
   - [x] Sólo el administrador puede crear, actualizar y eliminar productos.
   - [x] Sólo el usuario puede enviar mensajes al chat.
   - [ ] Sólo el usuario puede agregar productos a su carrito. _**??LIMITAR ENDPOINT DE API O TAMBIEN VISTA**_
-- [ ] Crear un modelo Ticket el cual contará con todas las formalizaciones de la compra. Éste contará con los campos
+- [x] Crear un modelo Ticket el cual contará con todas las formalizaciones de la compra. Éste contará con los campos
   - Id (autogenerado por mongo)
   - code: String debe autogenerarse y ser único
   - purchase_datetime: Deberá guardar la fecha y hora exacta en la cual se formalizó la compra (básicamente es un created_at)
