@@ -32,7 +32,7 @@ const renderProducts = (products) => {
 tbody.addEventListener('click', async (e) => {
   const clickedElement = e.target
   const classArray = Array.from(clickedElement.classList)
-  if ((clickedElement.tagName = 'BUTTON') && classArray.includes('delete-button')) {
+  if (clickedElement.tagName === 'BUTTON' && classArray.includes('delete-button')) {
     const result = window.confirm('¿Está seguro de eliminar el producto?')
     if (result) {
       socket.emit('realTimeProducts:deleteProduct', clickedElement.id)
