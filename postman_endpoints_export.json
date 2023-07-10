@@ -230,7 +230,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"quantity\": 2\r\n}",
+							"raw": "{\r\n    \"quantity\": 160\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -254,11 +254,11 @@
 							"variable": [
 								{
 									"key": "cid",
-									"value": "646d26caf715d7bfd3384cef"
+									"value": "649392f0a090926a70d82bf2"
 								},
 								{
 									"key": "pid",
-									"value": "6464e4b0b23974b4343d394b"
+									"value": "646797264dc15ca243dd294e"
 								}
 							]
 						}
@@ -397,6 +397,34 @@
 								{
 									"key": "cid",
 									"value": "646d26caf715d7bfd3384cef"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/carts/:cid/purchase",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/carts/:cid/purchase",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts",
+								":cid",
+								"purchase"
+							],
+							"variable": [
+								{
+									"key": "cid",
+									"value": "649392f0a090926a70d82bf2"
 								}
 							]
 						}
