@@ -25,5 +25,7 @@ export default class CartRouter extends BaseRouter {
     )
 
     this.delete('/:cid', [PRIVACY_TYPES.PUBLIC], cartsController.deleteAllProductsFromCart)
+
+    this.put('/:cid/purchase', [PRIVACY_TYPES.PUBLIC], cartsController.purchaseCart)
   }
 }

@@ -195,6 +195,41 @@ const deleteAllProductsFromCart = async (req, res, next) => {
   }
 }
 
+const purchaseCart = async (req, res, next) => {
+  const { cid } = req.params
+  const { user } = req
+
+  if (!cid) return res.sendBadRequest({ error: `Missing cart id` })
+
+  const cartId = castToMongoId(cid)
+
+  // Validate if cart exist
+  const requiredCart = await cartRepository.getCartById(cartId)
+
+  if (!requiredCart) return res.sendBadRequest({ error: `Cart with id "${cartId}" not exist` })
+
+  // Validate if cart has products
+  if (requiredCart.products.length === 0) {
+    res.sendBadRequest({ error: `Cart with id "${cartId}" has no products` })
+  }
+
+  const { ticket, productIdsWithInvalidStock } = await cartRepository.purchaseCart({
+    cartId,
+    purchaserEmail: user.email,
+  })
+
+  if (!ticket)
+    return res.sendBadRequest({
+      error: `Cart with id "${cartId}" has no products with valid stock`,
+      payload: { productIdsWithInvalidStock },
+    })
+
+  res.sendSuccessWithPayload({
+    message: `Cart with id ${cartId} was purchased`,
+    payload: { ticket, productIdsWithInvalidStock },
+  })
+}
+
 export default {
   createCart,
   getCartById,
@@ -203,4 +238,5 @@ export default {
   updateCartWithProducts,
   updateProductQuantityFromCart,
   deleteAllProductsFromCart,
+  purchaseCart,
 }
