@@ -19,6 +19,7 @@ app.use(cookieParser())
 const hbs = create({
   helpers: {
     equal: (a, b) => a === b,
+    json: (n) => JSON.stringify(n),
   },
 })
 
