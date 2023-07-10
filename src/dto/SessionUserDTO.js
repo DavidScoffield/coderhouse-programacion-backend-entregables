@@ -3,13 +3,16 @@ export default class SessionUserDTO {
   name
   role
   email
+  cart
 
-  constructor({ name, firstName, lastName, id, role, email }) {
+  constructor({ name, firstName, lastName, id, role, email, cart }) {
     if (!id && id !== 0) throw new Error('SessionUserDTO: id is required')
 
     if (!role) throw new Error('SessionUserDTO: role is required')
 
     if (!email) throw new Error('SessionUserDTO: email is required')
+
+    if (!cart) throw new Error('SessionUserDTO: cart is required')
 
     if (!name && !firstName && !lastName)
       throw new Error('SessionUserDTO: Name or firstName or lastName are required')
@@ -17,6 +20,7 @@ export default class SessionUserDTO {
     this.id = id
     this.role = role
     this.email = email
+    this.cart = cart
     this.name = name || `${firstName || ''} ${lastName || ''}`
   }
 
@@ -26,6 +30,7 @@ export default class SessionUserDTO {
       name: this.name,
       role: this.role,
       email: this.email,
+      cart: this.cart,
     }
   }
 }
