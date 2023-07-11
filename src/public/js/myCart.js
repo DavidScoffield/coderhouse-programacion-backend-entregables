@@ -70,9 +70,10 @@ buyButton.addEventListener('click', async () => {
         <p>Email: <b>${ticket.purchaser}</b></p>
         <p>Importe total: <b>$${ticket.amount}</b></p>
         ${
-          productIdsWithInvalidStock.length > 0 &&
-          `<p>Productos sin stock: <b>${productIdsWithInvalidStock}</b></p>`
-        }`,
+          productIdsWithInvalidStock.length > 0
+            ? `<p>Productos sin stock: <b>${productIdsWithInvalidStock}</b></p>`
+            : ''
+        } `,
         confirmButtonText: 'Cerrar y volver a la tienda',
       }).then((result) => {
         if (result.isConfirmed) {
