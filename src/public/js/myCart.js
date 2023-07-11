@@ -7,31 +7,35 @@ cartProducts.addEventListener('click', async (e) => {
 
   const productId = clickedElement.getAttribute('product-id')
 
-  if (clickedElement.tagName === 'BUTTON') {
-    if (classArray.includes('remove-button')) {
-      const result = window.confirm('¿Está seguro de eliminar el producto?')
+  if (clickedElement.tagName !== 'BUTTON') return
 
-      if (result) {
-        const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
-          method: 'DELETE',
-        })
+  // Handleclick for remove button
+  if (classArray.includes('remove-button')) {
+    const result = window.confirm('¿Está seguro de eliminar el producto?')
 
-        if (response.status === 200) window.location.reload()
-      }
-    } else if (classArray.includes('update-button')) {
-      const newQuantity = clickedElement.parentElement.querySelector('.quantity').value
-
+    if (result) {
       const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          quantity: newQuantity,
-        }),
+        method: 'DELETE',
       })
 
-      if (response.status === 200) window.location.reload()
+      if (response.status === 200) return window.location.reload()
     }
+  }
+
+  // Handleclick for update button
+  if (classArray.includes('update-button')) {
+    const newQuantity = clickedElement.parentElement.querySelector('.quantity').value
+
+    const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        quantity: newQuantity,
+      }),
+    })
+
+    if (response.status === 200) return window.location.reload()
   }
 })
