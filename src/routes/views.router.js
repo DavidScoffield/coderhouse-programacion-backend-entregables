@@ -22,6 +22,6 @@ export default class ViewRouter extends BaseRouter {
 
     this.get('/profile', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.profile)
 
-    this.get('/myCart', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.myCart)
+    this.get('/myCart', [USER_ROLES.USER], viewsController.myCart)
   }
 }
