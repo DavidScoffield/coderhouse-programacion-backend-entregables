@@ -120,10 +120,14 @@ const myCart = async (req, res) => {
 
   const cart = await cartRepository.getCartById(user.cart, { lean: true })
 
-  console.log(JSON.stringify(cart, null, 2))
+  const totalAmount = cart.products.reduce((acc, product) => {
+    return acc + product._id.price * product.quantity
+  }, 0)
+
   res.render('myCart', {
     user,
     cart,
+    totalAmount,
     css: ['myCart'],
     js: ['myCart'],
   })
