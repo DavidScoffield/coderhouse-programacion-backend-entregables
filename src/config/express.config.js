@@ -6,6 +6,7 @@ import { __src } from '../utils/dirname.utils.js'
 import logger from '../utils/logger.utils.js'
 import initializePassportStrategies from './passport.config.js'
 import cookieParser from 'cookie-parser'
+import { USER_ROLES } from '../constants/constants.js'
 
 const app = express()
 
@@ -19,7 +20,9 @@ app.use(cookieParser())
 const hbs = create({
   helpers: {
     equal: (a, b) => a === b,
+    notEqual: (a, b) => a !== b,
     json: (n) => JSON.stringify(n),
+    isAdmin: (role) => role === USER_ROLES.ADMIN,
   },
 })
 
