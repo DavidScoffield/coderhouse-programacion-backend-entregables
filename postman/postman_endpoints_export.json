@@ -15,12 +15,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/products?limit=6&page=1&sort=desc&category=Frutas&status=true",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/products?limit=6&page=1&sort=desc&category=Frutas&status=true",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products"
@@ -58,12 +56,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/products/:pid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/products/:pid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products",
@@ -94,12 +90,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/products",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/products",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products"
@@ -123,12 +117,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/products/:pid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/products/:pid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products",
@@ -150,12 +142,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/products/:pid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/products/:pid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"products",
@@ -182,12 +172,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -196,7 +184,7 @@
 							"variable": [
 								{
 									"key": "cid",
-									"value": "646d26caf715d7bfd3384cef"
+									"value": ""
 								}
 							]
 						}
@@ -209,12 +197,10 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/carts",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts"
@@ -238,12 +224,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid/products/:pid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid/products/:pid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -271,12 +255,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid/products/:pid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid/products/:pid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -304,12 +286,10 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -340,12 +320,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid/products/:pid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid/products/:pid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -382,12 +360,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -409,12 +385,10 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/carts/:cid/purchase",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/carts/:cid/purchase",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"carts",
@@ -451,12 +425,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/sessions/register",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/sessions/register",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"sessions",
@@ -481,12 +453,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/sessions/login",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/sessions/login",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"sessions",
@@ -511,12 +481,10 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/api/sessions/restorePassword",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/sessions/restorePassword",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"sessions",
@@ -532,12 +500,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/sessions/logout",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/sessions/logout",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"sessions",
@@ -553,12 +519,10 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/api/sessions/current",
-							"protocol": "http",
+							"raw": "{{HOST}}{{PORT}}/api/sessions/current",
 							"host": [
-								"localhost"
+								"{{HOST}}{{PORT}}"
 							],
-							"port": "8080",
 							"path": [
 								"api",
 								"sessions",
@@ -576,12 +540,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/healthcheck",
-					"protocol": "http",
+					"raw": "{{HOST}}{{PORT}}/healthcheck",
 					"host": [
-						"localhost"
+						"{{HOST}}{{PORT}}"
 					],
-					"port": "8080",
 					"path": [
 						"healthcheck"
 					]
