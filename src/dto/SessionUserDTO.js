@@ -12,8 +12,6 @@ export default class SessionUserDTO {
 
     if (!email) throw new Error('SessionUserDTO: email is required')
 
-    if (!cart) throw new Error('SessionUserDTO: cart is required')
-
     if (!name && !firstName && !lastName)
       throw new Error('SessionUserDTO: Name or firstName or lastName are required')
 
