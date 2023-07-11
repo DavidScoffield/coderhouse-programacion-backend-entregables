@@ -56,6 +56,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
     │   └── mongo
     │       ├── managers
     │       └── models
+    ├── dto
     ├── errors
     ├── listeners
     ├── middlewares
@@ -87,6 +88,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | GET              | /login            |          |                  |                                     | HTML       |
 | GET              | /restorePassword  |          |                  |                                     | HTML       |
 | GET              | /profile          |          |                  |                                     | HTML       |
+| GET              | /myCart           |          |                  |                                     | HTML       |
 
 ## Documentación de la API:
 
@@ -104,7 +106,8 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | DELETE           | /api/carts/:cid/products/:pid |          |                                     | cid : Cart ID, pid : Product ID | Object     |
 | PUT              | /api/carts/:cid               | Object   |                                     | cid : Cart ID                   | Object     |
 | PUT              | /api/carts/:cid/products/:pid | Object   |                                     | cid : Cart ID, pid : Product ID | Object     |
-| DELETE           | /api/carts/:cid               |          |                                     | cid : Cart ID, pid : Product ID | Object     |
+| DELETE           | /api/carts/:cid               |          |                                     | cid : Cart ID                   | Object     |
+| PUT              | /api/carts/:cid/purchase      |          |                                     | cid : Cart ID                   | Object     |
 | POST             | /api/sessions/register        | Object   |                                     |                                 | Object     |
 | POST             | /api/sessions/login           | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
@@ -270,6 +273,14 @@ Elimina un carrito a partir de un ID de Carrito dado.
 
 - **cid**: ID del carrito
 
+### + PUT /api/carts/:cid/purchase
+
+Permite realizar la compra de un carrito. Recibe el carrito en los params y lleva a cabo la compra, generando un Ticket de respaldo, y actualiza los productos involucrados en la misma.
+
+#### Path variables
+
+- **cid**: ID del carrito
+
 ### + POST /api/sessions/register
 
 Permite registrar un usuario. Recibe un objeto a través del body y retorna un objeto con los valores ingresados junto con el ID de usuario asignado.
@@ -323,5 +334,3 @@ Retorna un objeto con la información del usuario actual.
     En `TODO.md` podran encontrar los requerimientos de la entrega .
 
 > Puede importar en postman el archivo `postman_endpoints_export.json` para testear los endpoints desarrollados.
-
-> **ACLARACION:** No eliminar el carrito con id _"64679c70db83fc11a4f2df62"_, ya que es el utilizado de momento de forma estatica para cargar los productos en la home de /products. Si se elimina, se debera cambiar el id en el archivo `products.js` en la linea 2.
