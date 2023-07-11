@@ -57,7 +57,7 @@ buyButton.addEventListener('click', async () => {
     const { status, payload, error } = await response.json()
 
     if (status === 'success') {
-      const { ticket } = payload
+      const { ticket, productIdsWithInvalidStock } = payload
       const date = new Date(ticket.purchaseDateTime)
       const stringDate = date.toLocaleString()
 
@@ -68,7 +68,11 @@ buyButton.addEventListener('click', async () => {
         <p>Código de ticket: <b>${ticket.code}</b></p>
         <p>Fecha de compra: <b>${stringDate}</b></p>
         <p>Email: <b>${ticket.purchaser}</b></p>
-        <p>Importe total: <b>$${ticket.amount}</b></p>`,
+        <p>Importe total: <b>$${ticket.amount}</b></p>
+        ${
+          productIdsWithInvalidStock.length > 0 &&
+          `<p>Productos sin stock: <b>${productIdsWithInvalidStock}</b></p>`
+        }`,
         confirmButtonText: 'Cerrar y volver a la tienda',
       }).then((result) => {
         if (result.isConfirmed) {
