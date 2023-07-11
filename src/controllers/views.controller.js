@@ -18,7 +18,12 @@ const realTimeProducts = async (req, res) => {
 }
 
 const chat = async (req, res) => {
-  res.render('chat')
+  const { user } = req
+
+  res.render('chat', {
+    user,
+    js: ['chat'],
+  })
 }
 
 const products = async (req, res, next) => {

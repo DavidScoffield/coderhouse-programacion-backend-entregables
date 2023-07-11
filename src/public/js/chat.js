@@ -1,31 +1,17 @@
 /* global Swal, io */
-const socket = io({
-  autoConnect: false,
-})
+
+const userID = JSON.parse(document.querySelector('script[data]').getAttribute('data'))
 const chatBox = document.getElementById('chatBox')
 
-let user
+const socket = io()
 
-Swal.fire({
-  title: 'Identifícate',
-  text: 'Para acceder al chat, coloca tu username',
-  icon: 'question',
-  input: 'text',
-  inputValidator: (value) => {
-    return !value && '¡Necesitas identificarte antes de entrar!'
-  },
-  allowOutsideClick: false,
-  allowEscapeKey: false,
-}).then((result) => {
-  user = result.value
-  socket.connect()
-  socket.emit('chat:newParticipant', user)
-})
+socket.emit('chat:newParticipant', userID)
 
 chatBox.addEventListener('keyup', (evt) => {
   if (evt.key === 'Enter') {
     if (chatBox.value.trim().length > 0) {
-      socket.emit('chat:message', { user, message: chatBox.value.trim() })
+      socket.emit('chat:message', { user: userID, message: chatBox.value.trim() })
+      chatBox.value = ''
     }
   }
 })
@@ -34,7 +20,11 @@ socket.on('chat:messageLogs', (data) => {
   const logs = document.getElementById('logs')
   let message = ''
   data.forEach((log) => {
-    message += `${log.user} dice: ${log.message} <br/>`
+    if (log.user === userID) {
+      message += `<strong>YO</strong>: ${log.message} <br/>`
+    } else {
+      message += `${log.user} dice: ${log.message} <br/>`
+    }
   })
   logs.innerHTML = message
 })
