@@ -1,5 +1,6 @@
 import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
 import ValidationError from '../errors/ValidationError.js'
+import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken } from '../utils/jwt.utils.js'
@@ -7,6 +8,8 @@ import { httpCodes } from '../utils/response.utils.js'
 
 const register = async (req, res, next) => {
   const { user } = req
+
+  mailService.sendWelcomeMail({ to: user.email, name: `${user.firstName} ${user.lastName}` })
 
   res.sendSuccessWithPayload({
     message: 'Usuario registrado correctamente',
