@@ -15,10 +15,10 @@
 - [x] El DAO seleccionado (por un parámetro en línea de comandos como lo hicimos anteriormente) será devuelto por una Factory para que la capa de negocio opere con él. (Factory puede ser opcional)
 - [x] Implementar el patrón Repository para trabajar con el DAO en la lógica de negocio.
 - [x] Modificar la ruta /current Para evitar enviar información sensible, enviar un DTO del usuario sólo con la información necesaria.
-- [ ] Realizar un middleware que pueda trabajar en conjunto con la estrategia “current” para hacer un sistema de autorización y delimitar el acceso a dichos endpoints:
+- [x] Realizar un middleware que pueda trabajar en conjunto con la estrategia “current” para hacer un sistema de autorización y delimitar el acceso a dichos endpoints:
   - [x] Sólo el administrador puede crear, actualizar y eliminar productos.
   - [x] Sólo el usuario puede enviar mensajes al chat.
-  - [ ] Sólo el usuario puede agregar productos a su carrito. _**??LIMITAR ENDPOINT DE API O TAMBIEN VISTA**_
+  - [x] Sólo el usuario puede agregar productos a su carrito.
 - [x] Crear un modelo Ticket el cual contará con todas las formalizaciones de la compra. Éste contará con los campos
   - Id (autogenerado por mongo)
   - code: String debe autogenerarse y ser único
