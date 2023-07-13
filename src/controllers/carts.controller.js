@@ -225,6 +225,8 @@ const purchaseCart = async (req, res, next) => {
       payload: { productIdsWithInvalidStock },
     })
 
+  mailService.sendPurchasedCartMail({ to: user.email, name: user.name, ticket })
+
   res.sendSuccessWithPayload({
     message: `Cart with id ${cartId} was purchased`,
     payload: { ticket, productIdsWithInvalidStock },
