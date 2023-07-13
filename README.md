@@ -21,7 +21,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **Handlebars**
 - **Passport**
 - **JWT**
-- **Nodemailer(with gamil)**
+- **Nodemailer(with gmail)**
 
 ## Intrucciones de instalación
 
