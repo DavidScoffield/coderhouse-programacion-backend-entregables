@@ -11,6 +11,18 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **Repository**: Se utiliza para el acceso a datos como capa de servicios.
 - **Factory**: Se utiliza para el manejo de la persistencia de los datos, en base a la configuración del archivo _.env_.
 
+## Tecnologías utilizadas
+
+- **Node.js**
+- **Express**
+- **MongoDB**
+- **Mongoose**
+- **Socket.io**
+- **Handlebars**
+- **Passport**
+- **JWT**
+- **Nodemailer(with gamil)**
+
 ## Intrucciones de instalación
 
 > #### Requisitos:
