@@ -35,3 +35,38 @@ export const VALIDS_PERSISTENCE_TYPES = {
 }
 
 export const COOKIE_AUTH = 'authToken'
+
+export const MAILS_TEMPLATES = {
+  WELCOME: ({ name }) => ({
+    subject: 'Bienvenido a mi tienda',
+    html: `<b>Gracias por registrarte ${name}</b>`,
+  }),
+  PURCHASED_CART: ({ name, ticket }) => {
+    const date = new Date(ticket.purchaseDateTime)
+    const stringDate = date.toLocaleString()
+
+    return {
+      subject: 'Compra realizada',
+      html: `<p>Gracias por tu compra <b>${name}</b></p>
+        <h2>Ticket de compra</h2>
+        <p>Código de ticket: <b>${ticket.code}</b></p>
+        <p>Fecha de compra: <b>${stringDate}</b></p>
+        <p>Email: <b>${ticket.purchaser}</b></p>
+        <p>Importe total: <b>$${ticket.amount}</b></p>
+        `,
+    }
+  },
+
+  // RESET_PASSWORD: ({ name, token }) => ({
+  //   subject: 'Resetea tu contraseña',
+  //   html: `<b>Para resetear tu contraseña haz click <a href="http://localhost:8080/reset-password/${token}">aquí</a></b>`,
+  // }),
+  // RESET_PASSWORD_SUCCESS: ({ name }) => ({
+  //   subject: 'Contraseña reseteada',
+  //   html: `<b>La contraseña de ${name} se ha reseteado correctamente</b>`,
+  // }),
+  // RESET_PASSWORD_ERROR: ({ name }) => ({
+  //   subject: 'Error al resetear la contraseña',
+  //   html: `<b>Ha ocurrido un error al resetear la contraseña de ${name}</b>`,
+  // }),
+}

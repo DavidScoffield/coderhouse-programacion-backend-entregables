@@ -21,3 +21,11 @@ export const HOST = process.env.SERVER_HOST || 'localhost'
 export const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID
 export const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET
 export const GITHUB_CALLBACK_URL = process.env.GITHUB_CALLBACK_URL
+
+// Mail credentials
+export const GMAIL_MAIL_USER = process.env.GMAIL_MAIL_USER || 'user'
+export const GMAIL_MAIL_PASS = process.env.GMAIL_MAIL_PASS || 'pass'
+export const GMAIL_MAIL_SERVICE = process.env.GMAIL_MAIL_SERVICE || 'gmail'
+export const GMAIL_MAIL_PORT = process.env.GMAIL_MAIL_PORT || 587
+export const GMAIL_MAIL_SECURE = process.env.GMAIL_MAIL_SECURE || false
+export const GMAIL_MAIL_FROM = process.env.GMAIL_MAIL_FROM || 'TEST <test@test.com>'
