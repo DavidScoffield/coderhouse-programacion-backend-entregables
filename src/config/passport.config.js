@@ -15,7 +15,7 @@ import { isValidPassword } from '../utils/bcrypt.js'
 import { cookieExtractor } from '../utils/jwt.utils.js'
 import logger from '../utils/logger.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
-import { cartRepository, userRepository } from '../repositories/index.js'
+import { cartRepository, userRepository } from '../services/repositories/index.js'
 import SessionUserDTO from '../dto/SessionUserDTO.js'
 
 const initializePassportStrategies = () => {

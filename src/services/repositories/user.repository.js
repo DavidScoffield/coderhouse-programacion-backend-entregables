@@ -1,5 +1,5 @@
-import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
-import CurrentUserDTO from '../dto/CurrentUserDTO.js'
+import { DEFAULT_ADMIN_DATA } from '../../constants/constants.js'
+import CurrentUserDTO from '../../dto/CurrentUserDTO.js'
 
 export default class UserRepository {
   constructor(dao) {

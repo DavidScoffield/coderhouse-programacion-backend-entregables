@@ -1,4 +1,4 @@
-import { productRepository } from '../repositories/index.js'
+import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import logger from '../utils/logger.utils.js'
 

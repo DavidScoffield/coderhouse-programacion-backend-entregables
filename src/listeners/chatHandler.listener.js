@@ -1,4 +1,4 @@
-import { messageRepository } from '../repositories/index.js'
+import { messageRepository } from '../services/repositories/index.js'
 
 const registerChatHandler = (io, socket) => {
   const saveMessage = async (message) => {

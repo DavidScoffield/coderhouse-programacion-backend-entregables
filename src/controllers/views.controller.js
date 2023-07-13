@@ -1,4 +1,8 @@
-import { cartRepository, productRepository, userRepository } from '../repositories/index.js'
+import {
+  cartRepository,
+  productRepository,
+  userRepository,
+} from '../services/repositories/index.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'

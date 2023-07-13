@@ -1,4 +1,4 @@
-import TicketDTO from '../dto/TicketDTO.js'
+import TicketDTO from '../../dto/TicketDTO.js'
 import { productRepository, ticketRepository } from './index.js'
 
 export default class CartRepository {

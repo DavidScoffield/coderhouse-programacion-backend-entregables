@@ -1,4 +1,5 @@
-import { cartRepository, productRepository } from '../repositories/index.js'
+import { mailService } from '../services/index.js'
+import { cartRepository, productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { validateProductArray } from '../utils/validations/carts.validation.util.js'
 import { isCommonParamsValid } from '../utils/validations/products.validations.util.js'
