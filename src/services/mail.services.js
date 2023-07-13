@@ -15,12 +15,16 @@ export default class MailService {
       const { subject, html } = template
 
       await this.transporter.verify()
-      return await this.transporter.sendMail({
+      const response = await this.transporter.sendMail({
         from: GMAIL_MAIL_FROM,
         to,
         subject,
         html,
       })
+
+      loggerUtils.info(`📨 Mail enviado a ${to}`)
+
+      return response
     } catch (e) {
       loggerUtils.error(e.message)
     }
