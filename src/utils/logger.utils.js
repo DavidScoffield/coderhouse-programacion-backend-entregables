@@ -2,7 +2,6 @@ const info = (...params) => {
   console.log('❔ INFO |', ...params)
 }
 const error = (...params) => {
-  console.log('-----------------------------------------')
   console.error('❌ ERROR |', [...params].join('\n'))
   console.log('-----------------------------------------')
 }
