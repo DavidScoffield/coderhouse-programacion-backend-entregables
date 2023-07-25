@@ -1,5 +1,5 @@
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
-import ValidationError from '../../errors/ValidationError.js'
+import ValidationError from '../../errors/classes/ValidationError.js'
 
 const isEmail = (value) => {
   const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g

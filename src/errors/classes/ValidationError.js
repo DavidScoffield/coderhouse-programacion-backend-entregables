@@ -1,4 +1,4 @@
-import { httpCodes } from '../utils/response.utils.js'
+import { httpCodes } from '../../utils/response.utils.js'
 
 export default class ValidationError extends Error {
   constructor(message, status) {

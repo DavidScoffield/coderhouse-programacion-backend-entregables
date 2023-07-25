@@ -1,6 +1,6 @@
 import { PERSISTENCE_TYPE } from '../constants/envVars.js'
 import { VALIDS_PERSISTENCE_TYPES } from '../constants/constants.js'
-import CustomError from '../errors/CustomError.js'
+import CustomError from '../errors/classes/CustomError.js'
 import { httpCodes } from '../utils/response.utils.js'
 
 const PersistenceFactory = {

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import ValidationError from '../errors/ValidationError.js'
+import ValidationError from '../errors/classes/ValidationError.js'
 
 const castToMongoId = (id) => {
   try {

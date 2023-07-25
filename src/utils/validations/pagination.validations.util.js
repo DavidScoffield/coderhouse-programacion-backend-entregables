@@ -1,4 +1,4 @@
-import ValidationError from '../../errors/ValidationError.js'
+import ValidationError from '../../errors/classes/ValidationError.js'
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
 
 const paginationParamsValidations = {

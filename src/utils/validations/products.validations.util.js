@@ -1,4 +1,4 @@
-import ValidationError from '../../errors/ValidationError.js'
+import ValidationError from '../../errors/classes/ValidationError.js'
 import { castToMongoId } from '../casts.utils.js'
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
 

@@ -1,5 +1,5 @@
 import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
-import ValidationError from '../errors/ValidationError.js'
+import ValidationError from '../errors/classes/ValidationError.js'
 import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'

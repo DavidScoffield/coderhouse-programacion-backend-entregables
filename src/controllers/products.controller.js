@@ -1,4 +1,4 @@
-import ValidationError from '../errors/ValidationError.js'
+import ValidationError from '../errors/classes/ValidationError.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 import Products from './Products.js'
 
-import CustomError from '../../../errors/CustomError.js'
+import CustomError from '../../../errors/classes/CustomError.js'
 
 const collection = 'carts'
 
