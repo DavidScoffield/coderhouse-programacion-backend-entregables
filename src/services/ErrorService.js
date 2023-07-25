@@ -28,6 +28,7 @@ export default class ErrorService {
     code = EErrors.MONGO_ERROR,
     cause,
     stack,
+    metaData,
   }) {
     return ErrorService.createError({
       name: 'MongoError',
@@ -36,6 +37,7 @@ export default class ErrorService {
       code,
       status,
       stack,
+      metaData,
     })
   }
 
@@ -45,6 +47,7 @@ export default class ErrorService {
     code = EErrors.INVALID_VALUES,
     cause,
     stack,
+    metaData,
   }) {
     return ErrorService.createError({
       name: 'ValidationError',
@@ -53,6 +56,7 @@ export default class ErrorService {
       code,
       status,
       stack,
+      metaData,
     })
   }
 }
