@@ -1,8 +1,9 @@
+import { tryCatchWrapperMongo } from '../../../errors/handlers/mongoError.handler.js'
 import { hashPassword } from '../../../utils/bcrypt.js'
 import Users from '../models/Users.js'
 
 export default class UserManager {
-  addUser = ({ firstName, lastName, email, age, password, cart }) => {
+  addUser = tryCatchWrapperMongo(async ({ firstName, lastName, email, age, password, cart }) => {
     const user = {
       ...(firstName && { firstName }),
       ...(lastName && { lastName }),
@@ -13,17 +14,17 @@ export default class UserManager {
     }
 
     return Users.create(user)
-  }
+  })
 
-  getUserByEmail = (email, { lean = false } = {}) => {
+  getUserByEmail = tryCatchWrapperMongo(async (email, { lean = false } = {}) => {
     return Users.findOne({ email }, null, { lean })
-  }
+  })
 
-  updateUser = (userId, data, { lean = false } = {}) => {
+  updateUser = tryCatchWrapperMongo(async (userId, data, { lean = false } = {}) => {
     return Users.findByIdAndUpdate(userId, data, { new: true, lean })
-  }
+  })
 
-  getUserById = (userId, { lean = false } = {}) => {
+  getUserById = tryCatchWrapperMongo(async (userId, { lean = false } = {}) => {
     return Users.findById(userId, null, { lean })
-  }
+  })
 }

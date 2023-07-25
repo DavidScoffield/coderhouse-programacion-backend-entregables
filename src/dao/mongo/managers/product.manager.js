@@ -1,7 +1,8 @@
+import { tryCatchWrapperMongo } from '../../../errors/handlers/mongoError.handler.js'
 import Products from '../models/Products.js'
 
 export default class ProductManager {
-  getProducts = ({ limit, page, sort, query = {} } = {}) => {
+  getProducts = tryCatchWrapperMongo(async ({ limit, page, sort, query = {} } = {}) => {
     const options = {
       lean: true,
     }
@@ -11,27 +12,13 @@ export default class ProductManager {
     if (sort) options.sort = { price: sort }
 
     return Products.paginate(query, options)
-  }
+  })
 
-  getProductById = (id) => Products.findById(id).lean()
+  getProductById = tryCatchWrapperMongo(async (id) => Products.findById(id).lean())
 
-  addProduct = ({ title, description, price, thumbnail, code, stock, category, status }) => {
-    return Products.create({
-      title,
-      description,
-      price,
-      thumbnail,
-      code,
-      stock,
-      category,
-      status,
-    })
-  }
-
-  updateProduct = (id, { title, description, price, thumbnail, code, stock, category, status }) => {
-    return Products.findByIdAndUpdate(
-      id,
-      {
+  addProduct = tryCatchWrapperMongo(
+    async ({ title, description, price, thumbnail, code, stock, category, status }) => {
+      return Products.create({
         title,
         description,
         price,
@@ -40,14 +27,32 @@ export default class ProductManager {
         stock,
         category,
         status,
-      },
-      { new: true, lean: true }
-    )
-  }
+      })
+    }
+  )
 
-  deleteProduct = (id) => Products.findByIdAndDelete(id)
+  updateProduct = tryCatchWrapperMongo(
+    async (id, { title, description, price, thumbnail, code, stock, category, status }) => {
+      return Products.findByIdAndUpdate(
+        id,
+        {
+          title,
+          description,
+          price,
+          thumbnail,
+          code,
+          stock,
+          category,
+          status,
+        },
+        { new: true, lean: true }
+      )
+    }
+  )
 
-  getCategories = () => {
+  deleteProduct = tryCatchWrapperMongo(async (id) => Products.findByIdAndDelete(id))
+
+  getCategories = tryCatchWrapperMongo(async () => {
     return Products.distinct('category')
-  }
+  })
 }

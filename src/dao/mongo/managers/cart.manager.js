@@ -1,35 +1,42 @@
+import { tryCatchWrapperMongo } from '../../../errors/handlers/mongoError.handler.js'
 import Carts from '../models/Carts.js'
 
 export default class CartManager {
-  getCartById = (id, { lean = false } = {}) => Carts.findById(id, null, { lean })
+  getCartById = tryCatchWrapperMongo(async (id, { lean = false } = {}) => {
+    return Carts.findById(id, null, { lean })
+  })
 
-  addCart = () => Carts.create({})
+  addCart = tryCatchWrapperMongo(async () => {
+    return Carts.create({})
+  })
 
-  saveCart = (cart) => cart.save()
+  saveCart = tryCatchWrapperMongo(async (cart) => {
+    return cart.save()
+  })
 
-  addProductToCart = ({ cart, productId, quantity }) => {
+  addProductToCart = tryCatchWrapperMongo(async ({ cart, productId, quantity }) => {
     cart.addProduct(productId, quantity)
     return this.saveCart(cart)
-  }
+  })
 
-  removeProductFromCart = ({ cart, productId }) => {
+  removeProductFromCart = tryCatchWrapperMongo(async ({ cart, productId }) => {
     cart.removeProduct(productId)
     return this.saveCart(cart)
-  }
+  })
 
-  removeAllProductFromCart = (cartId) => {
+  removeAllProductFromCart = tryCatchWrapperMongo(async (cartId) => {
     return Carts.findByIdAndUpdate(cartId, { products: [] }, { new: true })
-  }
+  })
 
-  updateQuantityOfProductInCart = ({ cartId, productId, quantity }) => {
+  updateQuantityOfProductInCart = tryCatchWrapperMongo(async ({ cartId, productId, quantity }) => {
     return Carts.findOneAndUpdate(
       { _id: cartId, 'products._id': productId },
       { $set: { 'products.$.quantity': quantity } },
       { new: true }
     )
-  }
+  })
 
-  updateCartWithProducts = ({ cartId, products }) => {
+  updateCartWithProducts = tryCatchWrapperMongo(async ({ cartId, products }) => {
     return Carts.findByIdAndUpdate(cartId, { products }, { new: true }).lean()
-  }
+  })
 }

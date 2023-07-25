@@ -1,7 +1,8 @@
+import { tryCatchWrapperMongo } from '../../../errors/handlers/mongoError.handler.js'
 import Message from '../models/Messages.js'
 
 export default class MessageManager {
-  getMessages = (params) => Message.find(params).lean()
+  getMessages = tryCatchWrapperMongo(async (params) => Message.find(params).lean())
 
-  createMessage = (message) => Message.create(message)
+  createMessage = tryCatchWrapperMongo(async (message) => Message.create(message))
 }
