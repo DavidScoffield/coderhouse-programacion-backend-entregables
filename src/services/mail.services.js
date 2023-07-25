@@ -1,6 +1,8 @@
 import { MAILS_TEMPLATES } from '../constants/constants.js'
 import { GMAIL_MAIL_FROM } from '../constants/envVars.js'
+import EErrors from '../errors/EErrors.js'
 import loggerUtils from '../utils/logger.utils.js'
+import ErrorService from './ErrorService.js'
 
 export default class MailService {
   constructor(transporter) {
@@ -9,8 +11,19 @@ export default class MailService {
 
   sendMail = async ({ to, template }) => {
     try {
-      if (!to) throw new Error('No se ha especificado un destinatario')
-      if (!template) throw new Error('No se ha especificado una plantilla de mail')
+      if (!to)
+        ErrorService.createError({
+          message: 'No se ha especificado un destinatario',
+          name: 'MailService Error',
+          code: EErrors.INCOMPLETE_VALUES,
+        })
+
+      if (!template)
+        ErrorService.createError({
+          message: 'No se ha especificado una plantilla de mail',
+          name: 'MailService Error',
+          code: EErrors.INCOMPLETE_VALUES,
+        })
 
       const { subject, html } = template
 

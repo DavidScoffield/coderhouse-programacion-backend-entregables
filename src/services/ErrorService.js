@@ -59,4 +59,23 @@ export default class ErrorService {
       metaData,
     })
   }
+
+  static createInternalError({
+    message,
+    status = httpStatus.INTERNAL_SERVER_ERROR,
+    code = EErrors.DEFAULT,
+    cause,
+    stack,
+    metaData,
+  }) {
+    return ErrorService.createError({
+      name: 'InternalError',
+      cause,
+      message,
+      code,
+      status,
+      stack,
+      metaData,
+    })
+  }
 }

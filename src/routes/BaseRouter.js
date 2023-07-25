@@ -1,8 +1,10 @@
 import { Router } from 'express'
+import httpStatus from 'http-status'
+import EErrors from '../errors/EErrors.js'
+import ErrorService from '../services/ErrorService.js'
 import { passportCall } from '../utils/passport.utils.js'
 import { POLICY_STRATEGIES } from '../utils/policiesStrategies.util.js'
 import { httpStatusResponse } from '../utils/response.utils.js'
-import httpStatus from 'http-status'
 
 export default class BaseRouter {
   constructor() {
@@ -11,7 +13,11 @@ export default class BaseRouter {
   }
 
   init() {
-    throw new Error('You have to implement the method init!')
+    ErrorService.createInternalError({
+      message: 'You have to implement the method init!',
+      name: 'BaseRouter Error',
+      code: EErrors.METHOD_NOT_IMPLEMENTED,
+    })
   }
 
   getRouter() {

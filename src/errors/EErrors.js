@@ -5,6 +5,7 @@ const EErrors = {
   INVALID_VALUES: 3,
   INVALID_LENGTH: 4,
   MONGO_ERROR: 5,
+  METHOD_NOT_IMPLEMENTED: 6,
 }
 
 export default EErrors
