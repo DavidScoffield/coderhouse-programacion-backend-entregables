@@ -1,8 +1,13 @@
-import ValidationError from '../errors/classes/ValidationError.js'
+import httpStatus from 'http-status'
+import EErrors from '../errors/EErrors.js'
+import {
+  productErrorAtLeastOne,
+  productErrorIncompleteValues,
+} from '../errors/constants/productsErrors.js'
+import ErrorService from '../services/ErrorService.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
-import { httpCodes } from '../utils/response.utils.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'
 
@@ -72,26 +77,28 @@ const createProduct = async (req, res, next) => {
   } = req.body
 
   if (!title || !description || !code || !stock || !category || !price) {
-    return res.sendCustomError({ code: httpCodes.BAD_REQUEST, error: 'Missing parameters' })
-  }
-
-  try {
-    const product = await productRepository.addProduct({
-      title,
-      description,
-      code,
-      price,
-      status,
-      stock,
-      category,
-      thumbnail,
+    ErrorService.createError({
+      name: 'CreateProductError',
+      status: httpStatus.BAD_REQUEST,
+      cause: productErrorIncompleteValues({ title, description, code, stock, category, price }),
+      code: EErrors.INCOMPLETE_VALUES,
+      message: 'Missing parameters',
     })
-    res.sendSuccess(`New product with id "${product.id}" was added`)
-
-    req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
-  } catch (error) {
-    next(error)
   }
+
+  const product = await productRepository.addProduct({
+    title,
+    description,
+    code,
+    price,
+    status,
+    stock,
+    category,
+    thumbnail,
+  })
+  res.sendSuccess(`New product with id "${product.id}" was added`)
+
+  req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
 }
 
 const updateProduct = async (req, res, next) => {
@@ -112,7 +119,12 @@ const updateProduct = async (req, res, next) => {
       !category &&
       status === undefined
     ) {
-      throw new ValidationError('Must provide at least one field to update', 400)
+      ErrorService.createValidationError({
+        message: 'Must provide at least one field to update',
+        status: httpStatus.BAD_REQUEST,
+        cause: productErrorAtLeastOne(body),
+        code: EErrors.INCOMPLETE_VALUES,
+      })
     }
 
     isProductDataValid(body)

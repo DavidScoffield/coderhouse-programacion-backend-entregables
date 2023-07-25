@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import { passportCall } from '../utils/passport.utils.js'
 import { POLICY_STRATEGIES } from '../utils/policiesStrategies.util.js'
-import { httpCodes, httpStatus } from '../utils/response.utils.js'
+import { httpStatusResponse } from '../utils/response.utils.js'
+import httpStatus from 'http-status'
 
 export default class BaseRouter {
   constructor() {
@@ -44,28 +45,28 @@ export default class BaseRouter {
   }
 
   generateCustomResponses = (req, res, next) => {
-    res.sendSuccess = (message) => res.json({ status: httpStatus.SUCCESS, message })
+    res.sendSuccess = (message) => res.json({ status: httpStatusResponse.SUCCESS, message })
 
     res.sendSuccessWithPayload = ({ message, payload }) =>
-      res.json({ status: httpStatus.SUCCESS, payload, message })
+      res.json({ status: httpStatusResponse.SUCCESS, payload, message })
 
     res.sendInternalError = ({ error }) =>
-      res.status(httpCodes.INTERNAL_SERVER_ERROR).json({ status: httpStatus.ERROR, error })
+      res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ status: httpStatusResponse.ERROR, error })
 
     res.sendUnauthorized = ({ error, payload }) =>
-      res.status(httpCodes.UNAUTHORIZED).json({ status: httpStatus.ERROR, error, payload })
+      res.status(httpStatus.UNAUTHORIZED).json({ status: httpStatusResponse.ERROR, error, payload })
 
     res.sendForbidden = ({ error, payload }) =>
-      res.status(httpCodes.FORBIDDEN).json({ status: httpStatus.ERROR, error, payload })
+      res.status(httpStatus.FORBIDDEN).json({ status: httpStatusResponse.ERROR, error, payload })
 
     res.sendNotFound = ({ error, payload }) =>
-      res.status(httpCodes.NOT_FOUND).json({ status: httpStatus.ERROR, error, payload })
+      res.status(httpStatus.NOT_FOUND).json({ status: httpStatusResponse.ERROR, error, payload })
 
     res.sendBadRequest = ({ error, payload }) =>
-      res.status(httpCodes.BAD_REQUEST).json({ status: httpStatus.ERROR, error, payload })
+      res.status(httpStatus.BAD_REQUEST).json({ status: httpStatusResponse.ERROR, error, payload })
 
     res.sendCustomError = ({ code, error, payload }) =>
-      res.status(code).json({ status: httpStatus.ERROR, error, payload })
+      res.status(code).json({ status: httpStatusResponse.ERROR, error, payload })
 
     next()
   }

@@ -1,8 +1,10 @@
 const info = (...params) => {
-  console.log('❔ INFO', ...params)
+  console.log('❔ INFO |', ...params)
 }
 const error = (...params) => {
-  console.error('❌ ERROR', ...params)
+  console.log('-----------------------------------------')
+  console.error('❌ ERROR |', [...params].join('\n'))
+  console.log('-----------------------------------------')
 }
 
 const msgIdWrong = ({ res, id }) => {

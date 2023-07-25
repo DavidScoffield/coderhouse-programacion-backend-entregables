@@ -1,7 +1,7 @@
+import httpStatus from 'http-status'
 import mongoose from 'mongoose'
+import ErrorService from '../../../services/ErrorService.js'
 import Products from './Products.js'
-
-import CustomError from '../../../errors/classes/CustomError.js'
 
 const collection = 'carts'
 
@@ -51,7 +51,11 @@ cardSchema.methods.removeProduct = function (product) {
   const index = this.products.findIndex((p) => p._id._id.equals(product._id))
 
   if (index === -1) {
-    throw new CustomError(`Product with id ${product._id} not exist in cart`)
+    ErrorService.createError({
+      message: `Product with id ${product._id} not exist in cart`,
+      status: httpStatus.NOT_FOUND,
+      name: 'ProductNotInCart',
+    })
   }
 
   this.products.splice(index, 1)

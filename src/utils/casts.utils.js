@@ -1,11 +1,17 @@
 import mongoose from 'mongoose'
-import ValidationError from '../errors/classes/ValidationError.js'
+import EErrors from '../errors/EErrors.js'
+import ErrorService from '../services/ErrorService.js'
 
 const castToMongoId = (id) => {
   try {
     return new mongoose.Types.ObjectId(id)
   } catch (error) {
-    throw new ValidationError(`The provided id (${id}) isn't valid`, 400)
+    ErrorService.createMongoError({
+      message: `The provided id (${id}) isn't valid`,
+      status: 400,
+      stack: error.stack,
+      code: EErrors.INVALID_TYPES,
+    })
   }
 }
 

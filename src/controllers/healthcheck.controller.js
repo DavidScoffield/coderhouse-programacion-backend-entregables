@@ -1,4 +1,4 @@
-import { httpCodes } from '../utils/response.utils.js'
+import httpStatus from 'http-status'
 
 const check = (req, res) => {
   const healthcheck = {
@@ -11,7 +11,7 @@ const check = (req, res) => {
     res.sendSuccessWithPayload({ payload: healthcheck })
   } catch (error) {
     healthcheck.message = error.message || error.toString()
-    res.sendCustomError({ code: httpCodes.SERVICE_UNAVAILABLE, error: healthcheck })
+    res.sendCustomError({ code: httpStatus.SERVICE_UNAVAILABLE, error: healthcheck })
   }
 }
 

@@ -1,7 +1,8 @@
-import { PERSISTENCE_TYPE } from '../constants/envVars.js'
+import httpStatus from 'http-status'
 import { VALIDS_PERSISTENCE_TYPES } from '../constants/constants.js'
-import CustomError from '../errors/classes/CustomError.js'
-import { httpCodes } from '../utils/response.utils.js'
+import { PERSISTENCE_TYPE } from '../constants/envVars.js'
+import EErrors from '../errors/EErrors.js'
+import ErrorService from '../services/ErrorService.js'
 
 const PersistenceFactory = {
   [VALIDS_PERSISTENCE_TYPES.FS]: async () => {
@@ -21,12 +22,15 @@ const PersistenceFactory = {
   },
 
   default: async () => {
-    throw new CustomError(
-      `Invalid persistence type: ${PERSISTENCE_TYPE}. The valids keys are: ${Object.keys(
+    ErrorService.createError({
+      message: 'Invalid persistence type',
+      status: httpStatus.INTERNAL_SERVER_ERROR,
+      cause: `Invalid persistence type: ${PERSISTENCE_TYPE}. The valids keys are: ${Object.keys(
         VALIDS_PERSISTENCE_TYPES
       )}`,
-      httpCodes.INTERNAL_SERVER_ERROR
-    )
+      name: 'InvalidPersistenceType',
+      code: EErrors.INVALID_TYPES,
+    })
   },
 }
 
@@ -38,10 +42,12 @@ const getPersistences = async () => {
   // Validate if all managers are defined (not null) or throw an error
   Object.keys(managers).forEach((managerKey) => {
     if (!managers[managerKey]) {
-      throw new CustomError(
-        `The manager ${managerKey} is not defined. Please check the persistence type "${PERSISTENCE_TYPE}" or define it`,
-        httpCodes.INTERNAL_SERVER_ERROR
-      )
+      ErrorService.createError({
+        message: 'Manager not defined',
+        status: httpStatus.INTERNAL_SERVER_ERROR,
+        name: 'ManagerNotDefined',
+        cause: `The manager ${managerKey} is not defined. Please check the persistence type "${PERSISTENCE_TYPE}" or define it`,
+      })
     }
   })
 

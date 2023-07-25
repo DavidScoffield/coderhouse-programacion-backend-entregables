@@ -1,10 +1,10 @@
+import httpStatus from 'http-status'
 import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
-import ValidationError from '../errors/classes/ValidationError.js'
+import ErrorService from '../services/ErrorService.js'
 import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken } from '../utils/jwt.utils.js'
-import { httpCodes } from '../utils/response.utils.js'
 
 const register = async (req, res, next) => {
   const { user } = req
@@ -39,13 +39,14 @@ const restorePassword = async (req, res, next) => {
   try {
     const user = await userRepository.getUserByEmail(email)
 
-    if (!user) throw new ValidationError('El email no está registrado')
+    // if (!user) throw new ValidationError('El email no está registrado')
+    if (!user) ErrorService.createValidationError({ message: 'El email no está registrado' })
 
     if (user.password) {
       const isSamePassword = isValidPassword(password, user.password)
       if (isSamePassword)
         return res.sendCustomError({
-          code: httpCodes.BAD_REQUEST,
+          code: httpStatus.BAD_REQUEST,
           error: 'Cannot replace password with current password',
         })
     }
