@@ -22,6 +22,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **Passport**
 - **JWT**
 - **Nodemailer(with gmail)**
+- **Faker js**
 
 ## Intrucciones de instalación
 
