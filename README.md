@@ -46,6 +46,10 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
     GITHUB_CLIENT_ID=
     GITHUB_CLIENT_SECRET=
     GITHUB_CALLBACK_URL=
+
+    # Google credentials
+    GMAIL_MAIL_USER=
+    GMAIL_MAIL_PASS=
   ```
 
 ## Ejecutar servidor
@@ -58,6 +62,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 ```bash
 .
 ├── extras
+├── postman
 └── src
     ├── config
     ├── constants
@@ -71,14 +76,18 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
     │       └── models
     ├── dto
     ├── errors
+    │   ├── constants
+    │   └── handlers
     ├── listeners
     ├── middlewares
+    ├── mocks
     ├── public
     │   ├── assets
     │   ├── css
     │   └── js
-    ├── repositories
     ├── routes
+    ├── services
+    │   └── repositories
     ├── utils
     │   └── validations
     └── views
