@@ -5,6 +5,7 @@ import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken } from '../utils/jwt.utils.js'
+import EErrors from '../errors/EErrors.js'
 
 const register = async (req, res, next) => {
   const { user } = req
@@ -36,32 +37,31 @@ const logout = (req, res, next) => {
 const restorePassword = async (req, res, next) => {
   const { email, password } = req.body
 
-  try {
-    const user = await userRepository.getUserByEmail(email)
+  const user = await userRepository.getUserByEmail(email)
 
-    // if (!user) throw new ValidationError('El email no está registrado')
-    if (!user) ErrorService.createValidationError({ message: 'El email no está registrado' })
+  if (!user) ErrorService.createValidationError({ message: 'El email no está registrado' })
 
-    if (user.password) {
-      const isSamePassword = isValidPassword(password, user.password)
-      if (isSamePassword)
-        return res.sendCustomError({
-          code: httpStatus.BAD_REQUEST,
-          error: 'Cannot replace password with current password',
-        })
-    }
-
-    const hashedPassword = hashPassword(password)
-
-    const updatedUser = await userRepository.updateUser(user._id, { password: hashedPassword })
-
-    res.sendSuccessWithPayload({
-      message: 'Contraseña actualizada correctamente',
-      payload: updatedUser,
-    })
-  } catch (error) {
-    next(error)
+  if (user.password) {
+    const isSamePassword = isValidPassword(password, user.password)
+    if (isSamePassword)
+      return ErrorService.createError({
+        message: 'Cannot replace password with current password',
+        cause: 'Cannot replace password with current password',
+        status: httpStatus.BAD_REQUEST,
+        metaData: { email },
+        code: EErrors.INVALID_VALUES,
+        name: 'RestorePassword Error',
+      })
   }
+
+  const hashedPassword = hashPassword(password)
+
+  const updatedUser = await userRepository.updateUser(user._id, { password: hashedPassword })
+
+  res.sendSuccessWithPayload({
+    message: 'Contraseña actualizada correctamente',
+    payload: updatedUser,
+  })
 }
 
 const githubCallback = (req, res, next) => {
