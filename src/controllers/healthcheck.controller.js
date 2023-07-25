@@ -1,4 +1,5 @@
 import httpStatus from 'http-status'
+import ErrorService from '../services/ErrorService.js'
 
 const check = (req, res) => {
   const healthcheck = {
@@ -11,7 +12,13 @@ const check = (req, res) => {
     res.sendSuccessWithPayload({ payload: healthcheck })
   } catch (error) {
     healthcheck.message = error.message || error.toString()
-    res.sendCustomError({ code: httpStatus.SERVICE_UNAVAILABLE, error: healthcheck })
+
+    ErrorService.createError({
+      message: healthcheck,
+      name: 'Healthcheck Error',
+      status: httpStatus.SERVICE_UNAVAILABLE,
+      metaData: { healthcheck },
+    })
   }
 }
 
