@@ -23,12 +23,12 @@ export default class SessionUserDTO {
         code: EErrors.INCOMPLETE_VALUES,
       })
 
-    if (!email) throw new Error('SessionUserDTO: email is required')
-    ErrorService.createValidationError({
-      message: 'SessionUserDTO: email is required',
-      name: 'SessionUserDTO Error',
-      code: EErrors.INCOMPLETE_VALUES,
-    })
+    if (!email)
+      ErrorService.createValidationError({
+        message: 'SessionUserDTO: email is required',
+        name: 'SessionUserDTO Error',
+        code: EErrors.INCOMPLETE_VALUES,
+      })
 
     if (!name && !firstName && !lastName)
       ErrorService.createValidationError({
