@@ -535,7 +535,29 @@
 			]
 		},
 		{
-			"name": "healthcheck",
+			"name": "mockingProducts",
+			"item": [
+				{
+					"name": "/mockingproducts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}{{PORT}}/mockingproducts",
+							"host": [
+								"{{HOST}}{{PORT}}"
+							],
+							"path": [
+								"mockingproducts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/healthcheck",
 			"request": {
 				"method": "GET",
 				"header": [],

@@ -125,6 +125,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
 | PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/current         |          |                                     |                                 | Object     |
+| GET              | /mockingproducts              |          |                                     |                                 | Object     |
 
 ### + GET /healthcheck
 
@@ -138,6 +139,33 @@ Retorna un objeto con la información del estado del servidor.
     uptime: Integer,
     responsetime: Array,
     timestamp: Integer,
+}
+```
+
+### + GET /mockingproducts
+
+Retorna un array de 100 productos generados con faker js
+
+#### Return
+
+```js
+payload: {
+  products: [
+    {
+        id: String,
+        title: String,
+        description: String,
+        price: Integer,
+        thumbnails: Array,
+        code: String,
+        stock: Integer,
+        category: String,
+        status: Boolean,
+        createdAt: Date,
+        updatedAt: Date,
+    },
+    ...
+  ]
 }
 ```
 
