@@ -1,6 +1,6 @@
+import LoggerService from '../services/logger.service.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
-import logger from '../utils/logger.utils.js'
 
 const registerRealTimeProductsHandler = async (io, socket) => {
   const saveProduct = async (product) => {
@@ -10,7 +10,7 @@ const registerRealTimeProductsHandler = async (io, socket) => {
 
     io.emit('realTimeProducts:storedProducts', products)
 
-    logger.info(`Product with id ${product.id} created through socket.io`)
+    LoggerService.info(`Product with id ${product.id} created through socket.io`)
   }
 
   const deleteProduct = async (pid) => {
@@ -22,7 +22,7 @@ const registerRealTimeProductsHandler = async (io, socket) => {
 
     io.emit('realTimeProducts:storedProducts', products)
 
-    logger.info(`Product with id ${id} deleted through socket.io`)
+    LoggerService.info(`Product with id ${id} deleted through socket.io`)
   }
 
   socket.emit('realTimeProducts:storedProducts', await productRepository.getProducts())

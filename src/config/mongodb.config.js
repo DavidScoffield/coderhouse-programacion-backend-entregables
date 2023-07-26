@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 import { MONGO_DB_NAME, MONGO_HOST, MONGO_PASS, MONGO_USER } from '../constants/envVars.js'
-import logger from '../utils/logger.utils.js'
+import LoggerService from '../services/logger.service.js'
 
 if (!MONGO_DB_NAME || !MONGO_HOST || !MONGO_PASS || !MONGO_USER) {
-  logger.error('❌❌❌ Missing MongoDB env vars ❌❌❌')
+  LoggerService.fatal('❌❌❌ Missing MongoDB env vars ❌❌❌')
   process.exit(1)
 }
 
@@ -13,14 +13,14 @@ class MongoSingleton {
   static #instance
 
   constructor() {
-    logger.info('🔎🔎 connecting to', MONGO_URI)
+    LoggerService.info('🔎🔎 connecting to', MONGO_URI)
     mongoose
       .connect(MONGO_URI)
       .then(() => {
-        logger.info('✅️✅️ Connections to Mongo database succefully')
+        LoggerService.info('✅️✅️ Connections to Mongo database succefully')
       })
       .catch((err) => {
-        logger.info('❌ error connecting to MongoDB:', err.message)
+        LoggerService.error('❌ error connecting to MongoDB:', err.message)
       })
   }
 

@@ -3,10 +3,10 @@ import { create } from 'express-handlebars'
 import passport from 'passport'
 import { PORT } from '../constants/envVars.js'
 import { __src } from '../utils/dirname.utils.js'
-import logger from '../utils/logger.utils.js'
 import initializePassportStrategies from './passport.config.js'
 import cookieParser from 'cookie-parser'
 import { USER_ROLES } from '../constants/constants.js'
+import LoggerService from '../services/logger.service.js'
 
 const app = express()
 
@@ -37,7 +37,7 @@ app.use(passport.initialize())
 
 // Listener
 const httpServer = app.listen(PORT, () =>
-  logger.info(`Server running on port ${PORT} - Access http://localhost:${PORT}`)
+  LoggerService.info(`Server running on port ${PORT} - Access http://localhost:${PORT}`)
 )
 
 export { app, httpServer }

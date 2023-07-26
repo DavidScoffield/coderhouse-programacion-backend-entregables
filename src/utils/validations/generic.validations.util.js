@@ -1,4 +1,4 @@
-import logger from '../logger.utils.js'
+import LoggerService from '../../services/logger.service.js'
 
 const isInvalidNumber = (value) => {
   const parsedValue = Number(value)
@@ -31,7 +31,7 @@ const validateData = (data, validations) => {
   )
 
   if (nonMatches.length > 0) {
-    logger.error(`❓Las keys |${nonMatches.join(',')}| no tienen validador`)
+    LoggerService.warn(`❓Las keys |${nonMatches.join(',')}| no tienen validador`)
   }
 
   const validatedValues = matches.reduce((acc, property) => {
@@ -42,4 +42,4 @@ const validateData = (data, validations) => {
   return Object.values(validatedValues).every(Boolean)
 }
 
-export { validateData, isInvalidNumber }
+export { isInvalidNumber, validateData }

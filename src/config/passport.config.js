@@ -1,7 +1,7 @@
 import passport from 'passport'
 import GithubStrategy from 'passport-github2'
-import { Strategy as LocalStrategy } from 'passport-local'
 import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt'
+import { Strategy as LocalStrategy } from 'passport-local'
 
 import {
   ADMIN_USER,
@@ -11,12 +11,12 @@ import {
   SECRET_JWT,
 } from '../constants/envVars.js'
 
+import SessionUserDTO from '../dto/SessionUserDTO.js'
+import LoggerService from '../services/logger.service.js'
+import { cartRepository, userRepository } from '../services/repositories/index.js'
 import { isValidPassword } from '../utils/bcrypt.js'
 import { cookieExtractor } from '../utils/jwt.utils.js'
-import logger from '../utils/logger.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
-import { cartRepository, userRepository } from '../services/repositories/index.js'
-import SessionUserDTO from '../dto/SessionUserDTO.js'
 
 const initializePassportStrategies = () => {
   passport.use(
@@ -88,7 +88,10 @@ const initializePassportStrategies = () => {
           const emailGithub = email || login
 
           if (!name || !emailGithub) {
-            logger.error('No se pudo obtener la información de GitHub', { emailGithub, name })
+            LoggerService.error('No se pudo obtener la información de GitHub', {
+              emailGithub,
+              name,
+            })
             return done(null, false, { message: 'No se pudo obtener la información de GitHub' })
           }
 

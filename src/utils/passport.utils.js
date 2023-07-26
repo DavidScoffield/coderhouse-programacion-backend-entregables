@@ -1,5 +1,5 @@
 import passport from 'passport'
-import loggerUtils from './logger.utils.js'
+import LoggerService from '../services/logger.service.js'
 
 export const passportCall = (strategy, { redirect, strategyType } = {}) => {
   return async (req, res, next) => {
@@ -7,7 +7,7 @@ export const passportCall = (strategy, { redirect, strategyType } = {}) => {
       if (error) return next(error)
 
       if (!strategyType) {
-        loggerUtils.error(`❓ Route ${req.url} doesn't have defined a strategyType`)
+        LoggerService.fatal(`❓ Route ${req.url} doesn't have defined a strategyType`)
         return res.sendInternalError({
           error: `Route ${req.url} doesn't have defined a strategyType`,
         })

@@ -1,8 +1,8 @@
 import { MAILS_TEMPLATES } from '../constants/constants.js'
 import { GMAIL_MAIL_FROM } from '../constants/envVars.js'
 import EErrors from '../errors/EErrors.js'
-import loggerUtils from '../utils/logger.utils.js'
 import ErrorService from './error.service.js'
+import LoggerService from './logger.service.js'
 
 export default class MailService {
   constructor(transporter) {
@@ -35,11 +35,11 @@ export default class MailService {
         html,
       })
 
-      loggerUtils.info(`📨 Mail enviado a ${to}`)
+      LoggerService.info(`📨 Mail enviado a ${to}`)
 
       return response
     } catch (e) {
-      loggerUtils.error(e.message)
+      LoggerService.error(e.message)
     }
   }
 

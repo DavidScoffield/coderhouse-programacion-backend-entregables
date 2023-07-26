@@ -1,6 +1,6 @@
 /* global io */
 
-import logger from '../../utils/logger.utils.js'
+import LoggerService from '../../services/logger.service.js'
 
 const socket = io()
 
@@ -41,6 +41,6 @@ tbody.addEventListener('click', async (e) => {
 })
 
 socket.on('realTimeProducts:storedProducts', (products) => {
-  logger.info(products)
+  LoggerService.info(products)
   renderProducts(products)
 })

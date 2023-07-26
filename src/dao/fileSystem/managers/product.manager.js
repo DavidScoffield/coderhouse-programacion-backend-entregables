@@ -1,4 +1,4 @@
-import logger from '../../../utils/logger.utils.js'
+import LoggerService from '../../../services/logger.service.js'
 import FileSystemPromises from '../utils/FileSystemPromises.js'
 
 export default class ProductManager {
@@ -25,7 +25,7 @@ export default class ProductManager {
     const product = products.find((product) => product.id === id)
 
     if (!product) {
-      logger.info(`Product with id "${id}" not exist in list`)
+      LoggerService.info(`Product with id "${id}" not exist in list`)
       throw new Error(`Product with id "${id}" not exist in list`)
     }
 
