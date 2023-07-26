@@ -1,5 +1,5 @@
 import httpStatus from 'http-status'
-import ErrorService from '../../services/ErrorService.js'
+import ErrorService from '../../services/error.service.js'
 
 const MONGO_SERVER_ERROR_HANDLER = {
   DuplicateKey: (error) => {

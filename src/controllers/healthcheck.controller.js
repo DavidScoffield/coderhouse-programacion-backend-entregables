@@ -1,5 +1,5 @@
 import httpStatus from 'http-status'
-import ErrorService from '../services/ErrorService.js'
+import ErrorService from '../services/error.service.js'
 
 const check = (req, res) => {
   const healthcheck = {

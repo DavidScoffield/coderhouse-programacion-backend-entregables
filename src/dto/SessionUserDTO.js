@@ -1,5 +1,5 @@
 import EErrors from '../errors/EErrors.js'
-import ErrorService from '../services/ErrorService.js'
+import ErrorService from '../services/error.service.js'
 
 export default class SessionUserDTO {
   id

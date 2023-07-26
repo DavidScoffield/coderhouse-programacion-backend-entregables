@@ -2,7 +2,7 @@ import { MAILS_TEMPLATES } from '../constants/constants.js'
 import { GMAIL_MAIL_FROM } from '../constants/envVars.js'
 import EErrors from '../errors/EErrors.js'
 import loggerUtils from '../utils/logger.utils.js'
-import ErrorService from './ErrorService.js'
+import ErrorService from './error.service.js'
 
 export default class MailService {
   constructor(transporter) {

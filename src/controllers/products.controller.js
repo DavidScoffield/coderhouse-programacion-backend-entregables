@@ -4,7 +4,7 @@ import {
   productErrorAtLeastOne,
   productErrorIncompleteValues,
 } from '../errors/constants/productsErrors.js'
-import ErrorService from '../services/ErrorService.js'
+import ErrorService from '../services/error.service.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'

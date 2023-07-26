@@ -1,6 +1,6 @@
 import httpStatus from 'http-status'
 import mongoose from 'mongoose'
-import ErrorService from '../../../services/ErrorService.js'
+import ErrorService from '../../../services/error.service.js'
 import Products from './Products.js'
 
 const collection = 'carts'

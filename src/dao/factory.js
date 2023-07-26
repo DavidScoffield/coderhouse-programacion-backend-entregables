@@ -2,7 +2,7 @@ import httpStatus from 'http-status'
 import { VALIDS_PERSISTENCE_TYPES } from '../constants/constants.js'
 import { PERSISTENCE_TYPE } from '../constants/envVars.js'
 import EErrors from '../errors/EErrors.js'
-import ErrorService from '../services/ErrorService.js'
+import ErrorService from '../services/error.service.js'
 
 const PersistenceFactory = {
   [VALIDS_PERSISTENCE_TYPES.FS]: async () => {

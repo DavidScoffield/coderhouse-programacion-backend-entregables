@@ -1,6 +1,6 @@
 import httpStatus from 'http-status'
 import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
-import ErrorService from '../services/ErrorService.js'
+import ErrorService from '../services/error.service.js'
 import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'

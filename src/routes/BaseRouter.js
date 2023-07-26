@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import httpStatus from 'http-status'
 import EErrors from '../errors/EErrors.js'
-import ErrorService from '../services/ErrorService.js'
+import ErrorService from '../services/error.service.js'
 import { passportCall } from '../utils/passport.utils.js'
 import { POLICY_STRATEGIES } from '../utils/policiesStrategies.util.js'
 import { httpStatusResponse } from '../utils/response.utils.js'
