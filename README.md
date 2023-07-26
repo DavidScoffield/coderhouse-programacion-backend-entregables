@@ -23,6 +23,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **JWT**
 - **Nodemailer(with gmail)**
 - **Faker js**
+- **Winston (for logging)**
 
 ## Intrucciones de instalación
 
@@ -136,6 +137,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/current         |          |                                     |                                 | Object     |
 | GET              | /mockingproducts              |          |                                     |                                 | Object     |
+| GET              | /loggerTest                   |          |                                     |                                 | Object     |
 
 ### + GET /healthcheck
 
@@ -178,6 +180,10 @@ payload: {
   ]
 }
 ```
+
+### + GET /loggerTest
+
+Retorna un status 200 - muestra los distintos logs disponibles en el servidor
 
 ### + GET /api/products/
 
