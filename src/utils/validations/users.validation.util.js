@@ -1,4 +1,4 @@
-import ErrorService from '../../services/ErrorService.js'
+import ErrorService from '../../services/error.service.js'
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
 
 const isEmail = (value) => {
