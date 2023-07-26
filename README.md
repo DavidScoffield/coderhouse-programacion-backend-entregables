@@ -58,6 +58,11 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - Con **NODE**: Ejecutar el comando `npm run start` (ejecuta el archivo _app.js_ con node)
 - CON **NODEMON**: Ejecutar el comando `npm run dev` (ejecuta el archivo _app.js_ con nodemon)
 
+> #### Nota:
+>
+> Para modificar el ambiente de ejecución, modificar la variable de entorno `NODE_ENV` en el archivo _.env_.
+> Las posibles opciones son: `development` y `production`.
+
 ## Estructura de carpetas
 
 ```bash
