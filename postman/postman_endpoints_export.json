@@ -572,6 +572,23 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "/loggerTest",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{HOST}}{{PORT}}/loggerTest",
+					"host": [
+						"{{HOST}}{{PORT}}"
+					],
+					"path": [
+						"loggerTest"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
