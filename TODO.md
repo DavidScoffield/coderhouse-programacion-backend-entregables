@@ -1,23 +1,31 @@
-# Implementación de logger
+# Práctica de integración sobre tu ecommerce
 
 ## Consigna
 
-- Basado en nuestro proyecto principal, implementar un logger
+- Con base en el proyecto que venimos desarrollando, toca solidificar algunos procesos
 
-## Se debe entregar
+## Aspectos a incluir
 
-- [x] Primero, definir un sistema de niveles que tenga la siguiente prioridad (de menor a mayor): **debug, http, info, warning, error, fatal**
-- [x] Después implementar un logger para desarrollo y un logger para producción, el logger de desarrollo deberá loggear a partir del nivel debug, sólo en consola
-- [x] Sin embargo, el logger del entorno productivo debería loggear sólo a partir de nivel info.
-- [x] Además, el logger deberá enviar en un transporte de archivos a partir del nivel de error en un nombre “errors.log”
-- [x] Agregar logs de valor alto en los puntos importantes de tu servidor (errores, advertencias, etc) y modificar los console.log() habituales que tenemos para que muestren todo a partir de winston.
-- [x] Crear un endpoint /loggerTest que permita probar todos los logs
+Realizar un sistema de recuperación de contraseña, la cual envíe por medio de un correo un botón que redireccione a una página para restablecer la contraseña (no recuperarla).
+
+- [ ] link del correo debe expirar después de 1 hora de enviado.
+- [ ] Si se trata de restablecer la contraseña con la misma contraseña del usuario, debe impedirlo e indicarle que no se puede colocar la misma contraseña
+- [ ] Si el link expiró, debe redirigir a una vista que le permita generar nuevamente el correo de restablecimiento, el cual contará con una nueva duración de 1 hora.
+
+- [ ] Establecer un nuevo rol para el schema del usuario llamado "premium" el cual estará habilitado también para crear productos
+- [ ] Modificar el schema de producto para contar con un campo “owner”, el cual haga referencia a la persona que creó el producto
+  - [ ] Si un producto se crea sin owner, se debe colocar por defecto "admin" .
+  - [ ] El campo owner deberá guardar sólo el correo electrónico (o \_id, lo dejamos a tu conveniencia) del usuario que lo haya creado (Sólo podrá recibir usuarios premium)
+- [ ] Modificar los permisos de modificación y eliminación de productos para que:
+  - [ ] Un usuario premium sólo pueda borrar los productos que le pertenecen.
+  - [ ] El admin pueda borrar cualquier producto, aún si es de un owner.
+- [ ] Además, modificar la lógica de carrito para que un usuario premium NO pueda agregar a su carrito un producto que le pertenece
+- [ ] Implementar una nueva ruta en el router de api/users, la cual será **/api/users/premium/:uid** la cual permitirá cambiar el rol de un usuario, de “user” a “premium” y viceversa.
 
 ## Formato
 
-- Link al repositorio de Github con el proyecto (sin node_modules)
+- Link al repositorio de GitHub con el proyecto completo (No incluir node_modules).
 
 ## Sugerencias
 
-- Puedes revisar el testing del entregable [Aqui](https://docs.google.com/document/d/1t--s1L7rv9cg5GENOveul9sHM6LcSclkIC1UWYU3TKs/edit)
-- La ruta loggerTest es muy importante para que tu entrega pueda ser calificada de manera rápida y eficiente. ¡No olvides colocarla!
+- Te recomendamos testear muy bien todas las políticas de acceso. ¡Son la parte fuerte de este entregable!
