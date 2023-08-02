@@ -18,6 +18,7 @@ export const PRIVACY_TYPES = {
 export const USER_ROLES = {
   USER: 'USER',
   ADMIN: 'ADMIN',
+  PREMIUM: 'PREMIUM',
 }
 
 export const ALL_USER_ROLES = Object.values(USER_ROLES)
