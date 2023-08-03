@@ -5,6 +5,7 @@ import ErrorService from '../services/error.service.js'
 import { passportCall } from '../utils/passport.utils.js'
 import { POLICY_STRATEGIES } from '../utils/policiesStrategies.util.js'
 import { httpStatusResponse } from '../utils/response.utils.js'
+import LoggerService from '../services/logger.service.js'
 
 export default class BaseRouter {
   constructor() {
@@ -27,6 +28,7 @@ export default class BaseRouter {
   #handleRoute(method, path, policies, ...callbacks) {
     this.router[method](
       path,
+      this.logRequest,
       this.generateCustomResponses,
       passportCall('jwt', { strategyType: 'jwt' }),
       this.handlePolicies(policies),
@@ -94,6 +96,13 @@ export default class BaseRouter {
 
       next()
     }
+  }
+
+  logRequest = (req, res, next) => {
+    LoggerService.http(
+      `[${req.method}] - ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`
+    )
+    next()
   }
 
   applyCallbacks(callbacks) {
