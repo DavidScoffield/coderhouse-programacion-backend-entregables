@@ -10,6 +10,7 @@ import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'
+import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
 
 const getProducts = async (req, res, next) => {
   const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
@@ -57,6 +58,8 @@ const getProductById = async (req, res, next) => {
 }
 
 const createProduct = async (req, res, next) => {
+  const { user } = req
+
   const {
     title,
     description,
@@ -78,6 +81,8 @@ const createProduct = async (req, res, next) => {
     })
   }
 
+  const owner = user.id === DEFAULT_ADMIN_DATA.id ? DEFAULT_ADMIN_DATA.name : user.email
+
   const product = await productRepository.addProduct({
     title,
     description,
@@ -87,7 +92,9 @@ const createProduct = async (req, res, next) => {
     stock,
     category,
     thumbnail,
+    owner,
   })
+
   res.sendSuccess(`New product with id "${product.id}" was added`)
 
   req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())

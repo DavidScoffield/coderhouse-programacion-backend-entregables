@@ -17,7 +17,7 @@ export default class ProductManager {
   getProductById = tryCatchWrapperMongo(async (id) => Products.findById(id).lean())
 
   addProduct = tryCatchWrapperMongo(
-    async ({ title, description, price, thumbnail, code, stock, category, status }) => {
+    async ({ title, description, price, thumbnail, code, stock, category, status, owner }) => {
       return Products.create({
         title,
         description,
@@ -27,6 +27,7 @@ export default class ProductManager {
         stock,
         category,
         status,
+        owner,
       })
     }
   )
