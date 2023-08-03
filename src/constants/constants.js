@@ -23,6 +23,10 @@ export const USER_ROLES = {
 
 export const ALL_USER_ROLES = Object.values(USER_ROLES)
 
+export const ALL_USER_ROLES_WITHOUT_ADMIN = ALL_USER_ROLES.filter(
+  (role) => role !== USER_ROLES.ADMIN
+)
+
 export const DEFAULT_ADMIN_DATA = {
   id: 0,
   name: 'Admin',
