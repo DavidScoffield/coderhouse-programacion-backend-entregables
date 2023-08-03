@@ -17,6 +17,7 @@ import { cartRepository, userRepository } from '../services/repositories/index.j
 import { isValidPassword } from '../utils/bcrypt.js'
 import { cookieExtractor } from '../utils/jwt.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
+import { USER_ROLES } from '../constants/constants.js'
 
 const initializePassportStrategies = () => {
   passport.use(
@@ -24,13 +25,16 @@ const initializePassportStrategies = () => {
     new LocalStrategy(
       { passReqToCallback: true, usernameField: 'email' },
       async (req, email, password, done) => {
-        const { firstName, lastName, age } = req.body
+        const { firstName, lastName, age, role } = req.body
 
         if (email === ADMIN_USER)
           return done(null, false, { message: 'No se puede registrar un usuario con ese email' })
 
+        if (role === USER_ROLES.ADMIN)
+          return done(null, false, { message: 'No se puede registrar un usuario administrador' })
+
         try {
-          isUsersDataValid({ firstName, lastName, email, age, password })
+          isUsersDataValid({ firstName, lastName, email, age, password, role })
 
           const userExists = await userRepository.getUserByEmail(email)
 
@@ -45,6 +49,7 @@ const initializePassportStrategies = () => {
             email,
             password,
             cart: newCart,
+            role,
           })
 
           return done(null, user)

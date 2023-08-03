@@ -137,6 +137,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | DELETE           | /api/carts/:cid               |          |                                     | cid : Cart ID                   | Object     |
 | PUT              | /api/carts/:cid/purchase      |          |                                     | cid : Cart ID                   | Object     |
 | POST             | /api/sessions/register        | Object   |                                     |                                 | Object     |
+| POST             | /api/sessions/registerUsers   | Object   |                                     |                                 | Object     |
 | POST             | /api/sessions/login           | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
 | PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
@@ -354,6 +355,21 @@ lastName: String | Required
 email: String | Required | Unique
 age: Integer | Required
 password: String | Required
+```
+
+### + POST /api/sessions/registerUsers
+
+Permite a los ADMIN registrar un usuario(permitiendo agregarle el role que deseen, excluyendo al role administrador). Recibe un objeto a través del body y retorna un objeto con los valores ingresados junto con el ID de usuario asignado.
+
+#### Body
+
+```js
+firstName: String | Required
+lastName: String | Required
+email: String | Required | Unique
+age: Integer | Required
+password: String | Required
+role: String | Optional
 ```
 
 ### + POST /api/sessions/login

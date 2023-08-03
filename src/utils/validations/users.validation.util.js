@@ -1,9 +1,14 @@
+import { ALL_USER_ROLES, USER_ROLES } from '../../constants/constants.js'
 import ErrorService from '../../services/error.service.js'
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
 
 const isEmail = (value) => {
   const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
   return emailRegex.test(value)
+}
+
+const isValidRole = (role) => {
+  return ALL_USER_ROLES.includes(role)
 }
 
 const userValidations = {
@@ -48,6 +53,17 @@ const userValidations = {
       ErrorService.createValidationError({
         message: `"${password}" is not a valid password string`,
       })
+    }
+
+    return true
+  },
+  role: (role) => {
+    if (role) {
+      if (typeof role !== 'string' || !isValidRole(role)) {
+        ErrorService.createValidationError({
+          message: `"${role}" is not a valid role`,
+        })
+      }
     }
 
     return true

@@ -1,6 +1,7 @@
-import { ALL_USER_ROLES, PRIVACY_TYPES } from '../constants/constants.js'
+import { ALL_USER_ROLES, PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import sessionController from '../controllers/session.controller.js'
 import checkAdminLogin from '../middlewares/checkAdminLogin.middleware.js'
+import protectRoleRegistration from '../middlewares/session.middleware.js'
 import { passportCall } from '../utils/passport.utils.js'
 import BaseRouter from './BaseRouter.js'
 
@@ -9,6 +10,14 @@ export default class SessionRouter extends BaseRouter {
     this.post(
       '/register',
       [PRIVACY_TYPES.NO_AUTH],
+      protectRoleRegistration,
+      passportCall('register', { strategyType: 'locals' }),
+      sessionController.register
+    )
+
+    this.post(
+      '/registerUsers',
+      [USER_ROLES.ADMIN],
       passportCall('register', { strategyType: 'locals' }),
       sessionController.register
     )

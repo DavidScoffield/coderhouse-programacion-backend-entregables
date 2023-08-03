@@ -6,8 +6,8 @@ export default class UserRepository {
     this.dao = dao
   }
 
-  addUser = ({ firstName, lastName, email, age, password, cart }) => {
-    return this.dao.addUser({ firstName, lastName, email, age, password, cart })
+  addUser = ({ firstName, lastName, email, age, password, cart, role }) => {
+    return this.dao.addUser({ firstName, lastName, email, age, password, cart, role })
   }
 
   getUserByEmail = (email, { lean } = {}) => {
