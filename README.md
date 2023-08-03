@@ -144,6 +144,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | GET              | /api/sessions/current         |          |                                     |                                 | Object     |
 | GET              | /mockingproducts              |          |                                     |                                 | Object     |
 | GET              | /loggerTest                   |          |                                     |                                 | Object     |
+| PUT              | /api/users/premium/:uid       |          |                                     | uid: User ID                    | Object     |
 
 ### + GET /healthcheck
 
@@ -401,6 +402,14 @@ password: String | Required
 ### + GET /api/sessions/current
 
 Retorna un objeto con la información del usuario actual.
+
+### + PUT /api/users/premium/:uid
+
+Permite cambiar el rol de un usuario, de "user" a "premium" y viceversa.
+
+#### Path variables
+
+- **uid**: ID del usuario
 
 ##
 

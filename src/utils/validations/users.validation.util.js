@@ -7,8 +7,8 @@ const isEmail = (value) => {
   return emailRegex.test(value)
 }
 
-const isValidRole = (role) => {
-  return ALL_USER_ROLES.includes(role)
+const isValidRole = (role, arrayRoles = ALL_USER_ROLES) => {
+  return arrayRoles.includes(role)
 }
 
 const userValidations = {
@@ -72,4 +72,4 @@ const userValidations = {
 
 const isUsersDataValid = (userData) => validateData(userData, userValidations)
 
-export { isUsersDataValid }
+export { isUsersDataValid, isValidRole }

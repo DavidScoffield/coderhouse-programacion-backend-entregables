@@ -19,7 +19,7 @@
   - [x] Un usuario premium sólo pueda borrar los productos que le pertenecen.
   - [x] El admin pueda borrar cualquier producto, aún si es de un owner.
 - [x] Además, modificar la lógica de carrito para que un usuario premium NO pueda agregar a su carrito un producto que le pertenece
-- [ ] Implementar una nueva ruta en el router de api/users, la cual será **/api/users/premium/:uid** la cual permitirá cambiar el rol de un usuario, de “user” a "premium" y viceversa.
+- [x] Implementar una nueva ruta en el router de api/users, la cual será **/api/users/premium/:uid** la cual permitirá cambiar el rol de un usuario, de “user” a "premium" y viceversa.
 
 ## Formato
 

@@ -13,6 +13,7 @@ import {
   viewRouter,
   mockingProductsRouter,
   loggerRouter,
+  userRouter,
 } from './routes/index.js'
 
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
@@ -27,6 +28,7 @@ app.use('/healthcheck', healthcheckRouter)
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
 app.use('/api/sessions', sessionRouter)
+app.use('/api/users', userRouter)
 app.use('/mockingproducts', mockingProductsRouter)
 app.use('/loggerTest', loggerRouter)
 
