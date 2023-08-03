@@ -82,7 +82,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Postman product\",\r\n    \"description\": \"Producto nuevo desde postman\",\r\n    \"code\": \"9\",\r\n    \"price\": 1555,\r\n    \"status\": true,\r\n    \"stock\": 120,\r\n    \"category\": \"Almacen\",\r\n    \"thumbnail\": []\r\n}",
+							"raw": "{\r\n   \"title\": \"Tomate\",\r\n   \"description\": \"description de tomate\",\r\n    \"code\": \"10\",\r\n    \"price\": 1555,\r\n    \"status\": true,\r\n    \"stock\": 120,\r\n    \"category\": \"Almacen\",\r\n    \"thumbnail\": []\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -129,7 +129,7 @@
 							"variable": [
 								{
 									"key": "pid",
-									"value": "646797264dc15ca243dd294e"
+									"value": "64cbd3a67349bfe922cab430"
 								}
 							]
 						}
@@ -154,7 +154,7 @@
 							"variable": [
 								{
 									"key": "pid",
-									"value": "647108ffd01e85d493eafa07"
+									"value": "64cbd3a67349bfe922cab430"
 								}
 							]
 						}
@@ -334,11 +334,11 @@
 							"variable": [
 								{
 									"key": "cid",
-									"value": "646d26caf715d7bfd3384cef"
+									"value": "6490ec6c5de20e6ee285bdcd"
 								},
 								{
 									"key": "pid",
-									"value": "6464e41864908598dfa4086f"
+									"value": "64cbd3a67349bfe922cab430"
 								}
 							]
 						}
@@ -411,34 +411,6 @@
 			"name": "sessions",
 			"item": [
 				{
-					"name": "/api/sessions/register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"firstName\": \"margin\", \r\n    \"lastName\": \"as\", \r\n    \"email\": \"margin@gmail.com\", \r\n    \"age\":22, \r\n    \"password\": \"qwe\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{HOST}}{{PORT}}/api/sessions/register",
-							"host": [
-								"{{HOST}}{{PORT}}"
-							],
-							"path": [
-								"api",
-								"sessions",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "/api/sessions/login",
 					"request": {
 						"method": "POST",
@@ -461,6 +433,62 @@
 								"api",
 								"sessions",
 								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/sessions/register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"margin\", \r\n    \"lastName\": \"as\", \r\n    \"email\": \"margin5@gmail.com\", \r\n    \"age\":22, \r\n    \"password\": \"qwe\",\r\n    \"role\": \"as\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}{{PORT}}/api/sessions/register",
+							"host": [
+								"{{HOST}}{{PORT}}"
+							],
+							"path": [
+								"api",
+								"sessions",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/api/sessions/registerUsers",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"margin\", \r\n    \"lastName\": \"as\", \r\n    \"email\": \"margin5@gmail.com\", \r\n    \"age\":22, \r\n    \"password\": \"qwe\",\r\n    \"role\": \"PREMIUM\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{HOST}}{{PORT}}/api/sessions/registerUsers",
+							"host": [
+								"{{HOST}}{{PORT}}"
+							],
+							"path": [
+								"api",
+								"sessions",
+								"registerUsers"
 							]
 						}
 					},
@@ -549,6 +577,37 @@
 							],
 							"path": [
 								"mockingproducts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "/api/users/premium/:uid",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{HOST}}{{PORT}}/api/users/premium/:uid",
+							"host": [
+								"{{HOST}}{{PORT}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"premium",
+								":uid"
+							],
+							"variable": [
+								{
+									"key": "uid",
+									"value": "64cbd01d0ed1610e45e14a5c"
+								}
 							]
 						}
 					},
