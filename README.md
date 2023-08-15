@@ -68,6 +68,9 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 ```bash
 .
 ├── extras
+├── logs
+│   ├── dev
+│   └── prod
 ├── postman
 └── src
     ├── config
@@ -105,18 +108,20 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 
 ## Rutas de vistas
 
-| **Request type** | **Path**          | **Body** | **Query params** | **Path variables**                  | **Output** |
-| ---------------- | ----------------- | -------- | ---------------- | ----------------------------------- | ---------- |
-| GET              | /                 |          |                  |                                     | HTML       |
-| GET              | /realtimeproducts |          |                  |                                     | HTML       |
-| GET              | /chat             |          |                  |                                     | HTML       |
-| GET              | /products         |          |                  | limit, page, sort, category, status | HTML       |
-| GET              | /cart/:cid        |          |                  | cid: Cart ID                        | HTML       |
-| GET              | /register         |          |                  |                                     | HTML       |
-| GET              | /login            |          |                  |                                     | HTML       |
-| GET              | /restorePassword  |          |                  |                                     | HTML       |
-| GET              | /profile          |          |                  |                                     | HTML       |
-| GET              | /myCart           |          |                  |                                     | HTML       |
+| **Request type** | **Path**          | **Body** | **Query params**    | **Path variables**                  | **Output** |
+| ---------------- | ----------------- | -------- | ------------------- | ----------------------------------- | ---------- |
+| GET              | /                 |          |                     |                                     | HTML       |
+| GET              | /realtimeproducts |          |                     |                                     | HTML       |
+| GET              | /chat             |          |                     |                                     | HTML       |
+| GET              | /products         |          |                     | limit, page, sort, category, status | HTML       |
+| GET              | /cart/:cid        |          |                     | cid: Cart ID                        | HTML       |
+| GET              | /register         |          |                     |                                     | HTML       |
+| GET              | /login            |          |                     |                                     | HTML       |
+| GET              | /restorePassword  |          |                     |                                     | HTML       |
+| GET              | /profile          |          |                     |                                     | HTML       |
+| GET              | /myCart           |          |                     |                                     | HTML       |
+| GET              | /restoreRequest   |          | e: Error            |                                     | HTML       |
+| GET              | /restorePassword  |          | token: RestoreToken |                                     | HTML       |
 
 ## Documentación de la API:
 
@@ -140,6 +145,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | POST             | /api/sessions/registerUsers   | Object   |                                     |                                 | Object     |
 | POST             | /api/sessions/login           | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
+| POST             | /api/sessions/restoreRequest  | Object   |                                     |                                 | Object     |
 | PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
 | GET              | /api/sessions/current         |          |                                     |                                 | Object     |
 | GET              | /mockingproducts              |          |                                     |                                 | Object     |
@@ -388,14 +394,24 @@ password: String | Required
 
 Desloguea al usuario actual. Elimina la sesión del usuario.
 
-### + PUT /api/sessions/restorePassword
+### + POST /api/sessions/restoreRequest
 
-Permite restaurar la contraseña de un usuario. Recibe un objeto a través del body y actualiza la contraseña del usuario especificado.
+Permite solicitar la restauración de la contraseña de un usuario. Recibe un email a través del body y envía un mail con un token de restauración.
 
 #### Body
 
 ```js
 email: String | Required
+```
+
+### + PUT /api/sessions/restorePassword
+
+Permite restaurar la contraseña de un usuario. Recibe un objeto(token y nueva contraseña) a través del body y actualiza la contraseña del usuario especificado.
+
+#### Body
+
+```js
+token: String | Required
 password: String | Required
 ```
 
