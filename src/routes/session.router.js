@@ -46,7 +46,9 @@ export default class SessionRouter extends BaseRouter {
 
     this.get('/logout', [...ALL_USER_ROLES], sessionController.logout)
 
-    this.put('/restorePassword', [PRIVACY_TYPES.NO_AUTH], sessionController.restorePassword)
+    this.post('/restoreRequest', [PRIVACY_TYPES.NO_AUTH], sessionController.restoreRequest)
+
+    this.put('/restorePassword', [PRIVACY_TYPES.PUBLIC], sessionController.restorePassword)
 
     this.get('/current', [...ALL_USER_ROLES], sessionController.current)
   }

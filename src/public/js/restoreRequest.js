@@ -1,9 +1,6 @@
 /* global Swal */
 
-const form = document.getElementById('restorePasswordForm')
-const urlParams = new Proxy(new URLSearchParams(window.location.search), {
-  get: (target, prop) => target.get(prop) || '',
-})
+const form = document.getElementById('restoreRequestForm')
 
 form.addEventListener('submit', async function (event) {
   event.preventDefault()
@@ -11,33 +8,33 @@ form.addEventListener('submit', async function (event) {
   const formData = new FormData(form)
   const data = Object.fromEntries(formData.entries())
 
-  const dataWithToken = {
-    ...data,
-    token: urlParams.token,
-  }
-
   try {
-    const response = await fetch('/api/sessions/restorePassword', {
-      method: 'PUT',
-      body: JSON.stringify(dataWithToken),
+    const response = await fetch('/api/sessions/restoreRequest', {
+      method: 'POST',
+      body: JSON.stringify(data),
       headers: {
         'Content-Type': 'application/json',
       },
     })
+
     const { status, error } = await response.json()
+
     if (status === 'error') {
       throw new Error(error)
     }
+
     if (status === 'success') {
-      window.location.replace('/login')
+      const PsuccessRestore = document.getElementById('successRestore')
+      PsuccessRestore.innerHTML =
+        'Se ha enviado un mail a tu casilla de correo para restaurar tu contraseña'
     }
   } catch (e) {
     Swal.fire({
       toast: true,
       position: 'top-end',
       showConfirmButton: false,
-      timer: 4000,
-      title: 'Error al restaurar la contraseña',
+      timer: 2000,
+      title: 'Error en el proceso',
       text: `${e.message}`,
       icon: 'error',
     })

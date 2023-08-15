@@ -23,5 +23,9 @@ export default class ViewRouter extends BaseRouter {
     this.get('/profile', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.profile)
 
     this.get('/myCart', [USER_ROLES.USER], viewsController.myCart)
+
+    this.get('/restoreRequest', [PRIVACY_TYPES.PUBLIC], viewsController.restoreRequest)
+
+    this.get('/restorePassword', [PRIVACY_TYPES.NO_AUTH_VIEW], viewsController.restorePassword)
   }
 }

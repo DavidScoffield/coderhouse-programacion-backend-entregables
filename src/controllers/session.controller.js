@@ -4,8 +4,9 @@ import ErrorService from '../services/error.service.js'
 import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
-import { generateToken } from '../utils/jwt.utils.js'
+import { generateToken, verifyToken } from '../utils/jwt.utils.js'
 import EErrors from '../errors/EErrors.js'
+import RestoreTokenDTO from '../dto/RestoreTokenDTO.js'
 
 const register = async (req, res, next) => {
   const { user } = req
@@ -35,33 +36,67 @@ const logout = (req, res, next) => {
 }
 
 const restorePassword = async (req, res, next) => {
-  const { email, password } = req.body
+  const { password, token } = req.body
+
+  try {
+    const tokenUser = verifyToken(token)
+
+    const user = await userRepository.getUserByEmail(tokenUser.email)
+
+    if (!user) ErrorService.createValidationError({ message: 'El email no está registrado' })
+
+    if (user.password) {
+      const isSamePassword = isValidPassword(password, user.password)
+      if (isSamePassword)
+        return ErrorService.createError({
+          message: 'No se puede reemplazar la contraseña con la contraseña actual',
+          cause: 'Cannot replace password with current password',
+          status: httpStatus.BAD_REQUEST,
+          metaData: { email: tokenUser.email, password },
+          code: EErrors.INVALID_VALUES,
+          name: 'RestorePassword Error',
+        })
+    }
+    const hashedPassword = hashPassword(password)
+    const updatedUser = await userRepository.updateUser(user._id, { password: hashedPassword })
+
+    res.sendSuccessWithPayload({
+      message: 'Contraseña actualizada correctamente',
+      payload: updatedUser,
+    })
+  } catch (e) {
+    if (e.name === 'JsonWebTokenError') {
+      ErrorService.createError({
+        message: 'Token inválido',
+        cause: 'Token inválido',
+        status: httpStatus.BAD_REQUEST,
+        metaData: { token },
+        code: EErrors.INVALID_VALUES,
+        name: 'RestorePassword Error',
+      })
+    } else {
+      next(e)
+    }
+  }
+}
+
+const restoreRequest = async (req, res, next) => {
+  const { email } = req.body
+
+  if (!email) ErrorService.createValidationError({ message: 'No se ha especificado un email' })
 
   const user = await userRepository.getUserByEmail(email)
 
   if (!user) ErrorService.createValidationError({ message: 'El email no está registrado' })
 
-  if (user.password) {
-    const isSamePassword = isValidPassword(password, user.password)
-    if (isSamePassword)
-      return ErrorService.createError({
-        message: 'Cannot replace password with current password',
-        cause: 'Cannot replace password with current password',
-        status: httpStatus.BAD_REQUEST,
-        metaData: { email },
-        code: EErrors.INVALID_VALUES,
-        name: 'RestorePassword Error',
-      })
-  }
+  const token = generateToken(RestoreTokenDTO.fromUser(user), '1h')
 
-  const hashedPassword = hashPassword(password)
-
-  const updatedUser = await userRepository.updateUser(user._id, { password: hashedPassword })
-
-  res.sendSuccessWithPayload({
-    message: 'Contraseña actualizada correctamente',
-    payload: updatedUser,
+  await mailService.sendRestorePasswordMail({
+    to: user.email,
+    token,
   })
+
+  res.sendSuccess('Se ha enviado un mail a tu casilla de correo para restaurar tu contraseña')
 }
 
 const githubCallback = (req, res, next) => {
@@ -84,4 +119,4 @@ const current = async (req, res, next) => {
   })
 }
 
-export default { register, login, logout, restorePassword, githubCallback, current }
+export default { register, login, logout, restoreRequest, restorePassword, githubCallback, current }

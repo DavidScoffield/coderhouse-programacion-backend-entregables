@@ -1,0 +1,27 @@
+<div class='center'>
+
+  <section class='form-section'>
+
+    <form class='form' id='restoreRequestForm'>
+      <h1 class='form-title'>Escribe tu correo</h1>
+
+      {{#if error}}
+        <p class='error'>{{error}}</p>
+      {{/if}}
+
+      <p>El correo que escribas recibirá un link de restauración sólo si está en nuestra base,
+        asegúrate de usarlo en la próxima hora</p>
+
+      <div class='form-body'>
+
+        <label for='email'>Email:</label>
+        <input type='email' id='email' name='email' required />
+
+        <input type='submit' value='Enviar' />
+      </div>
+    </form>
+
+    <p class='flex-center' id='successRestore'></p>
+  </section>
+  <a href='/login' class='center' style='margin-top: 10px;'>Volver a Iniciar Sesión</a>
+</div>

@@ -1,7 +1,7 @@
 import express from 'express'
 import { create } from 'express-handlebars'
 import passport from 'passport'
-import { PORT } from '../constants/envVars.js'
+import { HOST, PORT } from '../constants/envVars.js'
 import { __src } from '../utils/dirname.utils.js'
 import initializePassportStrategies from './passport.config.js'
 import cookieParser from 'cookie-parser'
@@ -37,7 +37,7 @@ app.use(passport.initialize())
 
 // Listener
 const httpServer = app.listen(PORT, () =>
-  LoggerService.info(`Server running on port ${PORT} - Access http://localhost:${PORT}`)
+  LoggerService.info(`Server running on port ${PORT} - Access ${HOST}:${PORT}`)
 )
 
 export { app, httpServer }

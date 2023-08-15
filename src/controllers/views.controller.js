@@ -1,8 +1,10 @@
+import LoggerService from '../services/logger.service.js'
 import {
   cartRepository,
   productRepository,
   userRepository,
 } from '../services/repositories/index.js'
+import { verifyToken } from '../utils/jwt.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'
@@ -119,8 +121,29 @@ const profile = async (req, res) => {
 }
 
 const restorePassword = async (req, res) => {
-  res.render('restorePassword', {
-    js: ['restorePassword'],
+  const { token } = req.query
+
+  try {
+    verifyToken(token)
+    res.render('restorePassword', {
+      js: ['restorePassword'],
+    })
+  } catch (e) {
+    LoggerService.error(e)
+    res.redirect(
+      `/restoreRequest?e=${encodeURIComponent(
+        'El token expiró o es inválido, por favor solicite uno nuevo'
+      )}`
+    )
+  }
+}
+
+const restoreRequest = async (req, res) => {
+  const { e } = req.query
+
+  res.render('restoreRequest', {
+    js: ['restoreRequest'],
+    error: e,
   })
 }
 
@@ -152,5 +175,6 @@ export default {
   login,
   profile,
   restorePassword,
+  restoreRequest,
   myCart,
 }

@@ -1,3 +1,5 @@
+import { HOST, PORT } from './envVars.js'
+
 // Server
 export const PATH_OF_PRODUCTS = './productos.json'
 export const PATH_OF_CARTS = './carrito.json'
@@ -62,10 +64,15 @@ export const MAILS_TEMPLATES = {
     }
   },
 
-  // RESET_PASSWORD: ({ name, token }) => ({
-  //   subject: 'Resetea tu contraseña',
-  //   html: `<b>Para resetear tu contraseña haz click <a href="http://localhost:8080/reset-password/${token}">aquí</a></b>`,
-  // }),
+  RESTORE_PASSWORD: ({ token }) => {
+    return {
+      subject: 'Reestablece tu contraseña',
+      html: `<b>Para resetear tu contraseña haz click <a href="${HOST}:${PORT}/restorePassword?token=${token}">aquí</a></b>
+    <p>Si el link no funciona, copia y pega la siguiente dirección en tu navegador: ${HOST}:${PORT}/restorePassword?token=${token}</p>
+    <b>Si no has solicitado el cambio de contraseña, ignora este email</b>
+    `,
+    }
+  },
   // RESET_PASSWORD_SUCCESS: ({ name }) => ({
   //   subject: 'Contraseña reseteada',
   //   html: `<b>La contraseña de ${name} se ha reseteado correctamente</b>`,

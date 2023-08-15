@@ -56,4 +56,11 @@ export default class MailService {
       template: MAILS_TEMPLATES.PURCHASED_CART({ name, ticket }),
     })
   }
+
+  sendRestorePasswordMail = async ({ to, token }) => {
+    return await this.sendMail({
+      to,
+      template: MAILS_TEMPLATES.RESTORE_PASSWORD({ token }),
+    })
+  }
 }

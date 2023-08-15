@@ -1,5 +1,7 @@
 .other-logins {
   margin-top: 20px;
+  display: grid;
+  place-content: center;
 }
 
 .third-party-button {
