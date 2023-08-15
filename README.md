@@ -19,7 +19,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **Mongoose**
 - **Socket.io**
 - **Handlebars**
-- **Passport**
+- **PassportJs**
 - **JWT**
 - **Nodemailer(with gmail)**
 - **Faker js**
