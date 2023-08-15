@@ -1,4 +1,4 @@
-import { ALL_USER_ROLES, USER_ROLES } from '../../constants/constants.js'
+import { ALL_USER_ROLES } from '../../constants/constants.js'
 import ErrorService from '../../services/error.service.js'
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
 
