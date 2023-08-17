@@ -8,7 +8,7 @@
 
 - [x] Se debe tener documentado el módulo de productos.
 - [x] Se debe tener documentado el módulo de carrito
-- [ ] No realizar documentación de sesiones (A lo mejor y si quieres el registro y el login)
+- [x] No realizar documentación de sesiones (A lo mejor y si quieres el registro y el login)
 
 ## Formato
 
