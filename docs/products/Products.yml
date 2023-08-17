@@ -1,0 +1,330 @@
+tags:
+  - name: products
+    description: Operations about products
+paths:
+  /api/products:
+    get:
+      tags:
+        - products
+      summary: Get all products
+      operationId: getProducts
+      parameters:
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/categoryParam'
+        - $ref: '#/components/parameters/statusParam'
+      responses:
+        '200':
+          description: OK (products found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductsWithPagination'
+        '400':
+          description: Bad Request
+        '409':
+          description: Conflict with some data in the request
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
+    post:
+      tags:
+        - products
+      summary: Create a new product
+      operationId: createProduct
+      requestBody:
+        description: Product object that needs to be added to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductToSend'
+      responses:
+        '200':
+          description: OK (product created)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReturned'
+        '400':
+          description: Bad Request (some data in the request is not valid or missing)
+        '409':
+          description: Conflict with some data in the request
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
+  /api/products/{pid}:
+    get:
+      tags:
+        - products
+      summary: Get a product by id
+      operationId: getProductById
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReturned'
+        '400':
+          description: Bad Request (some data in the request is not valid or missing)
+        '404':
+          description: Product not found
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
+    put:
+      tags:
+        - products
+      summary: Update a product data by id
+      operationId: updateProductById
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        description: Product object with the data that needs to be updated
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductToSend'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReturned'
+        '400':
+          description: Bad Request (some data in the request is not valid or missing)
+        '404':
+          description: Product not found
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
+    delete:
+      tags:
+        - products
+      summary: Delete a product by id
+      operationId: deleteProductById
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      responses:
+        '200':
+          description: OK (product deleted)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReturned'
+        '400':
+          description: Bad Request (some data in the request is not valid or missing)
+        '404':
+          description: Product not found
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
+components:
+  schemas:
+    ProductToSend:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Product title
+
+        description:
+          type: string
+          description: Product description
+        price:
+          type: number
+          format: double
+          description: Product price
+        thumbnail:
+          type: array
+          description: Product thumbnail
+          items:
+            type: string
+        code:
+          type: string
+          description: Product code, this must be unique
+        stock:
+          type: integer
+          format: int32
+        category:
+          type: string
+          description: Product category
+        status:
+          type: boolean
+          description: Product status indicate if the product is available or not
+        owner:
+          type: string
+          description: Product owner refer to an user email
+      example:
+        title: Product 1
+        description: Product 1 description
+        price: 100
+        thumbnail:
+          - https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png
+          - https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png
+        code: 1
+        stock: 10
+        category: Category 1
+        status: true
+        owner:
+    ProductReturned:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: Unique identifier for the product
+        title:
+          type: string
+          description: Product title
+        description:
+          type: string
+          description: Product description
+        price:
+          type: number
+          format: double
+          description: Product price
+        thumbnail:
+          type: array
+          description: Product thumbnail
+          items:
+            type: string
+        code:
+          type: string
+          description: Product code, this must be unique
+        stock:
+          type: integer
+          format: int32
+        category:
+          type: string
+          description: Product category
+        status:
+          type: boolean
+          description: Product status indicate if the product is available or not
+        owner:
+          type: string
+          description: Product owner refer to an user email
+      example:
+        _id: 5f9d5b9b9b0b3c2d0c8f1b1a
+        title: Product 1
+        description: Product 1 description
+        price: 100
+        thumbnail:
+          - https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png
+          - https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png
+        code: 1
+        stock: 10
+        category: Category 1
+        status: true
+        owner: owner@owner.com
+    ProductsWithPagination:
+      type: object
+      properties:
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductReturned'
+        totalPages:
+          type: integer
+          format: int32
+          description: Total pages
+        prevPage:
+          type: integer
+          format: int32
+          description: Previous page
+        nextPage:
+          type: integer
+          format: int32
+          description: Next page
+        page:
+          type: integer
+          format: int32
+          description: Current page
+        hasNextPage:
+          type: boolean
+          description: Indicates if the current page has a next page
+        hasPrevPage:
+          type: boolean
+          description: Indicates if the current page has a previous page
+      example:
+        products:
+          - _id: 5f9d5b9b9b0b3c2d0c8f1b1a
+            title: Product 1
+            description: Product 1 description
+            price: 100
+            thumbnail:
+              - https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png
+              - https://cdn3.iconfinder.com/data/icons/education-209/64/bus-vehicle-transport-school-128.png
+            code: 1
+            stock: 10
+            category: Category 1
+            status: true
+            owner: owner@owner.com
+        totalPages: 1
+        prevPage: 1
+        nextPage: 1
+        page: 1
+        hasNextPage: false
+        hasPrevPage: false
+  parameters:
+    productId:
+      name: pid
+      in: path
+      description: Product ID
+      required: true
+      schema:
+        type: string
+        format: ObjectId
+      example: 5f9d5b9b9b0b3c2d0c8f1b1a
+
+    pageParam:
+      name: page
+      in: query
+      description: Page number
+      required: false
+      schema:
+        type: integer
+        format: int32
+      example: 1
+
+    limitParam:
+      name: limit
+      in: query
+      description: Limit of products per page
+      required: false
+      schema:
+        type: integer
+        format: int32
+      example: 10
+
+    sortParam:
+      name: sort
+      in: query
+      description: Sort products by field
+      required: false
+      schema:
+        type: string
+      example: asc
+
+    categoryParam:
+      name: category
+      in: query
+      description: Filter products by category
+      required: false
+      schema:
+        type: string
+      example: Almacen
+
+    statusParam:
+      name: status
+      in: query
+      description: Filter products by status
+      required: false
+      schema:
+        type: boolean
+      example: true

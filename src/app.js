@@ -8,16 +8,19 @@ import { app } from './config/express.config.js'
 import {
   cartRouter,
   healthcheckRouter,
+  loggerRouter,
+  mockingProductsRouter,
   productRouter,
   sessionRouter,
-  viewRouter,
-  mockingProductsRouter,
-  loggerRouter,
   userRouter,
+  viewRouter,
 } from './routes/index.js'
 
 import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.controller.js'
 import ioMiddleware from './middlewares/io.middleware.js'
+
+import swaggerUiExpress from 'swagger-ui-express'
+import { swaggerSpecs, swaggerUiOptions } from './config/swagger.config.js'
 
 // Middlewares
 app.use(ioMiddleware)
@@ -31,6 +34,7 @@ app.use('/api/sessions', sessionRouter)
 app.use('/api/users', userRouter)
 app.use('/mockingproducts', mockingProductsRouter)
 app.use('/loggerTest', loggerRouter)
+app.use('/apiDocs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerSpecs, swaggerUiOptions))
 
 // Route unknown
 app.use(unknownEndpoint)

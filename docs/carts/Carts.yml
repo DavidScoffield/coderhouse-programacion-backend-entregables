@@ -1,0 +1,352 @@
+tags:
+  - name: cart
+    description: Work with carts
+
+# TODO: Add 401 Unauthorized response to all endpoints and 403 Forbidden to all endpoints
+
+paths:
+  /api/carts/:
+    post:
+      tags:
+        - cart
+      summary: Create a new cart
+      operationId: createCart
+      responses:
+        '200':
+          description: OK (cart created)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartEmptyExample:
+                  $ref: '#/components/examples/CartEmptyExample'
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /api/carts/{cid}:
+    get:
+      tags:
+        - cart
+      summary: Get a cart
+      operationId: getCart
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+      responses:
+        '200':
+          description: OK (cart found)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartWithProductsExample:
+                  $ref: '#/components/examples/CartWithProductsExample'
+        '404':
+          description: Not found (cart not found)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    put:
+      tags:
+        - cart
+      summary: Update a cart with products
+      operationId: updateCartWithProducts
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+      requestBody:
+        $ref: '#/components/requestBodies/ProductsWithQuantityToUpdate'
+      responses:
+        '200':
+          description: OK (cart updated)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartWithProductsExample:
+                  $ref: '#/components/examples/CartWithProductsExample'
+        '400':
+          description: Bad request (invalid product id or quantity)
+        '404':
+          description: Not found (cart not found)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    delete:
+      tags:
+        - cart
+      summary: Delete all products of a cart
+      operationId: deleteProductOfCart
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+      responses:
+        '200':
+          description: OK (cart updated)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartEmptyExample:
+                  $ref: '#/components/examples/CartEmptyExample'
+        '400':
+          description: Bad request (missing or invalid cart id)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /api/carts/{cid}/products/{pid}:
+    post:
+      tags:
+        - cart
+      summary: Add a product to a cart
+      operationId: addProductToCart
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        description: Quantity of the product to add
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+                  description: The quantity of the product
+                  example: 10
+      responses:
+        '200':
+          description: OK (cart updated)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartWithProductsExample:
+                  $ref: '#/components/examples/CartWithProductsExample'
+        '400':
+          description: Bad request (missing or invalid cart id or product id)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    delete:
+      tags:
+        - cart
+      summary: Remove a product from a cart
+      operationId: removeProductFromCart
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+        - $ref: '#/components/parameters/productId'
+      responses:
+        '200':
+          description: OK (cart updated, product deleted from cart)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartWithProductsExample:
+                  $ref: '#/components/examples/CartWithProductsExample'
+        '400':
+          description: Bad request (missing or invalid cart id or product id)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+    put:
+      tags:
+        - cart
+      summary: Update a product quantity of cart
+      operationId: updateProductInCart
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        description: Quantity of the product to update
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+                  description: The quantity of the product
+                  example: 10
+      responses:
+        '200':
+          description: OK (cart updated)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+              examples:
+                CartWithProductsExample:
+                  $ref: '#/components/examples/CartWithProductsExample'
+        '400':
+          description: Bad request (missing or invalid cart id or product id)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /api/carts/{cid}/purchase:
+    post:
+      tags:
+        - cart
+      summary: Purchase a cart
+      operationId: purchaseCart
+      parameters:
+        - $ref: '#/components/parameters/cartId'
+      responses:
+        '200':
+          description: OK (cart purchased)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ticket:
+                    $ref: '#/components/schemas/Ticket'
+                  productIdsWithInvalidStock:
+                    $ref: '#/components/schemas/ProductIdsArray'
+              examples:
+                PurchaseExample:
+                  $ref: '#/components/examples/PurchaseExample'
+        '400':
+          description: Bad request (missing or invalid params)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+components:
+  parameters:
+    cartId:
+      name: cid
+      in: path
+      description: The cart ID
+      required: true
+      schema:
+        type: string
+        format: ObjectId
+      example: 4c9d88b9a4b9a7b3a4b9a7b3
+
+  schemas:
+    Cart:
+      description: A cart
+      type: object
+      properties:
+        _id:
+          type: string
+          format: ObjectId
+          description: The cart ID
+        products:
+          type: array
+          description: The products in the cart
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                format: ObjectId
+                description: The product ID
+              quantity:
+                type: number
+                description: The quantity of the product
+    Ticket:
+      description: A ticket of a purchase
+      type: object
+      properties:
+        id:
+          type: string
+          format: ObjectId
+          description: The ticket ID
+        code:
+          type: string
+          description: The ticket code
+        amount:
+          type: number
+          description: The total price of the ticket
+        purchaser:
+          type: string
+          format: email
+          description: The purchaser of the ticket
+        purchaserDateTime:
+          type: string
+          format: date-time
+          description: The datetime of the purchase
+    ProductIdsArray:
+      description: Array of product ids
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: string
+            format: ObjectId
+            description: The product ID
+
+  examples:
+    CartWithProductsExample:
+      value:
+        _id: 4c9d88b9a4b9a7b3a4b9a7b3
+        products:
+          - _id: 5c9d88b9a4b9a7b3a4b9a7b3
+            quantity: 18
+          - _id: 5c9d88b9a4b9a7b3a4b9a7b2
+            quantity: 10
+    CartEmptyExample:
+      value:
+        _id: 4c9d88b9a4b9a7b3a4b9a7b3
+        products: []
+    PurchaseExample:
+      value:
+        ticket:
+          id: 4c9d88b9a4b9a7b3a4b9a7b3
+          code: n81238djwa918
+          amount: 100
+          purchaser: person@mail.com
+          purchaserDateTime: 2019-03-29T10:00:00.000Z
+        productIdsWithInvalidStock:
+          - id: 5c9d88b9a4b9a7b3a4b9a7b3
+          - id: 5c9d88b9a4b9a7b3a4b9a7b2
+          - id: 5c9d88b9a4b9a7b3a4b9a7b1
+          - id: 5c9d88b9a4b9a7b3a4b9a7b0
+
+  requestBodies:
+    ProductsWithQuantityToUpdate:
+      description: Array of product ids and quantities to update
+      required: true
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                products:
+                  type: array
+                  items:
+                    type: object
+                  properties:
+                    id:
+                      type: string
+                      format: ObjectId
+                      description: The product ID to update
+                    quantity:
+                      type: number
+                      description: The quantity of the product
+          example:
+            products:
+              - id: 5c9d88b9a4b9a7b3a4b9a7b3
+                quantity: 18
+              - id: 5c9d88b9a4b9a7b3a4b9a7b2
+                quantity: 10
+
+  responses:
+    401Unauthorized:
+      description: Unauthorized (user not logged in)
+
+    403Forbidden:
+      description: Forbidden (user not allowed to access this resource)
+
+    5XX:
+      description: Unexpected error, something went wrong in the server
