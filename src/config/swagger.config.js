@@ -1,7 +1,7 @@
 import swaggerJSDoc from 'swagger-jsdoc'
 import { __root } from '../utils/dirname.utils.js'
 
-const swaggerOptions = {
+const swaggerInit = {
   definition: {
     openapi: '3.0.0',
     info: {
@@ -14,7 +14,7 @@ const swaggerOptions = {
   apis: [`${__root}/docs/**/*.yml`],
 }
 
-export const swaggerSpecs = swaggerJSDoc(swaggerOptions)
+export const swaggerSpecs = swaggerJSDoc(swaggerInit)
 
 export const swaggerUiOptions = {
   explorer: true,
@@ -24,3 +24,5 @@ export const swaggerUiOptions = {
   filter: true,
   customfavIcon: '/favicon.ico',
 }
+
+export const swaggerOptions = { withCredentials: true }

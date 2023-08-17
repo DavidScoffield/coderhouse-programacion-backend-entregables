@@ -52,6 +52,8 @@ paths:
         - cart
       summary: Update a cart with products
       operationId: updateCartWithProducts
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/cartId'
       requestBody:
@@ -78,6 +80,8 @@ paths:
         - cart
       summary: Delete all products of a cart
       operationId: deleteProductOfCart
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/cartId'
       responses:
@@ -101,6 +105,8 @@ paths:
         - cart
       summary: Add a product to a cart
       operationId: addProductToCart
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/cartId'
         - $ref: '#/components/parameters/productId'
@@ -136,6 +142,8 @@ paths:
         - cart
       summary: Remove a product from a cart
       operationId: removeProductFromCart
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/cartId'
         - $ref: '#/components/parameters/productId'
@@ -159,6 +167,8 @@ paths:
         - cart
       summary: Update a product quantity of cart
       operationId: updateProductInCart
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/cartId'
         - $ref: '#/components/parameters/productId'
@@ -190,11 +200,13 @@ paths:
           $ref: '#/components/responses/5XX'
 
   /api/carts/{cid}/purchase:
-    post:
+    put:
       tags:
         - cart
       summary: Purchase a cart
       operationId: purchaseCart
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/cartId'
       responses:
@@ -340,13 +352,3 @@ components:
                 quantity: 18
               - id: 5c9d88b9a4b9a7b3a4b9a7b2
                 quantity: 10
-
-  responses:
-    401Unauthorized:
-      description: Unauthorized (user not logged in)
-
-    403Forbidden:
-      description: Forbidden (user not allowed to access this resource)
-
-    5XX:
-      description: Unexpected error, something went wrong in the server

@@ -33,6 +33,8 @@ paths:
         - products
       summary: Create a new product
       operationId: createProduct
+      security:
+        - cookieAuth: []
       requestBody:
         description: Product object that needs to be added to the store
         required: true
@@ -81,6 +83,8 @@ paths:
         - products
       summary: Update a product data by id
       operationId: updateProductById
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/productId'
       requestBody:
@@ -109,6 +113,8 @@ paths:
         - products
       summary: Delete a product by id
       operationId: deleteProductById
+      security:
+        - cookieAuth: []
       parameters:
         - $ref: '#/components/parameters/productId'
       responses:

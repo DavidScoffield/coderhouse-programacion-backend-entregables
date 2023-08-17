@@ -1,0 +1,199 @@
+openapi: 3.0.0
+info:
+  title: Session
+  description: ''
+  version: 1.0.0
+
+tags:
+  - name: session
+    description: Everything about the autentication
+
+paths:
+  /api/sessions/register:
+    post:
+      tags:
+        - session
+      summary: Register a new user
+      description: Register a new user in the system
+      operationId: registerUser
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterBody'
+      responses:
+        '200':
+          description: OK (register success)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                UserExample:
+                  $ref: '#/components/examples/UserExample'
+        '401':
+          description: Unauthorized (register failed, some value is wrong)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /api/sessions/login:
+    post:
+      tags:
+        - session
+      summary: Login as user
+      description: Login as user in the system
+      operationId: loginUser
+      requestBody:
+        $ref: '#/components/requestBodies/LoginBody'
+      responses:
+        '200':
+          description: OK (login success), return a cookie named `authToken`. **You need to include this cookie in subsequent requests.**
+          headers:
+            Set-Cookie:
+              description: Cookie with the auth token
+              schema:
+                type: string
+                example: authToken=abcde12345; Path=/; HttpOnly
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                UserExample:
+                  $ref: '#/components/examples/CurrentInfoExample'
+        '401':
+          description: Unauthorized (login failed, soma value is wrong)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+  /api/sessions/logout:
+    get:
+      tags:
+        - session
+      summary: Logout as user
+      description: Logout as user in the system, this remove the auth cookie
+      operationId: logoutUser
+      responses:
+        '200':
+          description: OK (logout success)
+        '401':
+          description: Unauthorized (logout failed, maybe you are not logged in)
+        '5XX':
+          $ref: '#/components/responses/5XX'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: ObjectId
+        firstName:
+          type: string
+        lastName:
+          type: string
+        age:
+          type: integer
+        email:
+          type: string
+        role:
+          type: string
+        cart:
+          type: string
+          format: ObjectId
+    Register:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        age:
+          type: integer
+        password:
+          type: string
+        role:
+          type: string
+    Login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    CurrentInfo:
+      type: object
+      properties:
+        id:
+          type: string
+          format: ObjectId
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        cart:
+          type: string
+          format: ObjectId
+
+  requestBodies:
+    RegisterBody:
+      description: Body for register a new user
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Register'
+          example:
+            firstName: 'John'
+            lastName: 'Doe'
+            email: 'johndoe@mail.com'
+            password: '123456'
+            age: 20
+            role: 'user'
+
+    LoginBody:
+      description: Body for login as user
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Login'
+          example:
+            email: 'margin@gmail.com'
+            password: 'qwe'
+
+  examples:
+    UserExample:
+      value:
+        _id: '5f9b3b3b3b3b3b3b3b3b3b3b'
+        firstName: 'John'
+        lastName: 'Doe'
+        email: 'johndoe@mail.com'
+        age: 20
+        role: 'user'
+        cart: '5f9b3b3b3b3b3b3b3b3b3b3b'
+    CurrentInfoExample:
+      value:
+        id: '5f9b3b3b3b3b3b3b3b3b3b3b'
+        name: 'John Doe'
+        email: 'johndoe@mail.com'
+        role: 'user'
+        cart: '5f9b3b3b3b3b3b3b3b3b3b3b'
+
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: authToken
+
+  responses:
+    401Unauthorized:
+      description: Unauthorized (user not logged in)
+
+    403Forbidden:
+      description: Forbidden (user not allowed to access this resource)
+
+    5XX:
+      description: Unexpected error, something went wrong in the server

@@ -20,7 +20,7 @@ import { errorHandler, unknownEndpoint } from './controllers/extrasHandlers.cont
 import ioMiddleware from './middlewares/io.middleware.js'
 
 import swaggerUiExpress from 'swagger-ui-express'
-import { swaggerSpecs, swaggerUiOptions } from './config/swagger.config.js'
+import { swaggerOptions, swaggerSpecs, swaggerUiOptions } from './config/swagger.config.js'
 
 // Middlewares
 app.use(ioMiddleware)
@@ -34,7 +34,11 @@ app.use('/api/sessions', sessionRouter)
 app.use('/api/users', userRouter)
 app.use('/mockingproducts', mockingProductsRouter)
 app.use('/loggerTest', loggerRouter)
-app.use('/apiDocs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerSpecs, swaggerUiOptions))
+app.use(
+  '/apiDocs',
+  swaggerUiExpress.serve,
+  swaggerUiExpress.setup(swaggerSpecs, swaggerUiOptions, swaggerOptions)
+)
 
 // Route unknown
 app.use(unknownEndpoint)
