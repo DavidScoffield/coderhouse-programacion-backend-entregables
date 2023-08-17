@@ -51,6 +51,10 @@ paths:
                 $ref: '#/components/schemas/ProductReturned'
         '400':
           description: Bad Request (some data in the request is not valid or missing)
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
         '409':
           description: Conflict with some data in the request
         '5XX':
@@ -103,6 +107,10 @@ paths:
                 $ref: '#/components/schemas/ProductReturned'
         '400':
           description: Bad Request (some data in the request is not valid or missing)
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
         '404':
           description: Product not found
         '5XX':
@@ -126,6 +134,10 @@ paths:
                 $ref: '#/components/schemas/ProductReturned'
         '400':
           description: Bad Request (some data in the request is not valid or missing)
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
         '404':
           description: Product not found
         '5XX':
