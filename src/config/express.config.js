@@ -7,6 +7,7 @@ import initializePassportStrategies from './passport.config.js'
 import cookieParser from 'cookie-parser'
 import { USER_ROLES } from '../constants/constants.js'
 import LoggerService from '../services/logger.service.js'
+import serveFavicon from 'serve-favicon'
 
 const app = express()
 
@@ -15,6 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(`${__src}/public`))
 app.use(cookieParser())
+app.use(serveFavicon(`${__src}/public/assets/favicon.ico`))
 
 // Handlebars
 const hbs = create({

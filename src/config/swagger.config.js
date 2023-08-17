@@ -22,4 +22,5 @@ export const swaggerUiOptions = {
   customCss: '.swagger-ui .topbar a { display: none }',
   isExplorer: true,
   filter: true,
+  customfavIcon: '/favicon.ico',
 }
