@@ -1,19 +1,19 @@
-# Documentar API
+# Módulos de Testing para proyecto final
 
 ## Consigna
 
-- Realizar la configuración necesaria para tener documentado tu proyecto final a partir de Swagger.
+- Realizar módulos de testing para tu proyecto principal, utilizando los módulos de mocha + chai + supertest
 
 ## Aspectos a incluir
 
-- [x] Se debe tener documentado el módulo de productos.
-- [x] Se debe tener documentado el módulo de carrito
-- [x] No realizar documentación de sesiones (A lo mejor y si quieres el registro y el login)
-
-## Formato
+- [ ] Se deben incluir por lo menos 3 tests desarrollados para
+  - [ ] Router de products.
+  - [ ] Router de carts.
+  - [ ] Router de sessions.
+- [ ] NO desarrollar únicamente tests de status, la idea es trabajar lo mejor desarrollado posible las validaciones de testing
 
 - Link al repositorio de GitHub con el proyecto completo (No incluir node_modules).
 
 ## Sugerencias
 
-- Recuerda que es un proceso de documentación, ¡Hay que ser lo más claros posibles!
+- Ya que el testing lo desarrollarás tú, no hay una guía de test por leer. ¡Aplica tu mayor creatividad en tus pruebas!
