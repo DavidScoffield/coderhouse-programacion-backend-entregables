@@ -1,5 +1,11 @@
 import mongoose from 'mongoose'
-import { MONGO_DB_NAME, MONGO_HOST, MONGO_PASS, MONGO_USER } from '../constants/envVars.js'
+import {
+  MONGO_DB_NAME,
+  MONGO_HOST,
+  MONGO_PASS,
+  MONGO_USER,
+  NODE_ENV,
+} from '../constants/envVars.js'
 import LoggerService from '../services/logger.service.js'
 
 if (!MONGO_DB_NAME || !MONGO_HOST || !MONGO_PASS || !MONGO_USER) {
@@ -7,7 +13,13 @@ if (!MONGO_DB_NAME || !MONGO_HOST || !MONGO_PASS || !MONGO_USER) {
   process.exit(1)
 }
 
-const MONGO_URI = `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}?retryWrites=true&w=majority`
+const MONGO_URIS = {
+  production: `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}?retryWrites=true&w=majority`,
+  development: `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}?retryWrites=true&w=majority`,
+  test: `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}-test?retryWrites=true&w=majority`,
+}
+
+const MONGO_URI = MONGO_URIS[NODE_ENV]
 
 class MongoSingleton {
   static #instance
