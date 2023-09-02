@@ -352,8 +352,6 @@ describe('/api/sessions - Tests Session', () => {
         .get('/api/sessions/current')
         .set('Cookie', loginResponse.headers['set-cookie'])
 
-      console.log(response.body)
-
       expect(response.status).to.be.equal(200)
       expect(response.body).to.have.property('status').to.be.equal('success')
       expect(response.body).to.have.property('payload')
