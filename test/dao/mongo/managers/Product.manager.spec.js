@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { after, before, beforeEach, describe, it } from 'mocha'
-import mongoose from 'mongoose'
 import ProductManager from '../../../../src/dao/mongo/managers/product.manager.js'
+import { dropCollection } from '../../../helpers.js'
 
 describe('ProductManager - Testing Product Manager (DAO)', function () {
   before(function () {
@@ -9,13 +9,13 @@ describe('ProductManager - Testing Product Manager (DAO)', function () {
   })
 
   beforeEach(function (done) {
-    mongoose.connection.collections.products.drop(() => {
+    dropCollection('products').then(() => {
       done()
     })
   })
 
   after(function (done) {
-    mongoose.connection.collections.products.drop(() => {
+    dropCollection('products').then(() => {
       done()
     })
   })

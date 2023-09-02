@@ -1,8 +1,8 @@
-import { before, beforeEach, describe, it } from 'mocha'
-import mongoose from 'mongoose'
-import CartManager from '../../../../src/dao/mongo/managers/cart.manager.js'
 import { expect } from 'chai'
+import { after, before, beforeEach, describe, it } from 'mocha'
+import CartManager from '../../../../src/dao/mongo/managers/cart.manager.js'
 import ProductManager from '../../../../src/dao/mongo/managers/product.manager.js'
+import { dropCollection } from '../../../helpers.js'
 
 describe('CartManager - Testing Cart Manager (DAO)', function () {
   before(async function () {
@@ -11,10 +11,14 @@ describe('CartManager - Testing Cart Manager (DAO)', function () {
   })
 
   beforeEach(function (done) {
-    mongoose.connection.collections.carts.drop(() => {
-      mongoose.connection.collections.products.drop(() => {
-        done()
-      })
+    dropCollection('carts', 'products').then(() => {
+      done()
+    })
+  })
+
+  after(function (done) {
+    dropCollection('carts', 'products').then(() => {
+      done()
     })
   })
 
