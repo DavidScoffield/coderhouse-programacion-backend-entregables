@@ -1,3 +1,4 @@
+import CartDTO from '../dto/CartDTO.js'
 import { mailService } from '../services/index.js'
 import { cartRepository, productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
@@ -6,22 +7,28 @@ import { isCommonParamsValid } from '../utils/validations/products.validations.u
 
 const createCart = async (req, res) => {
   const cart = await cartRepository.addCart()
-  res.sendSuccessWithPayload({ message: `Cart with id "${cart.id}" created`, payload: { cart } })
+
+  const cartDTO = new CartDTO(cart)
+  res.sendSuccessWithPayload({
+    message: `Cart with id "${cartDTO.id}" created`,
+    payload: { cart: cartDTO },
+  })
 }
 
 const getCartById = async (req, res, next) => {
   const { cid } = req.params
-  try {
-    const id = castToMongoId(cid)
+  const id = castToMongoId(cid)
 
-    const cart = await cartRepository.getCartById(id)
+  const cart = await cartRepository.getCartById(id)
 
-    if (!cart) return res.sendNotFound({ error: `Cart with id "${cid}" not exist` })
+  if (!cart) return res.sendNotFound({ error: `Cart with id "${cid}" not exist` })
 
-    res.sendSuccessWithPayload({ message: `Cart with id "${cid}" found`, payload: { cart } })
-  } catch (error) {
-    next(error)
-  }
+  const cartDTO = new CartDTO(cart)
+
+  res.sendSuccessWithPayload({
+    message: `Cart with id "${cid}" found`,
+    payload: { cart: cartDTO },
+  })
 }
 
 const addProductToCart = async (req, res, next) => {
