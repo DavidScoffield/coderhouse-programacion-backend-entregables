@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { before, beforeEach, describe, it } from 'mocha'
+import { after, before, beforeEach, describe, it } from 'mocha'
 import mongoose from 'mongoose'
 import ProductManager from '../../../../src/dao/mongo/managers/product.manager.js'
 
@@ -9,6 +9,12 @@ describe('ProductManager - Testing Product Manager (DAO)', function () {
   })
 
   beforeEach(function (done) {
+    mongoose.connection.collections.products.drop(() => {
+      done()
+    })
+  })
+
+  after(function (done) {
     mongoose.connection.collections.products.drop(() => {
       done()
     })

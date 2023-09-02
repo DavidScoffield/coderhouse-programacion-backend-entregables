@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { before, beforeEach, describe, it } from 'mocha'
+import { after, before, beforeEach, describe, it } from 'mocha'
 import UserManager from '../../../../src/dao/mongo/managers/user.manager.js'
 import mongoose from 'mongoose'
 
@@ -9,6 +9,12 @@ describe('UserManager - Testing User Manager (DAO)', function () {
   })
 
   beforeEach(function (done) {
+    mongoose.connection.collections.users.drop(() => {
+      done()
+    })
+  })
+
+  after(function (done) {
     mongoose.connection.collections.users.drop(() => {
       done()
     })
