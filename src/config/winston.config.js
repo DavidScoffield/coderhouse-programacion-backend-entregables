@@ -69,13 +69,8 @@ const TRANSPORTS = {
   test: [
     new winston.transports.File({
       level: 'error',
-      filename: `./logs/dev/errors.log`,
+      filename: `./logs/test/errors.log`,
       format: COMBINES.file,
-      handleExceptions: true,
-    }),
-    new winston.transports.Console({
-      level: 'warning',
-      format: COMBINES.console,
       handleExceptions: true,
     }),
   ],
