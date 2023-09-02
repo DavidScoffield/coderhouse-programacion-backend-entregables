@@ -5,7 +5,6 @@ import supertest from 'supertest'
 import { app } from '../../src/app.js'
 import { ADMIN_PASS, ADMIN_USER } from '../../src/constants/envVars.js'
 import { dropCollection } from '../helpers.js'
-import e from 'express'
 
 const requester = supertest(app)
 
@@ -372,4 +371,6 @@ describe('/api/sessions - Tests Session', () => {
       expect(response.body).to.have.property('error').to.be.equal('No auth token')
     })
   })
+
+  // TODO: Test restore password
 })
