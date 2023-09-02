@@ -287,8 +287,6 @@ describe('/api/carts - Tests Carts endpoint', () => {
         .set('Cookie', premiumHeaders['set-cookie'])
         .send({ quantity: 3 })
 
-      console.log(response.body)
-
       expect(response.status).to.be.eq(401)
       expect(response.body).to.have.property('status').and.be.eq('error')
       expect(response.body)
