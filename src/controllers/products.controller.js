@@ -95,7 +95,10 @@ const createProduct = async (req, res, next) => {
     owner,
   })
 
-  res.sendSuccess(`New product with id "${product.id}" was added`)
+  res.sendSuccessWithPayload({
+    message: `New product with id "${product.id}" was added`,
+    payload: product,
+  })
 
   req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
 }
