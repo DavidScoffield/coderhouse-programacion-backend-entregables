@@ -1,10 +1,11 @@
-// /* eslint-disable no-unused-expressions */
+/* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
 import { after, beforeEach, describe, it } from 'mocha'
 import supertest from 'supertest'
 import { app } from '../../src/app.js'
-import { dropCollection } from '../helpers.js'
 import { ADMIN_PASS, ADMIN_USER } from '../../src/constants/envVars.js'
+import { dropCollection } from '../helpers.js'
+import e from 'express'
 
 const requester = supertest(app)
 
@@ -197,6 +198,13 @@ describe('/api/sessions - Tests Session', () => {
         password: mockUser.password,
       })
 
+      const cookieResponse = response.headers['set-cookie'][0]
+
+      const cookie = {
+        name: cookieResponse.split(';')[0].split('=')[0],
+        value: cookieResponse.split(';')[0].split('=')[1],
+      }
+
       expect(response.status).to.be.equal(200)
       expect(response.body).to.have.property('status').to.be.equal('success')
       expect(response.body)
@@ -210,6 +218,158 @@ describe('/api/sessions - Tests Session', () => {
       expect(response.body.payload).to.have.property('email').to.be.equal(mockUser.email)
       expect(response.body.payload).to.have.property('role').to.be.equal('USER')
       expect(response.body.payload).to.have.property('cart').to.be.an('string')
+      expect(cookieResponse).to.be.ok
+      expect(cookie.name).to.be.ok.and.to.be.equal('authToken')
+    })
+
+    it('should return 401 when the user email is not registered', async () => {
+      const response = await requester.post('/api/sessions/login').send({
+        email: 'noregister@test.com',
+        password: 'test',
+      })
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body)
+        .to.have.property('error')
+        .to.be.equal('Usuario o contraseña incorrectas')
+    })
+
+    it('should return 401 when the user password is incorrect', async () => {
+      const mockUser = {
+        firstName: 'test',
+        lastName: 'test',
+        email: 'user@test.com',
+        password: 'test',
+        age: 20,
+      }
+
+      await requester.post('/api/sessions/register').send(mockUser)
+
+      const response = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: 'incorrect',
+      })
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body)
+        .to.have.property('error')
+        .to.be.equal('Usuario o contraseña incorrectas')
+    })
+  })
+
+  describe('/logout - GET - Logout a user', () => {
+    it('should return 200 when the user logged out succesfully', async () => {
+      const mockUser = {
+        firstName: 'test',
+        lastName: 'test',
+        email: 'logout@test.com',
+        password: 'test',
+        age: 20,
+      }
+
+      await requester.post('/api/sessions/register').send(mockUser)
+
+      const loginResponse = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester
+        .get('/api/sessions/logout')
+        .set('Cookie', loginResponse.headers['set-cookie'])
+
+      expect(response.status).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('message').to.be.equal('Sesión cerrada correctamente')
+    })
+
+    it('should return 401 when the user try to logout without the cookie', async () => {
+      const mockUser = {
+        firstName: 'test',
+        lastName: 'test',
+        email: 'withoutCookie@test.com',
+        password: 'test',
+        age: 20,
+      }
+
+      await requester.post('/api/sessions/register').send(mockUser)
+
+      await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester.get('/api/sessions/logout')
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body).to.have.property('error').to.be.equal('No auth token')
+    })
+  })
+
+  describe('/current - GET - Get the current user', () => {
+    it('should return 200 when the user is logged in', async () => {
+      const mockUser = {
+        firstName: 'test',
+        lastName: 'test',
+        email: 'current@test.com',
+        password: 'test',
+        age: 20,
+      }
+
+      await requester.post('/api/sessions/register').send(mockUser)
+
+      const loginResponse = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester
+        .get('/api/sessions/current')
+        .set('Cookie', loginResponse.headers['set-cookie'])
+
+      expect(response.status).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('payload')
+      expect(response.body.payload)
+        .to.have.property('name')
+        .to.be.equal(`${mockUser.firstName} ${mockUser.lastName}`)
+      expect(response.body.payload).to.have.property('email').to.be.equal(mockUser.email)
+      expect(response.body.payload).to.have.property('role').to.be.equal('USER')
+      expect(response.body.payload).to.have.property('cart').to.be.an('string')
+    })
+
+    it('should return 200 when the user is logged in as admin', async () => {
+      const mockUser = {
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      }
+
+      const loginResponse = await requester.post('/api/sessions/login').send(mockUser)
+
+      const response = await requester
+        .get('/api/sessions/current')
+        .set('Cookie', loginResponse.headers['set-cookie'])
+
+      console.log(response.body)
+
+      expect(response.status).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('payload')
+      expect(response.body.payload).to.have.property('email').to.be.equal('...')
+      expect(response.body.payload).to.have.property('role').to.be.equal('ADMIN')
+      expect(response.body.payload).not.have.property('cart')
+      expect(response.body.payload).not.have.property('name')
+    })
+
+    it('should return 401 when the user is not logged in', async () => {
+      const response = await requester.get('/api/sessions/current')
+
+      expect(response.status).to.be.equal(401)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body).to.have.property('error').to.be.equal('No auth token')
     })
   })
 })
