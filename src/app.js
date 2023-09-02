@@ -44,3 +44,5 @@ app.use(
 app.use(unknownEndpoint)
 // Error handler
 app.use(errorHandler)
+
+export { app }
