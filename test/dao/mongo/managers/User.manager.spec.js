@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { after, before, beforeEach, describe, it } from 'mocha'
 import UserManager from '../../../../src/dao/mongo/managers/user.manager.js'
-import { dropCollection } from '../../../helpers.js'
+import { dropAllCollections } from '../../../helpers.js'
 
 describe('UserManager - Testing User Manager (DAO)', function () {
   before(async function () {
@@ -9,13 +9,13 @@ describe('UserManager - Testing User Manager (DAO)', function () {
   })
 
   beforeEach(function (done) {
-    dropCollection('users').then(() => {
+    dropAllCollections().then(() => {
       done()
     })
   })
 
   after(function (done) {
-    dropCollection('users').then(() => {
+    dropAllCollections().then(() => {
       done()
     })
   })

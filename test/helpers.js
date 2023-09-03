@@ -7,16 +7,24 @@ export const mongoConection = MongoSingleton.getInstance()
 
 export const dropAllCollections = async (collectionNames) => {
   const collections = Object.keys(mongoose.connection.collections)
-  for (const collectionName of collections) {
-    const collection = mongoose.connection.collections[collectionName]
-    await collection.deleteMany({})
-  }
+
+  await dropCollection(...collections)
 }
 
 export const dropCollection = async (...collectionNames) => {
-  for (const collectionName of collectionNames) {
+  const promises = collectionNames.map(async (collectionName) => {
     const collection = mongoose.connection.collections[collectionName]
-    if (!collection) return console.log(`"${collectionName}" collection not found`)
+    if (!collection) {
+      console.log(`"${collectionName}" collection not found`)
+      return
+    }
     await collection.deleteMany({})
+    // console.log(`Deleted all documents from "${collectionName}" collection`)
+  })
+
+  try {
+    await Promise.all(promises)
+  } catch (error) {
+    console.error('Error clearing collections:', error)
   }
 }

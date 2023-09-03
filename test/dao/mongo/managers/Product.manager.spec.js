@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import { after, before, beforeEach, describe, it } from 'mocha'
 import ProductManager from '../../../../src/dao/mongo/managers/product.manager.js'
-import { dropCollection } from '../../../helpers.js'
+import { dropAllCollections } from '../../../helpers.js'
 
 describe('ProductManager - Testing Product Manager (DAO)', function () {
   before(function () {
@@ -9,13 +9,13 @@ describe('ProductManager - Testing Product Manager (DAO)', function () {
   })
 
   beforeEach(function (done) {
-    dropCollection('products').then(() => {
+    dropAllCollections().then(() => {
       done()
     })
   })
 
   after(function (done) {
-    dropCollection('products').then(() => {
+    dropAllCollections().then(() => {
       done()
     })
   })

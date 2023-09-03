@@ -3,19 +3,19 @@ import { after, beforeEach, describe, it } from 'mocha'
 import supertest from 'supertest'
 import { app } from '../../src/app.js'
 import { ADMIN_PASS, ADMIN_USER } from '../../src/constants/envVars.js'
-import { dropCollection } from '../helpers.js'
+import { dropAllCollections } from '../helpers.js'
 
 const requester = supertest(app)
 
 describe('/api/carts - Tests Carts endpoint', () => {
   beforeEach((done) => {
-    dropCollection('carts', 'products', 'users').then(() => {
+    dropAllCollections().then(() => {
       done()
     })
   })
 
   after((done) => {
-    dropCollection('carts', 'products', 'users').then(() => {
+    dropAllCollections().then(() => {
       done()
     })
   })
