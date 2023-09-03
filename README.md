@@ -24,6 +24,9 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **Nodemailer(with gmail)**
 - **Faker js**
 - **Winston (for logging)**
+- **Mocha**
+- **Chai**
+- **Supertest**
 
 ## Intrucciones de instalación
 
@@ -426,6 +429,10 @@ Permite cambiar el rol de un usuario, de "user" a "premium" y viceversa.
 #### Path variables
 
 - **uid**: ID del usuario
+
+## Tests
+
+Para ejecutar los tests, ejecutar el comando `npm run test`.
 
 ##
 
