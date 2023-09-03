@@ -6,11 +6,11 @@
 
 ## Aspectos a incluir
 
-- [ ] Se deben incluir por lo menos 3 tests desarrollados para
-  - [ ] Router de products.
-  - [ ] Router de carts.
-  - [ ] Router de sessions.
-- [ ] NO desarrollar únicamente tests de status, la idea es trabajar lo mejor desarrollado posible las validaciones de testing
+- [x] Se deben incluir por lo menos 3 tests desarrollados para
+  - [x] Router de products.
+  - [x] Router de carts.
+  - [x] Router de sessions.
+- [x] NO desarrollar únicamente tests de status, la idea es trabajar lo mejor desarrollado posible las validaciones de testing
 
 - Link al repositorio de GitHub con el proyecto completo (No incluir node_modules).
 
