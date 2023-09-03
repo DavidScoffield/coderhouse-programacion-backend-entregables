@@ -19,7 +19,6 @@ export const dropCollection = async (...collectionNames) => {
       return
     }
     await collection.deleteMany({})
-    // console.log(`Deleted all documents from "${collectionName}" collection`)
   })
 
   try {
