@@ -54,7 +54,7 @@ const getProductById = async (req, res, next) => {
   const product = await productRepository.getProductById(id)
   if (!product) return res.sendNotFound({ error: `Product with id "${id}" not found` })
 
-  res.sendSuccessWithPayload({ payload: product })
+  res.sendSuccessWithPayload({ message: 'Product found', payload: product })
 }
 
 const createProduct = async (req, res, next) => {
