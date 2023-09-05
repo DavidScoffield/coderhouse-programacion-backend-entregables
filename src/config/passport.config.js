@@ -69,7 +69,11 @@ const initializePassportStrategies = () => {
         if (!existUser || !isValidPassword(password, existUser.password))
           return done(null, false, { message: 'Usuario o contraseña incorrectas' })
 
-        const sessionUserDTO = new SessionUserDTO(existUser)
+        const userUpdatedLastConnection = await userRepository.updateLastConnectionForUser(
+          existUser.id
+        )
+
+        const sessionUserDTO = new SessionUserDTO(userUpdatedLastConnection)
 
         return done(null, sessionUserDTO)
       } catch (e) {

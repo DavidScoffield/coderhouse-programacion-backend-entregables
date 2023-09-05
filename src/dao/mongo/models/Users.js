@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema({
     ref: Carts,
     default: null,
   },
+  last_connection: {
+    type: Date,
+    default: null,
+  },
 })
 
 userSchema.plugin(uniqueValidator)

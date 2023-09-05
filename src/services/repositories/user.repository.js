@@ -29,4 +29,8 @@ export default class UserRepository {
 
     return new CurrentUserDTO(user)
   }
+
+  updateLastConnectionForUser = (userId, { lean } = {}) => {
+    return this.updateUser(userId, { last_connection: new Date() }, { lean })
+  }
 }
