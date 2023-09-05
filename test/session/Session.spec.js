@@ -1,14 +1,19 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
-import { after, beforeEach, describe, it } from 'mocha'
+import { after, before, beforeEach, describe, it } from 'mocha'
 import supertest from 'supertest'
 import { app } from '../../src/app.js'
 import { ADMIN_PASS, ADMIN_USER } from '../../src/constants/envVars.js'
+import UserManager from '../../src/dao/mongo/managers/user.manager.js'
 import { dropAllCollections } from '../helpers.js'
 
 const requester = supertest(app)
 
-describe('/api/sessions - Tests Session', () => {
+describe('/api/sessions - Tests Session', function () {
+  before(function () {
+    this.userDao = new UserManager()
+  })
+
   beforeEach(function (done) {
     dropAllCollections().then(() => {
       done()
@@ -181,7 +186,7 @@ describe('/api/sessions - Tests Session', () => {
   })
 
   describe('/login - POST - Login a user', () => {
-    it('should return 200 when the user logged in succesfully', async () => {
+    it('should return 200 when the user logged in succesfully', async function () {
       const mockUser = {
         firstName: 'test',
         lastName: 'test',
@@ -196,6 +201,10 @@ describe('/api/sessions - Tests Session', () => {
         email: mockUser.email,
         password: mockUser.password,
       })
+
+      const { last_connection: userLastConnection } = await this.userDao.getUserById(
+        response.body.payload.id
+      )
 
       const cookieResponse = response.headers['set-cookie'][0]
 
@@ -219,6 +228,8 @@ describe('/api/sessions - Tests Session', () => {
       expect(response.body.payload).to.have.property('cart').to.be.an('string')
       expect(cookieResponse).to.be.ok
       expect(cookie.name).to.be.ok.and.to.be.equal('authToken')
+
+      expect(userLastConnection).to.be.ok.and.be.a('date')
     })
 
     it('should return 401 when the user email is not registered', async () => {
@@ -259,7 +270,7 @@ describe('/api/sessions - Tests Session', () => {
   })
 
   describe('/logout - GET - Logout a user', () => {
-    it('should return 200 when the user logged out succesfully', async () => {
+    it('should return 200 when the user logged out succesfully', async function () {
       const mockUser = {
         firstName: 'test',
         lastName: 'test',
@@ -275,13 +286,22 @@ describe('/api/sessions - Tests Session', () => {
         password: mockUser.password,
       })
 
+      const { last_connection: userLastConnectionLogin } = await this.userDao.getUserById(
+        loginResponse.body.payload.id
+      )
+
       const response = await requester
         .get('/api/sessions/logout')
         .set('Cookie', loginResponse.headers['set-cookie'])
 
+      const { last_connection: userLastConnectionLogout } = await this.userDao.getUserById(
+        loginResponse.body.payload.id
+      )
+
       expect(response.status).to.be.equal(200)
       expect(response.body).to.have.property('status').to.be.equal('success')
       expect(response.body).to.have.property('message').to.be.equal('Sesión cerrada correctamente')
+      expect(userLastConnectionLogout).to.be.ok.and.to.be.greaterThan(userLastConnectionLogin)
     })
 
     it('should return 401 when the user try to logout without the cookie', async () => {
