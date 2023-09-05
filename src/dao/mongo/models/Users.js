@@ -40,6 +40,21 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  documents: {
+    type: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        reference: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    default: [],
+  },
 })
 
 userSchema.plugin(uniqueValidator)

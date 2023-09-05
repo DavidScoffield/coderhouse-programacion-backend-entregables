@@ -7,7 +7,7 @@
 ## Aspectos a incluir
 
 - [x] Mover la ruta suelta /api/users/premium/:uid a un router específico para usuarios en /api/users/
-- [ ] Modificar el modelo de User para que cuente con una nueva propiedad “documents” el cual será un array que contenga los objetos con las siguientes propiedades
+- [x] Modificar el modelo de User para que cuente con una nueva propiedad “documents” el cual será un array que contenga los objetos con las siguientes propiedades
   - name: String (Nombre del documento).
   - reference: String (link al documento).  
     No es necesario crear un nuevo modelo de Mongoose para éste.
