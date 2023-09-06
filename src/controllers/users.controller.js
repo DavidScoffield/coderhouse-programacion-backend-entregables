@@ -34,7 +34,7 @@ const switchPremiumRole = async (req, res) => {
   })
 }
 
-const uploadFiles = (req, res) => {
+const uploadFiles = async (req, res) => {
   if (!req.files)
     return ErrorService.createError({
       name: 'NoFiles',
@@ -54,14 +54,27 @@ const uploadFiles = (req, res) => {
     })
   }
 
-  const payload = {
+  const loadedFiles = {
     documents: documents ? documents.map((document) => document.filename) : [],
     profile: profiles ? profiles.map((profile) => profile.filename) : [],
   }
 
+  //  store documents in users
+  let allDocuments = []
+
+  if (profiles) allDocuments = [...allDocuments, ...profiles]
+  if (documents) allDocuments = [...allDocuments, ...documents]
+
+  const formatedDocuments = allDocuments.map((document) => ({
+    name: document.filename,
+    reference: document.destination,
+  }))
+
+  await userRepository.addDocuments(req.user.id, formatedDocuments)
+
   res.sendSuccessWithPayload({
     message: 'Files uploaded',
-    payload,
+    payload: loadedFiles,
   })
 }
 
