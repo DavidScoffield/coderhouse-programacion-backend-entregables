@@ -30,4 +30,16 @@ export default class UserManager {
   getUserById = tryCatchWrapperMongo(async (userId, { lean = false } = {}) => {
     return Users.findById(userId, null, { lean })
   })
+
+  addDocuments = tryCatchWrapperMongo(async (userId, documents) => {
+    return Users.findByIdAndUpdate(userId, { $push: { documents } }, { new: true, lean: true })
+  })
+
+  removeDocument = tryCatchWrapperMongo(async (userId, documentId) => {
+    return Users.findByIdAndUpdate(
+      userId,
+      { $pull: { documents: { _id: documentId } } },
+      { new: true, lean: true }
+    )
+  })
 }
