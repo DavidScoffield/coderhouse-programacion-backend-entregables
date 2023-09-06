@@ -35,7 +35,17 @@ const switchPremiumRole = async (req, res) => {
 }
 
 const uploadFiles = (req, res) => {
-  if (!req.files) {
+  if (!req.files)
+    return ErrorService.createError({
+      name: 'NoFiles',
+      message: 'No files uploaded',
+      status: 400,
+      code: EErrors.INVALID_VALUES,
+    })
+
+  const { profiles, documents } = req.files
+
+  if (!profiles && !documents) {
     return ErrorService.createError({
       name: 'NoFiles',
       message: 'No files uploaded',
@@ -44,7 +54,15 @@ const uploadFiles = (req, res) => {
     })
   }
 
-  res.sendSuccessWithPayload({ message: 'Files uploaded', payload: req.files })
+  const payload = {
+    documents: documents ? documents.map((document) => document.filename) : [],
+    profile: profiles ? profiles.map((profile) => profile.filename) : [],
+  }
+
+  res.sendSuccessWithPayload({
+    message: 'Files uploaded',
+    payload,
+  })
 }
 
 export default {

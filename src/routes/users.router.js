@@ -11,7 +11,15 @@ export default class UserRouter extends BaseRouter {
       '/:uid/documents',
       [...ALL_USER_ROLES_WITHOUT_ADMIN],
       validateUserId,
-      uploaders.array('documents'),
+      uploaders.fields([
+        {
+          name: 'profiles',
+          maxCount: 1,
+        },
+        {
+          name: 'documents',
+        },
+      ]),
       usersController.uploadFiles
     )
   }
