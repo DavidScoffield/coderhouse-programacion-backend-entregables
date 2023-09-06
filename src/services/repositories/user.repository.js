@@ -33,4 +33,8 @@ export default class UserRepository {
   updateLastConnectionForUser = (userId, { lean } = {}) => {
     return this.updateUser(userId, { last_connection: new Date() }, { lean })
   }
+
+  addDocuments = (userId, documents = []) => {
+    return this.dao.addDocuments(userId, documents)
+  }
 }
