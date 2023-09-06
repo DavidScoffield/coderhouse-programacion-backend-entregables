@@ -1,11 +1,17 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
-import { after, before, beforeEach, describe, it } from 'mocha'
+import fs from 'fs'
+import { after, beforeEach, describe, it } from 'mocha'
 import supertest from 'supertest'
 import { app } from '../../src/app.js'
-import { ADMIN_PASS, ADMIN_USER, MULTER_MAX_FILE_SIZE_MB } from '../../src/constants/envVars.js'
-import { deleteRandomFiles, dropAllCollections, generateRandomFiles } from '../helpers.js'
-
+import { MULTER_PATH_FOLDER } from '../../src/constants/constants.js'
+import {
+  ADMIN_PASS,
+  ADMIN_USER,
+  MULTER_DEST,
+  MULTER_MAX_FILE_SIZE_MB,
+} from '../../src/constants/envVars.js'
+import { createRandomFilesInMemory, deleteRandomFiles, dropAllCollections } from '../helpers.js'
 const requester = supertest(app)
 
 describe('/api/users - Tests User endpoints', function () {
@@ -16,23 +22,18 @@ describe('/api/users - Tests User endpoints', function () {
     password: 'test',
     age: 20,
   }
-  // eslint-disable-next-line no-unused-vars
-  let files
-
-  before(function () {
-    this.files = generateRandomFiles({ numberOfFiles: 4, maxSizeInMB: MULTER_MAX_FILE_SIZE_MB })
-  })
 
   beforeEach(function (done) {
     dropAllCollections().then(async () => {
+      await deleteRandomFiles(MULTER_PATH_FOLDER)
       await requester.post('/api/sessions/register').send(mockUser)
       done()
     })
   })
 
   after(function (done) {
-    dropAllCollections().then(() => {
-      deleteRandomFiles()
+    dropAllCollections().then(async () => {
+      await deleteRandomFiles()
       done()
     })
   })
@@ -90,8 +91,9 @@ describe('/api/users - Tests User endpoints', function () {
         password: mockUser.password,
       })
 
-      // change last char of uid
-      const uid = `${body.payload.id.slice(0, -1)}1`
+      const uids = ['64f87b38c2e0cab9b3f451d5', '64f87af5ad8908985256485f']
+
+      const uid = body.payload.id !== uids[0] ? uids[0] : uids[1]
 
       const response = await requester
         .post(`/api/users/${uid}/documents`)
@@ -120,27 +122,6 @@ describe('/api/users - Tests User endpoints', function () {
       expect(response.body).to.have.property('error').to.be.equal('No files uploaded')
     })
 
-    it('should return 200 if files are valid', async function () {
-      const { body, headers } = await requester.post('/api/sessions/login').send({
-        email: mockUser.email,
-        password: mockUser.password,
-      })
-
-      const uid = body.payload.id
-
-      const response = await requester
-        .post(`/api/users/${uid}/documents`)
-        .set('Cookie', headers['set-cookie'])
-        .attach('documents', this.files[1])
-        .attach('documents', this.files[2])
-
-      expect(response.statusCode).to.be.equal(200)
-      expect(response.body).to.have.property('status').to.be.equal('success')
-      expect(response.body).to.have.property('message').to.be.equal('Files uploaded')
-      expect(response.body).to.have.property('payload').to.be.an('array')
-      expect(response.body.payload).to.have.lengthOf(2)
-    })
-
     it(`should return 400 if files are not valid - more heavier than ${MULTER_MAX_FILE_SIZE_MB} MB`, async function () {
       const { body, headers } = await requester.post('/api/sessions/login').send({
         email: mockUser.email,
@@ -149,7 +130,7 @@ describe('/api/users - Tests User endpoints', function () {
 
       const uid = body.payload.id
 
-      const file = generateRandomFiles({
+      const file = createRandomFilesInMemory({
         numberOfFiles: 1,
         specificSizeInMB: MULTER_MAX_FILE_SIZE_MB + 1,
       })
@@ -159,13 +140,105 @@ describe('/api/users - Tests User endpoints', function () {
       const response = await requester
         .post(`/api/users/${uid}/documents`)
         .set('Cookie', headers['set-cookie'])
-        .attach(fieldName, file[0])
+        .attach(fieldName, file[0].content, file[0].name)
 
       expect(response.statusCode).to.be.equal(400)
       expect(response.body).to.have.property('status').to.be.equal('error')
       expect(response.body)
         .to.have.property('error')
         .to.be.equal(`File too large in field "${fieldName}"`)
+    })
+
+    it('should return 200 if files are valid - in documents', async function () {
+      const filesToUse = createRandomFilesInMemory({ numberOfFiles: 2, maxSizeInMB: 10 })
+
+      const { body, headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const uid = body.payload.id
+
+      const response = await requester
+        .post(`/api/users/${uid}/documents`)
+        .set('Cookie', headers['set-cookie'])
+        .attach('documents', filesToUse[0].content, filesToUse[0].name)
+        .attach('documents', filesToUse[1].content, filesToUse[1].name)
+
+      const files = fs.readdirSync(`${MULTER_DEST}/documents`)
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('message').to.be.equal('Files uploaded')
+      expect(response.body).to.have.property('payload').to.be.an('object')
+      expect(response.body.payload).to.have.property('documents').to.be.an('array')
+      expect(response.body.payload).to.have.property('profile').to.be.an('array')
+      expect(response.body.payload.documents).to.have.lengthOf(2)
+      expect(response.body.payload.profile).to.have.lengthOf(0)
+
+      expect(files).to.have.lengthOf(2)
+      expect(files[0]).to.be.match(new RegExp(filesToUse[0].name))
+      expect(files[1]).to.be.match(new RegExp(filesToUse[1].name))
+    })
+
+    it('should return 200 if file is valid - in profiles', async function () {
+      const filesToUse = createRandomFilesInMemory({ numberOfFiles: 1, maxSizeInMB: 5 })
+
+      const { body, headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const uid = body.payload.id
+
+      const response = await requester
+        .post(`/api/users/${uid}/documents`)
+        .set('Cookie', headers['set-cookie'])
+        .attach('profiles', filesToUse[0].content, filesToUse[0].name)
+
+      const files = fs.readdirSync(`${MULTER_DEST}/profiles`)
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('message').to.be.equal('Files uploaded')
+      expect(response.body).to.have.property('payload').to.be.an('object')
+      expect(response.body.payload).to.have.property('documents').to.be.an('array')
+      expect(response.body.payload).to.have.property('profile').to.be.an('array')
+      expect(response.body.payload.documents).to.have.lengthOf(0)
+      expect(response.body.payload.profile).to.have.lengthOf(1)
+
+      expect(files).to.have.lengthOf(1)
+      expect(files[0]).to.be.match(new RegExp(filesToUse[0].name))
+    })
+
+    it('should return 400 if pass more than 1 file - in profiles', async function () {
+      const { body, headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const uid = body.payload.id
+
+      const generatedFiles = createRandomFilesInMemory({ numberOfFiles: 2, maxSizeInMB: 5 })
+
+      const response = await requester
+        .post(`/api/users/${uid}/documents`)
+        .set('Cookie', headers['set-cookie'])
+        .set('Connection', 'keep-alive')
+        .set('Keep-Alive', 'timeout=5, max=1000')
+        .attach('profiles', generatedFiles[0].content, generatedFiles[0].name)
+        .attach('profiles', generatedFiles[1].content, generatedFiles[0].name)
+
+      const uploadedFiles = await fs.promises.readdir(`${MULTER_DEST}/profiles`)
+
+      expect(response.statusCode).to.be.equal(400)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body)
+        .to.have.property('error')
+        .to.be.equal('Unexpected field in field "profiles"')
+      expect(response.body).to.not.have.property('payload')
+
+      expect(uploadedFiles).to.have.lengthOf(0)
     })
   })
 })
