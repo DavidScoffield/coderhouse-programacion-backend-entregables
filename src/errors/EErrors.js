@@ -7,6 +7,7 @@ const EErrors = {
   MONGO_ERROR: 5,
   METHOD_NOT_IMPLEMENTED: 6,
   TEST_ERROR: 7,
+  MULTER_ERROR: 8,
 }
 
 export default EErrors

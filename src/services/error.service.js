@@ -78,4 +78,23 @@ export default class ErrorService {
       metaData,
     })
   }
+
+  static createMulterError({
+    message,
+    status = httpStatus.BAD_REQUEST,
+    code = EErrors.MULTER_ERROR,
+    cause,
+    stack,
+    metaData,
+  }) {
+    return ErrorService.createError({
+      name: 'MulterError',
+      cause,
+      message,
+      code,
+      status,
+      stack,
+      metaData,
+    })
+  }
 }

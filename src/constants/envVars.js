@@ -31,3 +31,7 @@ export const GMAIL_MAIL_SERVICE = process.env.GMAIL_MAIL_SERVICE || 'gmail'
 export const GMAIL_MAIL_PORT = process.env.GMAIL_MAIL_PORT || 587
 export const GMAIL_MAIL_SECURE = process.env.GMAIL_MAIL_SECURE || false
 export const GMAIL_MAIL_FROM = process.env.GMAIL_MAIL_FROM || 'TEST <test@test.com>'
+
+// Multer
+export const MULTER_MAX_FILE_SIZE_MB = process.env.MULTER_MAX_FILE_SIZE_MB || 10
+export const MULTER_DEST = process.env.MULTER_DEST || 'uploads'

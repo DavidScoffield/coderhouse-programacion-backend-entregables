@@ -2,3 +2,6 @@ node_modules/
 .vscode/
 .env.local
 logs/
+uploads/
+uploads-test/
+test/files

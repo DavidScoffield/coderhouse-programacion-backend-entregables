@@ -35,4 +35,13 @@ export default class FileSystemPromises {
       throw new Error('Error writing file')
     }
   }
+
+  createFolder = async () => {
+    try {
+      await fs.mkdir(this.#path, { recursive: true })
+    } catch (error) {
+      LoggerService.error(error)
+      throw new Error('Error creating folder')
+    }
+  }
 }

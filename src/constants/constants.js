@@ -1,8 +1,10 @@
-import { HOST, PORT } from './envVars.js'
+import { __root } from '../utils/dirname.utils.js'
+import { HOST, MULTER_DEST, PORT } from './envVars.js'
 
 // Server
 export const PATH_OF_PRODUCTS = './productos.json'
 export const PATH_OF_CARTS = './carrito.json'
+export const MULTER_PATH_FOLDER = `${__root}/${MULTER_DEST}`
 
 export const COOKIES_OPTIONS = {
   maxAge: 1000 * 60 * 60 * 24,
