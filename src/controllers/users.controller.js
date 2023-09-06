@@ -34,6 +34,20 @@ const switchPremiumRole = async (req, res) => {
   })
 }
 
+const uploadFiles = (req, res) => {
+  if (!req.files) {
+    return ErrorService.createError({
+      name: 'NoFiles',
+      message: 'No files uploaded',
+      status: 400,
+      code: EErrors.INVALID_VALUES,
+    })
+  }
+
+  res.sendSuccessWithPayload({ message: 'Files uploaded', payload: req.files })
+}
+
 export default {
   switchPremiumRole,
+  uploadFiles,
 }
