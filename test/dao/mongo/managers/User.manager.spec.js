@@ -165,8 +165,6 @@ describe('UserManager - Testing User Manager (DAO)', function () {
 
     const response = await this.userDao.removeDocument(withProducts._id, documentIdToDelete)
 
-    console.log(response)
-
     expect(response).to.be.an('object')
     expect(response).to.have.property('_id')
     expect(response.documents).to.be.an('array')
