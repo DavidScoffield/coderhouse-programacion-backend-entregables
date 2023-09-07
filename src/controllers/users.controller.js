@@ -1,9 +1,11 @@
 import { ALL_USER_ROLES_WITHOUT_ADMIN, USER_ROLES } from '../constants/constants.js'
+import { MULTER_DEST } from '../constants/envVars.js'
 import CurrentUserDTO from '../dto/CurrentUserDTO.js'
 import EErrors from '../errors/EErrors.js'
 import ErrorService from '../services/error.service.js'
 import { userRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
+import { extractToRelativePath } from '../utils/multer.js'
 import { isValidRole } from '../utils/validations/users.validation.util.js'
 
 const switchPremiumRole = async (req, res) => {
@@ -67,7 +69,7 @@ const uploadFiles = async (req, res) => {
 
   const formatedDocuments = allDocuments.map((document) => ({
     name: document.filename,
-    reference: document.path,
+    reference: extractToRelativePath(document.path, MULTER_DEST),
   }))
 
   await userRepository.addDocuments(req.user.id, formatedDocuments)
