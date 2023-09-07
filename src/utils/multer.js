@@ -23,3 +23,8 @@ export const uploader = multer({
     fileSize: MULTER_MAX_FILE_SIZE_MB * 1024 * 1024,
   },
 })
+
+export const extractToRelativePath = (filePath, folder) => {
+  const path = filePath.split(folder)[1]
+  return `/${folder}${path}`
+}
