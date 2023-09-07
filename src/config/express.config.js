@@ -1,13 +1,13 @@
+import cookieParser from 'cookie-parser'
 import express from 'express'
 import { create } from 'express-handlebars'
 import passport from 'passport'
+import serveFavicon from 'serve-favicon'
+import { MULTER_PATH_FOLDER, USER_ROLES } from '../constants/constants.js'
 import { HOST, PORT } from '../constants/envVars.js'
+import LoggerService from '../services/logger.service.js'
 import { __src } from '../utils/dirname.utils.js'
 import initializePassportStrategies from './passport.config.js'
-import cookieParser from 'cookie-parser'
-import { USER_ROLES } from '../constants/constants.js'
-import LoggerService from '../services/logger.service.js'
-import serveFavicon from 'serve-favicon'
 
 const app = express()
 
@@ -15,6 +15,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(`${__src}/public`))
+app.use('/uploads', express.static(MULTER_PATH_FOLDER))
 app.use(cookieParser())
 app.use(serveFavicon(`${__src}/public/assets/favicon.ico`))
 
