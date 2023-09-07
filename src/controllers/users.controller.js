@@ -67,7 +67,7 @@ const uploadFiles = async (req, res) => {
 
   const formatedDocuments = allDocuments.map((document) => ({
     name: document.filename,
-    reference: document.destination,
+    reference: document.path,
   }))
 
   await userRepository.addDocuments(req.user.id, formatedDocuments)
