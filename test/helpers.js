@@ -7,8 +7,10 @@ import '../src/config/env.config.js'
 import { MongoSingleton } from '../src/config/mongodb.config.js'
 import { MULTER_PATH_FOLDER } from '../src/constants/constants.js'
 import { __root } from '../src/utils/dirname.utils.js'
+import { createCanvas } from 'canvas'
 
-const folderPath = path.join(__root, 'test', 'files')
+// MONGO HELPERS --------------------------------->
+
 export const mongoConection = MongoSingleton.getInstance()
 
 export const dropAllCollections = async (collectionNames) => {
@@ -33,6 +35,10 @@ export const dropCollection = async (...collectionNames) => {
     console.error('Error clearing collections:', error)
   }
 }
+// MONGO HELPERS ---------------------------------<
+
+// GENERATE FILES HELPERS --------------------------------->
+const folderPath = path.join(__root, 'test', 'files')
 
 // Function to generate random files in a folder (folderPath).
 export const createRandomFilesInFolder = async ({
@@ -106,7 +112,60 @@ export const createRandomFilesInMemory = ({
   }
   return randomFiles
 }
+// GENERATE FILES HELPERS ---------------------------------<
 
+// GENERATE IMAGES HELPERS --------------------------------->
+
+/// Function to create an in-memory image with a specific size in MB
+const generateImage = (sizeInMB = 10) => {
+  // Calculate the width and height of the canvas based on the size in MB
+  const sizeInBytes = sizeInMB * 1024 * 1024
+  const width = 400 // Fixed width for this example
+  const height = Math.floor(sizeInBytes / (width * 4)) // 4 bytes per RGBA pixel
+
+  // Create a canvas with the calculated size
+  const canvas = createCanvas(width, height)
+  const context = canvas.getContext('2d')
+
+  // Draw something on the canvas (e.g., a red rectangle)
+  context.fillStyle = 'red'
+  context.fillRect(0, 0, width, height)
+
+  // Convert the canvas to a buffer in PNG format
+  const imageBuffer = canvas.toBuffer('image/png')
+  return imageBuffer
+}
+
+// Function to create a single random file in memory.
+const createImageInMemory = (sizeInMB) => {
+  const image = generateImage(sizeInMB)
+  const filename = `${Date.now()}_image.png`
+  return {
+    name: filename,
+    content: image,
+  }
+}
+
+// Main function to create random files in memory and return them.
+export const createImagesInMemory = ({
+  numberOfImages = 4,
+  maxSizeInMB = 10,
+  specificSizeInMB = null,
+}) => {
+  const randomImages = []
+  for (let i = 0; i < numberOfImages; i++) {
+    const sizeInMB = specificSizeInMB || Math.floor(Math.random() * maxSizeInMB) + 1 // Random size between 1MB and maxSizeInMB
+
+    const randomImage = createImageInMemory(sizeInMB)
+
+    randomImages.push(randomImage)
+  }
+  return randomImages
+}
+
+// GENERATE IMAGES HELPERS ---------------------------------<
+
+// DELETE FILES HELPERS --------------------------------->
 export const deleteRandomFiles = async (...paths) => {
   const options = {
     recursive: true,
@@ -123,3 +182,4 @@ export const deleteRandomFiles = async (...paths) => {
     console.error('Error clearing files:', error)
   }
 }
+// DELETE FILES HELPERS ---------------------------------<

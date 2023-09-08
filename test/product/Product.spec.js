@@ -1,22 +1,27 @@
 /* eslint-disable no-unused-expressions */
 import { expect } from 'chai'
+import fs from 'fs'
 import { after, beforeEach, describe, it } from 'mocha'
 import supertest from 'supertest'
 import { app } from '../../src/app.js'
+import { ADMIN_PASS, ADMIN_USER, MULTER_DEST } from '../../src/constants/envVars.js'
 import { productRepository } from '../../src/services/repositories/index.js'
-import { dropAllCollections } from '../helpers.js'
+import { createImagesInMemory, deleteRandomFiles, dropAllCollections } from '../helpers.js'
+import { MULTER_PATH_FOLDER } from '../../src/constants/constants.js'
 
 const requester = supertest(app)
 
 describe('/api/products - Tests Session', () => {
   beforeEach(function (done) {
-    dropAllCollections().then(() => {
+    dropAllCollections().then(async () => {
+      await deleteRandomFiles(MULTER_PATH_FOLDER)
       done()
     })
   })
 
   after(function (done) {
-    dropAllCollections().then(() => {
+    dropAllCollections().then(async () => {
+      await deleteRandomFiles()
       done()
     })
   })
@@ -722,6 +727,183 @@ describe('/api/products - Tests Session', () => {
       expect(response.body)
         .to.have.property('error')
         .and.be.equal(`The provided id (${id}) isn't valid`)
+    })
+  })
+
+  describe('/ - POST - Create a product', () => {
+    const mockUser = {
+      firstName: 'test',
+      lastName: 'test',
+      email: 'test@prueba.com',
+      password: 'test',
+      age: 20,
+    }
+
+    beforeEach(async function () {
+      await requester.post('/api/sessions/register').send(mockUser)
+    })
+
+    it('should return 401 if no token is provided', async () => {
+      const mockProduct = {
+        title: 'title',
+        description: 'description',
+        price: 123,
+        thumbnail: ['thumbnail'],
+        code: 'code',
+        stock: 1,
+        category: 'category',
+        status: true,
+        owner: 'owner',
+      }
+
+      const response = await requester.post('/api/products').send(mockProduct)
+
+      expect(response.statusCode).to.be.equal(401)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('No auth token')
+    })
+
+    it('should return 403 if is not an admin o premium user', async () => {
+      const mockProduct = {
+        title: 'title',
+        description: 'description',
+        price: 123,
+        thumbnail: ['thumbnail'],
+        code: 'code',
+        stock: 1,
+        category: 'category',
+        status: true,
+        owner: 'owner',
+      }
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester
+        .post('/api/products')
+        .send(mockProduct)
+        .set('Cookie', headers['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(403)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('Forbidden')
+    })
+
+    it('should return 200 and the created product with no files', async () => {
+      const mockProduct = {
+        title: 'title',
+        description: 'description',
+        price: 123,
+        thumbnail: ['thumbnail'],
+        code: 'code',
+        stock: 1,
+        category: 'category',
+        status: true,
+      }
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const response = await requester
+        .post('/api/products')
+        .send(mockProduct)
+        .set('Cookie', headers['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').and.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .and.be.equal(`New product with id "${response.body.payload._id}" was added`)
+
+      expect(response.body).to.have.property('payload').and.be.an('object')
+
+      expect(response.body.payload).to.have.property('title').and.be.equal(mockProduct.title)
+      expect(response.body.payload)
+        .to.have.property('description')
+        .and.be.equal(mockProduct.description)
+      expect(response.body.payload).to.have.property('price').and.be.equal(mockProduct.price)
+      expect(response.body.payload)
+        .to.have.property('thumbnail')
+        .and.be.an('array')
+        .and.have.lengthOf(1)
+      expect(response.body.payload).to.have.property('code').and.be.equal(mockProduct.code)
+      expect(response.body.payload).to.have.property('stock').and.be.equal(mockProduct.stock)
+      expect(response.body.payload).to.have.property('category').and.be.equal(mockProduct.category)
+      expect(response.body.payload).to.have.property('status').and.be.equal(mockProduct.status)
+      expect(response.body.payload).to.have.property('owner').and.be.equal('Admin')
+      expect(response.body.payload).to.have.property('_id').and.be.a('string')
+    })
+
+    it('should return 200 and the created product with 2 files sended', async () => {
+      const createdImages = createImagesInMemory({
+        numberOfImages: 2,
+        maxSizeInMB: 10,
+      })
+
+      const mockProduct = {
+        title: 'title',
+        description: 'description',
+        price: 123,
+        thumbnail: ['thumbnail'],
+        code: 'code',
+        stock: 1,
+        category: 'category',
+        status: true,
+      }
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const request = requester
+        .post('/api/products')
+        .set('Cookie', headers['set-cookie'])
+        .attach('products', createdImages[0].content, createdImages[0].name)
+        .attach('products', createdImages[1].content, createdImages[1].name)
+
+      // attack the mockProduct to the request
+      for (const key in mockProduct) {
+        request.field(key, mockProduct[key])
+      }
+
+      // Send de request
+      const response = await request
+
+      const files = fs.readdirSync(`${MULTER_DEST}/products`)
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').and.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .and.be.equal(`New product with id "${response.body.payload._id}" was added`)
+
+      expect(response.body).to.have.property('payload').and.be.an('object')
+
+      expect(response.body.payload).to.have.property('title').and.be.equal(mockProduct.title)
+      expect(response.body.payload)
+        .to.have.property('description')
+        .and.be.equal(mockProduct.description)
+      expect(response.body.payload).to.have.property('price').and.be.equal(mockProduct.price)
+      expect(response.body.payload)
+        .to.have.property('thumbnail')
+        .and.be.an('array')
+        .and.have.lengthOf(1)
+      expect(response.body.payload).to.have.property('code').and.be.equal(mockProduct.code)
+      expect(response.body.payload).to.have.property('stock').and.be.equal(mockProduct.stock)
+      expect(response.body.payload).to.have.property('category').and.be.equal(mockProduct.category)
+      expect(response.body.payload).to.have.property('status').and.be.equal(mockProduct.status)
+      expect(response.body.payload).to.have.property('owner').and.be.equal('Admin')
+      expect(response.body.payload).to.have.property('_id').and.be.a('string')
+
+      // Check if the files were saved
+      expect(files).to.have.lengthOf(2)
+      expect(files[0]).to.be.match(new RegExp(createdImages[0].name))
+      expect(files[1]).to.be.match(new RegExp(createdImages[1].name))
     })
   })
 })
