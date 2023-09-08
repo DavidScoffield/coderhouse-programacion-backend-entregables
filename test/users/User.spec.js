@@ -310,7 +310,7 @@ describe('/api/users - Tests User endpoints', function () {
       expect(response.body).to.have.property('error').to.be.equal(`User with id "${uid}" not found`)
     })
 
-    it('should return 200 if user (USER) is updated to PREMIUM', async function () {
+    it('should return 400 if try to update a user (USER) to PREMIUM that not have no all neccesary documents loaded', async function () {
       const { headers } = await requester.post('/api/sessions/login').send({
         email: ADMIN_USER,
         password: ADMIN_PASS,
@@ -321,6 +321,74 @@ describe('/api/users - Tests User endpoints', function () {
       const response = await requester
         .put(`/api/users/premium/${uid}`)
         .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(400)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body)
+        .to.have.property('error')
+        .to.be.equal(
+          `User with id "${uid}" has not all the necessary documents to be premium. Missing files: identification, proofOfAddress, proofOfAccountState`
+        )
+    })
+
+    it('should return 200 if user (USER) is updated to PREMIUM', async function () {
+      // --- load files in user --- //
+      const filesToUse = {
+        identification: createRandomFilesInMemory({
+          numberOfFiles: 1,
+          maxSizeInMB: 5,
+          predefinedFileName: 'identification',
+        }),
+        proofOfAddress: createRandomFilesInMemory({
+          numberOfFiles: 1,
+          maxSizeInMB: 5,
+          predefinedFileName: 'proofOfAddress',
+        }),
+        proofOfAccountState: createRandomFilesInMemory({
+          numberOfFiles: 1,
+          maxSizeInMB: 5,
+          predefinedFileName: 'proofOfAccountState',
+        }),
+      }
+
+      const { body, headers: headersUser } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      await requester
+        .post(`/api/users/${body.payload.id}/documents`)
+        .set('Cookie', headersUser['set-cookie'])
+        .attach(
+          'documents',
+          filesToUse.identification[0].content,
+          filesToUse.identification[0].name
+        )
+        .attach(
+          'documents',
+          filesToUse.proofOfAddress[0].content,
+          filesToUse.proofOfAddress[0].name
+        )
+        .attach(
+          'documents',
+          filesToUse.proofOfAccountState[0].content,
+          filesToUse.proofOfAccountState[0].name
+        )
+
+      await requester.post('/api/sessions/logout').send()
+      // ---  end load files in user  --- //
+
+      const { headers: headersAdmin } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const uid = user._id
+
+      const response = await requester
+        .put(`/api/users/premium/${uid}`)
+        .set('Cookie', headersAdmin['set-cookie'])
         .send()
 
       expect(response.statusCode).to.be.equal(200)
