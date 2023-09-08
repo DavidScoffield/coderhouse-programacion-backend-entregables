@@ -1,4 +1,6 @@
 import httpStatus from 'http-status'
+import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
+import { MULTER_DEST } from '../constants/envVars.js'
 import EErrors from '../errors/EErrors.js'
 import {
   productErrorAtLeastOne,
@@ -8,9 +10,9 @@ import ErrorService from '../services/error.service.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
+import { extractToRelativePath } from '../utils/multer.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
 import { isProductDataValid } from '../utils/validations/products.validations.util.js'
-import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
 
 const getProducts = async (req, res, next) => {
   const { page = 1, limit = 10, sort, category = '', status = undefined } = req.query
@@ -58,7 +60,12 @@ const getProductById = async (req, res, next) => {
 }
 
 const createProduct = async (req, res, next) => {
-  const { user } = req
+  const { user, files } = req
+
+  const images = files?.map((file) => ({
+    name: file.filename,
+    reference: extractToRelativePath(file.path, MULTER_DEST),
+  }))
 
   const {
     title,
@@ -93,6 +100,7 @@ const createProduct = async (req, res, next) => {
     category,
     thumbnail,
     owner,
+    images,
   })
 
   res.sendSuccessWithPayload({

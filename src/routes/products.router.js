@@ -1,5 +1,6 @@
 import { PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import productsController from '../controllers/products.controller.js'
+import { uploaders } from '../middlewares/multer.middleware.js'
 import { validateProductOwnership } from '../middlewares/products.middleware.js'
 
 import BaseRouter from './BaseRouter.js'
@@ -10,7 +11,12 @@ export default class ProductRouter extends BaseRouter {
 
     this.get('/:pid', [PRIVACY_TYPES.PUBLIC], productsController.getProductById)
 
-    this.post('/', [USER_ROLES.ADMIN, USER_ROLES.PREMIUM], productsController.createProduct)
+    this.post(
+      '/',
+      [USER_ROLES.ADMIN, USER_ROLES.PREMIUM],
+      uploaders.array('products'),
+      productsController.createProduct
+    )
 
     this.put(
       '/:pid',
