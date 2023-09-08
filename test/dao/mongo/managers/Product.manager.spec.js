@@ -246,4 +246,95 @@ describe('ProductManager - Testing Product Manager (DAO)', function () {
     expect(response).to.have.lengthOf(3)
     expect(response).to.have.members(['frutas', 'verduras', 'limpieza'])
   })
+
+  it('(addImages) add images to a product', async function () {
+    const product = {
+      title: 'lechuga',
+      description: 'verdura lechuga',
+      price: 300,
+      code: 'code3',
+      stock: 30,
+      category: 'verduras',
+      status: true,
+      owner: 'owner3',
+    }
+
+    const createdProduct = await this.productDao.addProduct(product)
+
+    const images = [
+      {
+        name: 'test.png',
+        reference: '/path/test.png',
+      },
+      {
+        name: 'test2.png',
+        reference: '/path/test2.png',
+      },
+    ]
+
+    const response1 = await this.productDao.addImages(createdProduct._id, [images[0]])
+
+    expect(response1).to.be.an('object')
+    expect(response1).to.have.property('_id')
+    expect(response1.images).to.be.an('array')
+    expect(response1.images).to.have.lengthOf(1)
+    expect(response1.images[0].name).to.be.equal(images[0].name)
+    expect(response1.images[0].reference).to.be.equal(images[0].reference)
+
+    const response2 = await this.productDao.addImages(createdProduct._id, [images[1]])
+
+    expect(response2).to.be.an('object')
+    expect(response2).to.have.property('_id')
+    expect(response2.images).to.be.an('array')
+    expect(response2.images).to.have.lengthOf(2)
+    expect(response2.images[0].name).to.be.equal(images[0].name)
+    expect(response2.images[0].reference).to.be.equal(images[0].reference)
+    expect(response2.images[1].name).to.be.equal(images[1].name)
+    expect(response2.images[1].reference).to.be.equal(images[1].reference)
+  })
+
+  it('(removeImage) remove image from a user', async function () {
+    const product = {
+      title: 'lechuga',
+      description: 'verdura lechuga',
+      price: 300,
+      code: 'code3',
+      stock: 30,
+      category: 'verduras',
+      status: true,
+      owner: 'owner3',
+    }
+
+    const createdProduct = await this.productDao.addProduct(product)
+
+    const images = [
+      {
+        name: 'test.png',
+        reference: '/path/test.png',
+      },
+      {
+        name: 'test2.png',
+        reference: '/path/test2.png',
+      },
+      {
+        name: 'test3.png',
+        reference: '/path/test3.png',
+      },
+    ]
+
+    const withImages = await this.productDao.addImages(createdProduct._id, images)
+
+    const imageIdToDelete = withImages.images[0]._id
+
+    const response = await this.productDao.removeImage(withImages._id, imageIdToDelete)
+
+    expect(response).to.be.an('object')
+    expect(response).to.have.property('_id')
+    expect(response.images).to.be.an('array')
+    expect(response.images).to.have.lengthOf(2)
+    expect(response.images[0].name).to.be.equal(images[1].name)
+    expect(response.images[0].reference).to.be.equal(images[1].reference)
+    expect(response.images[1].name).to.be.equal(images[2].name)
+    expect(response.images[1].reference).to.be.equal(images[2].reference)
+  })
 })
