@@ -375,8 +375,6 @@ describe('/api/users - Tests User endpoints', function () {
           filesToUse.proofOfAccountState[0].content,
           filesToUse.proofOfAccountState[0].name
         )
-
-      await requester.post('/api/sessions/logout').send()
       // ---  end load files in user  --- //
 
       const { headers: headersAdmin } = await requester.post('/api/sessions/login').send({
