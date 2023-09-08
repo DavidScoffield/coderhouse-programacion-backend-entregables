@@ -25,6 +25,21 @@ export default class ProductRouter extends BaseRouter {
       productsController.updateProduct
     )
 
+    this.post(
+      '/:pid/images',
+      [USER_ROLES.ADMIN, USER_ROLES.PREMIUM],
+      validateProductOwnership,
+      uploaders.array('products'),
+      productsController.addProductImages
+    )
+
+    this.delete(
+      '/:pid/images/:iid',
+      [USER_ROLES.ADMIN, USER_ROLES.PREMIUM],
+      validateProductOwnership,
+      productsController.removeImage
+    )
+
     this.delete(
       '/:pid',
       [USER_ROLES.ADMIN, USER_ROLES.PREMIUM],

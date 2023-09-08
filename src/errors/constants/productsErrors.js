@@ -30,3 +30,7 @@ export const productErrorAtLeastOne = (product) => {
   * thumbnail: ${product.thumbnail};
   * price: ${product.price};`
 }
+
+export const productErrorAtLeastOneFile = () => {
+  return `Se esperaba al menos un archivo para actualizar, y se recibió 0`
+}

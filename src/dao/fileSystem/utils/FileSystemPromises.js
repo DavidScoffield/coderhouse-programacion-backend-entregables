@@ -44,4 +44,13 @@ export default class FileSystemPromises {
       throw new Error('Error creating folder')
     }
   }
+
+  removeFile = async () => {
+    try {
+      await fs.unlink(this.#path)
+    } catch (error) {
+      LoggerService.error(error)
+      throw new Error('Error removing file')
+    }
+  }
 }

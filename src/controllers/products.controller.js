@@ -1,14 +1,17 @@
 import httpStatus from 'http-status'
 import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
 import { MULTER_DEST } from '../constants/envVars.js'
+import FileSystemPromises from '../dao/fileSystem/utils/FileSystemPromises.js'
 import EErrors from '../errors/EErrors.js'
 import {
   productErrorAtLeastOne,
+  productErrorAtLeastOneFile,
   productErrorIncompleteValues,
 } from '../errors/constants/productsErrors.js'
 import ErrorService from '../services/error.service.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
+import { __root } from '../utils/dirname.utils.js'
 import { mappedStatus } from '../utils/mappedParams.util.js'
 import { extractToRelativePath } from '../utils/multer.js'
 import { isPaginationParamsValid } from '../utils/validations/pagination.validations.util.js'
@@ -170,10 +173,87 @@ const deleteProduct = async (req, res, next) => {
   }
 }
 
+const addProductImages = async (req, res, next) => {
+  const { pid } = req.params
+  const { files } = req
+
+  const id = castToMongoId(pid)
+
+  if (!files) {
+    ErrorService.createValidationError({
+      message: 'Must provide at least one file to upload',
+      status: httpStatus.BAD_REQUEST,
+      cause: productErrorAtLeastOneFile(),
+      code: EErrors.INCOMPLETE_VALUES,
+    })
+  }
+
+  const images = files.map((file) => ({
+    name: file.filename,
+    reference: extractToRelativePath(file.path, MULTER_DEST),
+  }))
+
+  const product = await productRepository.getProductById(id)
+
+  if (!product) {
+    ErrorService.createError({
+      message: `Product with id "${id}" not found`,
+      status: httpStatus.NOT_FOUND,
+      code: EErrors.NOT_FOUND,
+    })
+  }
+
+  const updatedProduct = await productRepository.addImages(id, images)
+
+  res.sendSuccessWithPayload({
+    message: `Images was added to product "${updatedProduct._id}"`,
+    payload: updatedProduct,
+  })
+}
+
+const removeImage = async (req, res, next) => {
+  const { pid, iid } = req.params
+
+  const productId = castToMongoId(pid)
+  const imageId = castToMongoId(iid)
+
+  const product = await productRepository.getProductById(productId)
+
+  if (!product) {
+    ErrorService.createError({
+      message: `Product with id "${productId}" not found`,
+      status: httpStatus.NOT_FOUND,
+      code: EErrors.NOT_FOUND,
+    })
+  }
+
+  const imageInProduct = product.images.find((image) => image._id.equals(imageId))
+  if (!imageInProduct) {
+    ErrorService.createError({
+      message: `Image with id "${imageId}" not found in product "${productId}"`,
+      status: httpStatus.NOT_FOUND,
+      code: EErrors.NOT_FOUND,
+    })
+  }
+
+  const updatedProduct = await productRepository.removeImage(productId, imageId)
+
+  // Remove file from file system
+  const fsp = new FileSystemPromises(`${__root}/${imageInProduct.reference}`)
+  await fsp.removeFile()
+
+  res.sendSuccessWithPayload({
+    message: `Image with id "${imageId}" was removed from product "${updatedProduct._id}"`,
+    payload: updatedProduct,
+  })
+}
+
 export default {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
   deleteProduct,
+  addProductImages,
+  removeImage,
 }

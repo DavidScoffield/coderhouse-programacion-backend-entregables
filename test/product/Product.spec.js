@@ -4,10 +4,10 @@ import fs from 'fs'
 import { after, beforeEach, describe, it } from 'mocha'
 import supertest from 'supertest'
 import { app } from '../../src/app.js'
+import { MULTER_PATH_FOLDER } from '../../src/constants/constants.js'
 import { ADMIN_PASS, ADMIN_USER, MULTER_DEST } from '../../src/constants/envVars.js'
 import { productRepository } from '../../src/services/repositories/index.js'
 import { createImagesInMemory, deleteRandomFiles, dropAllCollections } from '../helpers.js'
-import { MULTER_PATH_FOLDER } from '../../src/constants/constants.js'
 
 const requester = supertest(app)
 
@@ -676,7 +676,7 @@ describe('/api/products - Tests Session', () => {
     })
   })
 
-  describe('/:id - GET - Get product by id', () => {
+  describe('/:pid - GET - Get product by id', () => {
     it('should return 200 and the product', async () => {
       const mockProduct = {
         title: 'title',
@@ -904,6 +904,246 @@ describe('/api/products - Tests Session', () => {
       expect(files).to.have.lengthOf(2)
       expect(files[0]).to.be.match(new RegExp(createdImages[0].name))
       expect(files[1]).to.be.match(new RegExp(createdImages[1].name))
+    })
+  })
+
+  describe('/:pid/images - POST - Add images to a product', function () {
+    const mockUser = {
+      firstName: 'test',
+      lastName: 'test',
+      email: 'test@test.com',
+      password: 'test',
+      age: 20,
+    }
+    const mockProduct = {
+      title: 'title',
+      description: 'description',
+      price: 123,
+      thumbnail: ['thumbnail'],
+      code: 'code',
+      stock: 1,
+      category: 'category',
+      status: true,
+    }
+
+    beforeEach(async function () {
+      await requester.post('/api/sessions/register').send(mockUser)
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const { body } = await requester
+        .post('/api/products')
+        .send(mockProduct)
+        .set('Cookie', headers['set-cookie'])
+
+      this.productId = body.payload._id
+    })
+
+    it('should return 401 if no token is provided', async function () {
+      const response = await requester.post(`/api/products/${this.productId}/images`).send()
+
+      expect(response.statusCode).to.be.equal(401)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('No auth token')
+    })
+
+    it('should return 403 if is not an admin o premium user', async () => {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester
+        .post(`/api/products/${this.productId}/images`)
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(403)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('Forbidden')
+    })
+
+    it('should return 200 and the product with 2 images', async function () {
+      const createdImages = createImagesInMemory({
+        numberOfImages: 2,
+        maxSizeInMB: 10,
+      })
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const response = await requester
+        .post(`/api/products/${this.productId}/images`)
+        .set('Cookie', headers['set-cookie'])
+        .attach('products', createdImages[0].content, createdImages[0].name)
+        .attach('products', createdImages[1].content, createdImages[1].name)
+
+      const files = fs.readdirSync(`${MULTER_DEST}/products`)
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').and.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .and.be.equal(`Images was added to product "${this.productId}"`)
+
+      expect(response.body).to.have.property('payload').and.be.an('object')
+
+      expect(response.body.payload).to.have.property('title').and.be.equal(mockProduct.title)
+      expect(response.body.payload)
+        .to.have.property('description')
+        .and.be.equal(mockProduct.description)
+      expect(response.body.payload).to.have.property('price').and.be.equal(mockProduct.price)
+      expect(response.body.payload)
+        .to.have.property('thumbnail')
+        .and.be.an('array')
+        .and.have.lengthOf(1)
+      expect(response.body.payload).to.have.property('code').and.be.equal(mockProduct.code)
+      expect(response.body.payload).to.have.property('stock').and.be.equal(mockProduct.stock)
+      expect(response.body.payload).to.have.property('category').and.be.equal(mockProduct.category)
+      expect(response.body.payload).to.have.property('status').and.be.equal(mockProduct.status)
+      expect(response.body.payload).to.have.property('owner').and.be.equal('Admin')
+      expect(response.body.payload).to.have.property('_id').and.be.a('string')
+      expect(response.body.payload)
+        .to.have.property('images')
+        .and.be.an('array')
+        .and.have.lengthOf(2)
+      expect(response.body.payload.images[0]).to.have.property('_id').and.be.a('string')
+      expect(response.body.payload.images[0])
+        .to.have.property('name')
+        .and.be.a('string')
+        .and.be.match(new RegExp(createdImages[0].name))
+      expect(response.body.payload.images[0]).to.have.property('reference').and.be.a('string')
+
+      expect(response.body.payload.images[1]).to.have.property('_id').and.be.a('string')
+      expect(response.body.payload.images[1])
+        .to.have.property('name')
+        .and.be.a('string')
+        .and.be.match(new RegExp(createdImages[1].name))
+      expect(response.body.payload.images[1]).to.have.property('reference').and.be.a('string')
+
+      // Check if the files were saved
+      expect(files).to.have.lengthOf(2)
+      expect(files[0]).to.be.match(new RegExp(createdImages[0].name))
+      expect(files[1]).to.be.match(new RegExp(createdImages[1].name))
+    })
+  })
+
+  describe('/:pid/images/:iid - DELETE - Delete an image from a product', function () {
+    const mockUser = {
+      firstName: 'test',
+      lastName: 'test',
+      email: 'test@test.com',
+      password: 'test',
+      age: 20,
+    }
+    const mockProduct = {
+      title: 'title',
+      description: 'description',
+      price: 123,
+      thumbnail: ['thumbnail'],
+      code: 'code',
+      stock: 1,
+      category: 'category',
+      status: true,
+    }
+
+    beforeEach(async function () {
+      await requester.post('/api/sessions/register').send(mockUser)
+
+      const createdImages = createImagesInMemory({
+        numberOfImages: 2,
+        maxSizeInMB: 10,
+      })
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const request = requester
+        .post('/api/products')
+        .set('Cookie', headers['set-cookie'])
+        .attach('products', createdImages[0].content, createdImages[0].name)
+        .attach('products', createdImages[1].content, createdImages[1].name)
+
+      // attack the mockProduct to the request
+      for (const key in mockProduct) {
+        request.field(key, mockProduct[key])
+      }
+
+      // Send de request
+      const response = await request
+
+      this.product = response.body.payload
+    })
+
+    it('should return 401 if no token is provided', async function () {
+      const imageId = this.product.images[0]._id
+
+      const response = await requester.delete(`/api/products/${this.product._id}/images/${imageId}`)
+
+      expect(response.statusCode).to.be.equal(401)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('No auth token')
+    })
+
+    it('should return 403 if is not an admin o premium user', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const imageId = this.product.images[0]._id
+
+      const response = await requester
+        .delete(`/api/products/${this.product._id}/images/${imageId}`)
+        .set('Cookie', headers['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(403)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('Forbidden')
+    })
+
+    it('should return 200 and the product with 1 image when remove 1 of 2 images of product', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const imageId = this.product.images[0]._id
+
+      const filesBeforeDelete = fs.readdirSync(`${MULTER_DEST}/products`)
+
+      expect(filesBeforeDelete).to.have.lengthOf(2)
+
+      const response = await requester
+        .delete(`/api/products/${this.product._id}/images/${imageId}`)
+        .set('Cookie', headers['set-cookie'])
+
+      const filesAfterDelete = fs.readdirSync(`${MULTER_DEST}/products`)
+      const updatedProduct = response.body.payload
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').and.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .and.be.equal(`Image with id "${imageId}" was removed from product "${this.product._id}"`)
+      expect(updatedProduct).to.have.property('images').and.be.an('array').and.have.lengthOf(1)
+      expect(updatedProduct.images[0]).to.have.property('_id').and.be.a('string')
+      expect(updatedProduct.images[0])
+        .to.have.property('name')
+        .and.be.a('string')
+        .and.be.match(new RegExp(this.product.images[1].name))
+      expect(updatedProduct.images[0]).to.have.property('reference').and.be.a('string')
+
+      // Check if the file was removed of the folder
+      expect(filesAfterDelete).to.have.lengthOf(1)
+      expect(filesAfterDelete[0]).to.be.match(new RegExp(this.product.images[1].name))
     })
   })
 })

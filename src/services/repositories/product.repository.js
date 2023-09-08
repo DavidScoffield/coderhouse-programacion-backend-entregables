@@ -57,4 +57,12 @@ export default class ProductRepository {
   getCategories = () => {
     return this.dao.getCategories()
   }
+
+  addImages = (id, images = []) => {
+    return this.dao.addImages(id, images)
+  }
+
+  removeImage = (id, imageId) => {
+    return this.dao.removeImage(id, imageId)
+  }
 }
