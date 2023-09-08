@@ -88,11 +88,12 @@ const generateRandomData = (sizeInMB) => {
 }
 
 // Function to create a single random file in memory.
-const createRandomFileInMemory = (sizeInMB) => {
+const createRandomFileInMemory = (sizeInMB, predefinedFileName = '') => {
   const randomData = generateRandomData(sizeInMB)
-  const filename = `${Date.now()}_random_file.txt` // Unique filename based on timestamp
+  const filename = predefinedFileName || `${Date.now()}_random_file` // Unique filename based on timestamp
+  const filenameWithExtension = `${filename}.txt`
   return {
-    name: filename,
+    name: filenameWithExtension,
     content: randomData,
   }
 }
@@ -102,12 +103,15 @@ export const createRandomFilesInMemory = ({
   numberOfFiles = 4,
   maxSizeInMB = 10,
   specificSizeInMB = null,
+  predefinedFileName = '',
 }) => {
+  const fileName = numberOfFiles > 1 ? '' : predefinedFileName
+
   const randomFiles = []
   for (let i = 0; i < numberOfFiles; i++) {
     const sizeInMB = specificSizeInMB || Math.random() * (maxSizeInMB - 1) + 1 // Random size between 1MB and maxSizeInMB
 
-    const randomFile = createRandomFileInMemory(sizeInMB)
+    const randomFile = createRandomFileInMemory(sizeInMB, fileName)
     randomFiles.push(randomFile)
   }
   return randomFiles
