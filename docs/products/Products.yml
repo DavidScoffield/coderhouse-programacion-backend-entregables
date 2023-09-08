@@ -39,7 +39,7 @@ paths:
         description: Product object that needs to be added to the store
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/ProductToSend'
       responses:
@@ -143,6 +143,76 @@ paths:
         '5XX':
           description: Unexpected error, something went wrong in the server
 
+  /api/products/:pid/images:
+    post:
+      tags:
+        - products
+      summary: Upload images to a product
+      operationId: uploadImagesToProduct
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/productId'
+      requestBody:
+        description: Images to upload
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      responses:
+        '200':
+          description: OK (images uploaded)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReturned'
+        '400':
+          description: Bad Request (some data in the request is not valid or missing)
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          description: Product not found
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
+  /api/products/:pid/images/:iid:
+    delete:
+      tags:
+        - products
+      summary: Delete an image from a product
+      operationId: deleteImageFromProduct
+      security:
+        - cookieAuth: []
+      parameters:
+        - $ref: '#/components/parameters/productId'
+        - $ref: '#/components/parameters/imageId'
+      responses:
+        '200':
+          description: OK (image deleted)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductReturned'
+        '400':
+          description: Bad Request (some data in the request is not valid or missing)
+        '401':
+          $ref: '#/components/responses/401Unauthorized'
+        '403':
+          $ref: '#/components/responses/403Forbidden'
+        '404':
+          description: Product not found or image not found in product
+        '5XX':
+          description: Unexpected error, something went wrong in the server
+
 components:
   schemas:
     ProductToSend:
@@ -151,7 +221,6 @@ components:
         title:
           type: string
           description: Product title
-
         description:
           type: string
           description: Product description
@@ -179,6 +248,9 @@ components:
         owner:
           type: string
           description: Product owner refer to an user email
+        images:
+          type: file
+          description: Product images
       example:
         title: Product 1
         description: Product 1 description
@@ -191,6 +263,9 @@ components:
         category: Category 1
         status: true
         owner:
+        images:
+          - image1.jpg
+          - image2.jpg
     ProductReturned:
       type: object
       properties:
@@ -227,6 +302,21 @@ components:
         owner:
           type: string
           description: Product owner refer to an user email
+        images:
+          type: array
+          description: Product images
+          items:
+            type: object
+            properties:
+              _id:
+                type: string
+                description: Unique identifier for the image
+              name:
+                type: string
+                description: Image name
+              reference:
+                type: string
+                description: Image link
       example:
         _id: 5f9d5b9b9b0b3c2d0c8f1b1a
         title: Product 1
@@ -240,6 +330,13 @@ components:
         category: Category 1
         status: true
         owner: owner@owner.com
+        images:
+          - _id: 5f9d5b9b9b0b3c2d0c8f1b1a
+            name: image1.jpg
+            reference: /uploads/5f9d5b9b9b0b3c2d0c8f1b1a/image1.jpg
+          - _id: 5f9d5b9b9b0b3c2d0c8f1b1a
+            name: image2.jpg
+            reference: /uploads/5f9d5b9b9b0b3c2d0c8f1b1a/image2.jpg
     ProductsWithPagination:
       type: object
       properties:
@@ -294,6 +391,16 @@ components:
       name: pid
       in: path
       description: Product ID
+      required: true
+      schema:
+        type: string
+        format: ObjectId
+      example: 5f9d5b9b9b0b3c2d0c8f1b1a
+
+    imageId:
+      name: iid
+      in: path
+      description: Image ID
       required: true
       schema:
         type: string
