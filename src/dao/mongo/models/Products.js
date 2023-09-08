@@ -47,6 +47,18 @@ const productSchema = new mongoose.Schema(
       required: true,
       default: DEFAULT_ADMIN_DATA.name,
     },
+    images: [
+      {
+        name: {
+          type: String,
+          required: true,
+        },
+        reference: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: { createdAt: 'create_at', updatedAt: 'update_at' } }
 )
