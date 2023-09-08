@@ -159,11 +159,11 @@ describe('UserManager - Testing User Manager (DAO)', function () {
       },
     ]
 
-    const withProducts = await this.userDao.addDocuments(createdUser._id, documents)
+    const withDocuments = await this.userDao.addDocuments(createdUser._id, documents)
 
-    const documentIdToDelete = withProducts.documents[0]._id
+    const documentIdToDelete = withDocuments.documents[0]._id
 
-    const response = await this.userDao.removeDocument(withProducts._id, documentIdToDelete)
+    const response = await this.userDao.removeDocument(withDocuments._id, documentIdToDelete)
 
     expect(response).to.be.an('object')
     expect(response).to.have.property('_id')
