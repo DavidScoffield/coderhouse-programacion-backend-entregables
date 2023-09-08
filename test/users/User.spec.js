@@ -12,6 +12,7 @@ import {
   MULTER_MAX_FILE_SIZE_MB,
 } from '../../src/constants/envVars.js'
 import { createRandomFilesInMemory, deleteRandomFiles, dropAllCollections } from '../helpers.js'
+import UserManager from '../../src/dao/mongo/managers/user.manager.js'
 const requester = supertest(app)
 
 describe('/api/users - Tests User endpoints', function () {
@@ -22,11 +23,13 @@ describe('/api/users - Tests User endpoints', function () {
     password: 'test',
     age: 20,
   }
+  let user
 
   beforeEach(function (done) {
-    dropAllCollections().then(async () => {
+    dropAllCollections().then(async function () {
       await deleteRandomFiles(MULTER_PATH_FOLDER)
-      await requester.post('/api/sessions/register').send(mockUser)
+      const { body } = await requester.post('/api/sessions/register').send(mockUser)
+      user = body.payload
       done()
     })
   })
@@ -239,6 +242,142 @@ describe('/api/users - Tests User endpoints', function () {
       expect(response.body).to.not.have.property('payload')
 
       expect(uploadedFiles).to.have.lengthOf(0)
+    })
+  })
+
+  describe('PUT /api/users/premium/:uid', function () {
+    it('should return 401 if user is not logged in', async function () {
+      const response = await requester.put('/api/users/premium/1234').send()
+
+      expect(response.statusCode).to.be.equal(401)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body).to.have.property('error').to.be.equal('No auth token')
+    })
+
+    it('should return 403 if user is not admin', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const uid = 'anything'
+
+      const response = await requester
+        .put(`/api/users/premium/${uid}`)
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(403)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body).to.have.property('error').to.be.equal('Forbidden')
+    })
+
+    it('should return 400 if uid is not a valid user id', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const uid = '123456'
+
+      const response = await requester
+        .put(`/api/users/premium/${uid}`)
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(400)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body)
+        .to.have.property('error')
+        .to.be.equal(`The provided id (${uid}) isn't valid`)
+    })
+
+    it('should return 400 if user not exist', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const uid = '64f87b38c2e0cab9b3f451d5'
+
+      const response = await requester
+        .put(`/api/users/premium/${uid}`)
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(404)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body).to.have.property('error').to.be.equal(`User with id "${uid}" not found`)
+    })
+
+    it('should return 200 if user (USER) is updated to PREMIUM', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const uid = user._id
+
+      const response = await requester
+        .put(`/api/users/premium/${uid}`)
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .to.be.equal(`Switch role user from USER to PREMIUM`)
+      expect(response.body).to.have.property('payload').to.be.an('object')
+      expect(response.body.payload)
+        .to.have.property('name')
+        .to.be.equal(`${mockUser.firstName} ${mockUser.lastName}`)
+      expect(response.body.payload).to.have.property('email').to.be.equal(mockUser.email)
+      expect(response.body.payload).to.have.property('age').to.be.equal(mockUser.age)
+      expect(response.body.payload).to.have.property('role').to.be.equal('PREMIUM')
+      expect(response.body.payload).to.have.property('cart').to.be.a('string')
+    })
+
+    it('should return 200 if user (PREMIUM) is updated to (USER)', async function () {
+      const userDAO = new UserManager()
+      const mockPremiumUser = {
+        firstName: 'test',
+        lastName: 'test',
+        email: 'test@premium.com',
+        password: 'test',
+        age: 20,
+        role: 'PREMIUM',
+      }
+
+      const newPremiumUser = await userDAO.addUser(mockPremiumUser)
+
+      expect(newPremiumUser).to.have.property('documents').to.be.an('array').and.be.empty
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const uid = newPremiumUser._id
+
+      const response = await requester
+        .put(`/api/users/premium/${uid}`)
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .to.be.equal(`Switch role user from PREMIUM to USER`)
+      expect(response.body).to.have.property('payload').to.be.an('object')
+      expect(response.body.payload)
+        .to.have.property('name')
+        .to.be.equal(`${mockPremiumUser.firstName} ${mockPremiumUser.lastName}`)
+      expect(response.body.payload).to.have.property('email').to.be.equal(mockPremiumUser.email)
+      expect(response.body.payload).to.have.property('age').to.be.equal(mockPremiumUser.age)
+      expect(response.body.payload).to.have.property('role').to.be.equal('USER')
+      expect(response.body.payload).to.have.property('cart')
     })
   })
 })
