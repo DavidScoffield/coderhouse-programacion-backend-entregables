@@ -18,9 +18,9 @@
 - [x] Modificar el endpoint /api/users/premium/:uid para que sólo actualice al usuario a premium si ya ha cargado los siguientes documentos:
   - Identificación, Comprobante de domicilio, Comprobante de estado de cuenta
     **En caso de llamar al endpoint, si no se ha terminado de cargar la documentación, devolver un error indicando que el usuario no ha terminado de procesar su documentación. (Sólo si quiere pasar de user a premium, no al revés)**
-- [ ] Actualizar documentacion
-- [ ] Actualizar postman export
 - [ ] Agregar enpoint para eliminar y agregar imagenes a los products
+- [ ] Actualizar documentacion
+- [x] Actualizar postman export
 
 ## Formato
 
