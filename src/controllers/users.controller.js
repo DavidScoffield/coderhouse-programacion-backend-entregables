@@ -5,7 +5,7 @@ import EErrors from '../errors/EErrors.js'
 import ErrorService from '../services/error.service.js'
 import { userRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
-import { extractToRelativePath } from '../utils/multer.js'
+import { extractOriginalName, extractToRelativePath } from '../utils/multer.js'
 import { isValidRole } from '../utils/validations/users.validation.util.js'
 
 const switchPremiumRole = async (req, res) => {
@@ -15,6 +15,12 @@ const switchPremiumRole = async (req, res) => {
 
   const user = await userRepository.getUserById(userId)
 
+  if (!user) {
+    res.sendNotFound({
+      error: `User with id "${userId}" not found`,
+    })
+  }
+
   if (!isValidRole(user.role, ALL_USER_ROLES_WITHOUT_ADMIN)) {
     return ErrorService.createValidationError({
       name: 'InvalidRole',
@@ -22,6 +28,26 @@ const switchPremiumRole = async (req, res) => {
       status: 400,
       code: EErrors.INVALID_VALUES,
     })
+  }
+
+  if (user.role === USER_ROLES.USER) {
+    // Validate if user has documents of (indetification, proof of address, proof of account state)
+    const NECESSARY_FILES = ['identification', 'proofOfAddress', 'proofOfAccountState']
+
+    const namesOfFiles = user.documents.map((document) => extractOriginalName(document.name))
+
+    const missingFiles = NECESSARY_FILES.filter((file) => !namesOfFiles.includes(file))
+
+    if (missingFiles.length > 0) {
+      return ErrorService.createValidationError({
+        name: 'InsufficientDocuments',
+        message: `User with id "${userId}" has not all the necessary documents to be premium. Missing files: ${missingFiles.join(
+          ', '
+        )}`,
+        status: 400,
+        code: EErrors.INCOMPLETE_VALUES,
+      })
+    }
   }
 
   const newRole = user.role === USER_ROLES.USER ? USER_ROLES.PREMIUM : USER_ROLES.USER
