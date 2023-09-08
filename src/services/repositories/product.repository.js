@@ -11,7 +11,18 @@ export default class ProductRepository {
     return this.dao.getProductById(id)
   }
 
-  addProduct = ({ title, description, price, thumbnail, code, stock, category, status, owner }) => {
+  addProduct = ({
+    title,
+    description,
+    price,
+    thumbnail,
+    code,
+    stock,
+    category,
+    status,
+    owner,
+    images,
+  }) => {
     return this.dao.addProduct({
       title,
       description,
@@ -22,6 +33,7 @@ export default class ProductRepository {
       category,
       status,
       owner,
+      images,
     })
   }
 

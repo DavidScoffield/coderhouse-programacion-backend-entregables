@@ -17,7 +17,18 @@ export default class ProductManager {
   getProductById = tryCatchWrapperMongo(async (id) => Products.findById(id).lean())
 
   addProduct = tryCatchWrapperMongo(
-    async ({ title, description, price, thumbnail, code, stock, category, status, owner }) => {
+    async ({
+      title,
+      description,
+      price,
+      thumbnail,
+      code,
+      stock,
+      category,
+      status,
+      owner,
+      images,
+    }) => {
       return Products.create({
         title,
         description,
@@ -28,6 +39,7 @@ export default class ProductManager {
         category,
         status,
         owner,
+        images,
       })
     }
   )
@@ -55,5 +67,17 @@ export default class ProductManager {
 
   getCategories = tryCatchWrapperMongo(async () => {
     return Products.distinct('category')
+  })
+
+  addImages = tryCatchWrapperMongo(async (productId, images) => {
+    return Products.findByIdAndUpdate(productId, { $push: { images } }, { new: true, lean: true })
+  })
+
+  removeImage = tryCatchWrapperMongo(async (productId, imageId) => {
+    return Products.findByIdAndUpdate(
+      productId,
+      { $pull: { images: { _id: imageId } } },
+      { new: true, lean: true }
+    )
   })
 }
