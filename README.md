@@ -27,6 +27,8 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - **Mocha**
 - **Chai**
 - **Supertest**
+- **Multer**
+- **Swagger**
 
 ## Intrucciones de instalación
 
@@ -70,41 +72,55 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 
 ```bash
 .
+├── docs
+│   ├── carts
+│   ├── products
+│   └── session
 ├── extras
 ├── logs
 │   ├── dev
-│   └── prod
+│   ├── prod
+│   └── test
 ├── postman
-└── src
-    ├── config
-    ├── constants
-    ├── controllers
+├── src
+│   ├── config
+│   ├── constants
+│   ├── controllers
+│   ├── dao
+│   │   ├── fileSystem
+│   │   │   ├── managers
+│   │   │   └── utils
+│   │   └── mongo
+│   │       ├── managers
+│   │       └── models
+│   ├── dto
+│   ├── errors
+│   │   ├── constants
+│   │   └── handlers
+│   ├── listeners
+│   ├── middlewares
+│   ├── mocks
+│   ├── public
+│   │   ├── assets
+│   │   ├── css
+│   │   └── js
+│   ├── routes
+│   ├── services
+│   │   └── repositories
+│   ├── utils
+│   │   └── validations
+│   └── views
+│       ├── layouts
+│       └── partials
+└── test
+    ├── cart
     ├── dao
-    │   ├── fileSystem
-    │   │   ├── managers
-    │   │   └── utils
     │   └── mongo
-    │       ├── managers
-    │       └── models
-    ├── dto
-    ├── errors
-    │   ├── constants
-    │   └── handlers
-    ├── listeners
-    ├── middlewares
-    ├── mocks
-    ├── public
-    │   ├── assets
-    │   ├── css
-    │   └── js
-    ├── routes
-    ├── services
-    │   └── repositories
-    ├── utils
-    │   └── validations
-    └── views
-        ├── layouts
-        └── partials
+    │       └── managers
+    ├── product
+    ├── session
+    ├── users
+    └── utils
 ```
 
 ---
@@ -126,34 +142,51 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | GET              | /restoreRequest   |          | e: Error            |                                     | HTML       |
 | GET              | /restorePassword  |          | token: RestoreToken |                                     | HTML       |
 
+## Ruta de archivos estáticos
+
+| **Request type** | **Path** | **Body** | **Query params** | **Path variables** | **Output** |
+| ---------------- | -------- | -------- | ---------------- | ------------------ | ---------- |
+| GET              | /        |          |                  |                    | Files      |
+| GET              | /uploads |          |                  |                    | Files      |
+
+## Rutas de documentación
+
+| **Request type** | **Path** | **Body** | **Query params** | **Path variables** | **Output** |
+| ---------------- | -------- | -------- | ---------------- | ------------------ | ---------- |
+| GET              | /apiDocs |          |                  |                    | HTML       |
+
 ## Documentación de la API:
 
-| **Request type** | **Path**                      | **Body** | **Query params**                    | **Path variables**              | **Output** |
-| ---------------- | ----------------------------- | -------- | ----------------------------------- | ------------------------------- | ---------- |
-| GET              | /healthcheck                  |          |                                     |                                 | Object     |
-| GET              | /api/products/                |          | limit, page, sort, category, status |                                 | Object     |
-| GET              | /api/products/:pid            |          |                                     | pid : Product ID                | Object     |
-| POST             | /api/products/                | Object   |                                     |                                 | Object     |
-| PUT              | /api/products/:pid            | Object   |                                     | pid : Product ID                | Object     |
-| DELETE           | /api/products/:pid            |          |                                     | pid : Product ID                | Object     |
-| POST             | /api/carts/                   |          |                                     |                                 | Object     |
-| GET              | /api/carts/:cid               |          |                                     | cid : Cart ID                   | Object     |
-| POST             | /api/carts/:cid/product/:pid  | Object   |                                     | cid : Cart ID, pid : Product ID | Object     |
-| DELETE           | /api/carts/:cid/products/:pid |          |                                     | cid : Cart ID, pid : Product ID | Object     |
-| PUT              | /api/carts/:cid               | Object   |                                     | cid : Cart ID                   | Object     |
-| PUT              | /api/carts/:cid/products/:pid | Object   |                                     | cid : Cart ID, pid : Product ID | Object     |
-| DELETE           | /api/carts/:cid               |          |                                     | cid : Cart ID                   | Object     |
-| PUT              | /api/carts/:cid/purchase      |          |                                     | cid : Cart ID                   | Object     |
-| POST             | /api/sessions/register        | Object   |                                     |                                 | Object     |
-| POST             | /api/sessions/registerUsers   | Object   |                                     |                                 | Object     |
-| POST             | /api/sessions/login           | Object   |                                     |                                 | Object     |
-| GET              | /api/sessions/logout          |          |                                     |                                 | Object     |
-| POST             | /api/sessions/restoreRequest  | Object   |                                     |                                 | Object     |
-| PUT              | /api/sessions/restorePassword | Object   |                                     |                                 | Object     |
-| GET              | /api/sessions/current         |          |                                     |                                 | Object     |
-| GET              | /mockingproducts              |          |                                     |                                 | Object     |
-| GET              | /loggerTest                   |          |                                     |                                 | Object     |
-| PUT              | /api/users/premium/:uid       |          |                                     | uid: User ID                    | Object     |
+| **Request type** | **Path**                       | **Body** | **multipart/form-data** | **Query params**                    | **Path variables**              | **Output** |
+| ---------------- | ------------------------------ | -------- | ----------------------- | ----------------------------------- | ------------------------------- | ---------- |
+| GET              | /healthcheck                   |          |                         |                                     |                                 | Object     |
+| GET              | /api/products/                 |          |                         | limit, page, sort, category, status |                                 | Object     |
+| GET              | /api/products/:pid             |          |                         |                                     | pid : Product ID                | Object     |
+| POST             | /api/products/                 | Object   |                         |                                     |                                 | Object     |
+| PUT              | /api/products/:pid             | Object   |                         |                                     | pid : Product ID                | Object     |
+| DELETE           | /api/products/:pid             |          |                         |                                     | pid : Product ID                | Object     |
+| POST             | /api/products/:pid/images      |          | products                |                                     | pid : Product ID                | Object     |
+| DELETE           | /api/products/:pid/images/:iid |          |                         |                                     | pid : Product ID, iid: Image ID | Object     |
+| DELETE           | /api/products/:pid             |          |                         |                                     | pid : Product ID                | Object     |
+| POST             | /api/carts/                    |          |                         |                                     |                                 | Object     |
+| GET              | /api/carts/:cid                |          |                         |                                     | cid : Cart ID                   | Object     |
+| POST             | /api/carts/:cid/product/:pid   | Object   |                         |                                     | cid : Cart ID, pid : Product ID | Object     |
+| DELETE           | /api/carts/:cid/products/:pid  |          |                         |                                     | cid : Cart ID, pid : Product ID | Object     |
+| PUT              | /api/carts/:cid                | Object   |                         |                                     | cid : Cart ID                   | Object     |
+| PUT              | /api/carts/:cid/products/:pid  | Object   |                         |                                     | cid : Cart ID, pid : Product ID | Object     |
+| DELETE           | /api/carts/:cid                |          |                         |                                     | cid : Cart ID                   | Object     |
+| PUT              | /api/carts/:cid/purchase       |          |                         |                                     | cid : Cart ID                   | Object     |
+| POST             | /api/sessions/register         | Object   |                         |                                     |                                 | Object     |
+| POST             | /api/sessions/registerUsers    | Object   |                         |                                     |                                 | Object     |
+| POST             | /api/sessions/login            | Object   |                         |                                     |                                 | Object     |
+| GET              | /api/sessions/logout           |          |                         |                                     |                                 | Object     |
+| POST             | /api/sessions/restoreRequest   | Object   |                         |                                     |                                 | Object     |
+| PUT              | /api/sessions/restorePassword  | Object   |                         |                                     |                                 | Object     |
+| GET              | /api/sessions/current          |          |                         |                                     |                                 | Object     |
+| GET              | /mockingproducts               |          |                         |                                     |                                 | Object     |
+| GET              | /loggerTest                    |          |                         |                                     |                                 | Object     |
+| PUT              | /api/users/premium/:uid        |          |                         |                                     | uid: User ID                    | Object     |
+| POST             | /api/users/:uid/documents      |          | documents, profiles     |                                     | uid: User ID                    | Object     |
 
 ### + GET /healthcheck
 
@@ -265,6 +298,32 @@ Elimina un producto a partir de un ID de Producto dado.
 #### Path variables
 
 - **pid**: ID del producto
+
+### + POST /api/products/:pid/images
+
+Permite agregar imágenes a un producto. Recibe las imágenes a través de un form-data y retorna un objeto con el producto actualizado.
+
+#### Path variables
+
+- **pid**: ID del producto
+
+#### Form-data
+
+```js
+images: Array | Required
+{
+  image: File | Required
+}
+```
+
+### + DELETE /api/products/:pid/images/:iid
+
+Permite eliminar una imagen de un producto. Recibe el ID de la imagen a eliminar a través de los path variables y retorna un objeto con el producto actualizado.
+
+#### Path variables
+
+- **pid**: ID del producto
+- **iid**: ID de la imagen
 
 ### + POST /api/carts/
 
@@ -430,9 +489,43 @@ Permite cambiar el rol de un usuario, de "user" a "premium" y viceversa.
 
 - **uid**: ID del usuario
 
+### + POST /api/users/:uid/documents
+
+Permite agregar documentos a un usuario. Recibe los documentos a través de un form-data y retorna un objeto con el usuario actualizado.
+
+#### Path variables
+
+- **uid**: ID del usuario
+
+#### Form-data
+
+```js
+documents: Array | Required
+{
+  document: File | Required
+}
+
+profiles: Array((length = 1)) | Required
+{
+  profile: File | Required
+}
+```
+
 ## Tests
 
 Para ejecutar los tests, ejecutar el comando `npm run test`.
+
+## Logs de la aplicación
+
+Los logs de la aplicación se encuentran en la carpeta `logs` y se dividen en 3 carpetas:
+
+- **dev**: Logs de desarrollo
+- **prod**: Logs de producción
+- **test**: Logs de tests
+
+## Documentación de la API
+
+La documentación de la API se puede acceder desde el endpoint '/apiDocs' y se encuentra en formato SWAGGER.
 
 ##
 
@@ -442,4 +535,4 @@ Para ejecutar los tests, ejecutar el comando `npm run test`.
 
     En `TODO.md` podran encontrar los requerimientos de la entrega .
 
-> Puede importar en postman el archivo `postman_endpoints_export.json` para testear los endpoints desarrollados.
+> Puede importar en postman el archivo `postman/postman_endpoints_export.json` para testear los endpoints desarrollados. Con su respectivo ENV `postman/Backend-Coderhouse_ENV.postman_environment.json`

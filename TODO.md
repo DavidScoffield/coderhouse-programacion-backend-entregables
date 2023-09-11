@@ -21,6 +21,7 @@
 - [x] Agregar enpoint para eliminar y agregar imagenes a los products
 - [x] Actualizar postman export
 - [x] Actualizar documentacion
+- [x] Actualizar README con rutas (uploads, nuevas routas de documentos, etc)
 
 ## Formato
 
