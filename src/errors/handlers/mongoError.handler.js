@@ -30,11 +30,11 @@ const MONGO_ERROR_HANDLERS = {
     }
   },
   MongoServerError: (error) => {
-    const fn =
-      MONGO_SERVER_ERROR_HANDLER[error.codeName](error) ||
-      MONGO_SERVER_ERROR_HANDLER.defaultError(error)
+    const { codeName } = error
 
-    return fn()
+    const fn = MONGO_SERVER_ERROR_HANDLER[codeName] || MONGO_SERVER_ERROR_HANDLER.defaultError
+
+    return fn(error)
   },
   ValidationError: (error) => {
     const errors = Object.keys({ ...error }.errors)
@@ -46,7 +46,7 @@ const MONGO_ERROR_HANDLERS = {
       metaData,
     }
   },
-  defaultError: (res) => {
+  defaultError: () => {
     return {
       status: httpStatus.INTERNAL_SERVER_ERROR,
       message: "We're sorry, something went wrong",
