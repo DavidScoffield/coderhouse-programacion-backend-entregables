@@ -477,9 +477,67 @@ describe('/api/users - Tests User endpoints', function () {
         expect(user).to.have.property('role')
         expect(user).to.have.property('cart')
 
-        // expect(user).to.have.property('last_connection')
+        // expect(user).to.have.property('lastConnection')
         // expect(user).to.have.property('documents')
       })
+    })
+  })
+
+  describe('/api/users - DELETE - Delete inactive users', function () {
+    it('should return 403 if user is not admin', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester
+        .delete('/api/users')
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(403)
+      expect(response.body).to.have.property('status').to.be.equal('error')
+      expect(response.body).to.have.property('error').to.be.equal('Forbidden')
+    })
+
+    it('should return 200 and delete all inactive users', async function () {
+      const userDAO = new UserManager()
+
+      // Create users
+      const userMocks = Array.from({ length: 3 }, () => generateUser())
+      const newUsers = await Promise.all(userMocks.map((user) => userDAO.addUser(user)))
+
+      // Update lastConnection
+      const dayAndHalfInMs = 1.5 * 24 * 60 * 60 * 1000
+      const threeDaysInMs = 3 * 24 * 60 * 60 * 1000
+
+      await Promise.all([
+        userDAO.updateUser(newUsers[0]._id, {
+          lastConnection: new Date(Date.now() - dayAndHalfInMs),
+        }),
+        userDAO.updateUser(newUsers[1]._id, {
+          lastConnection: new Date(Date.now() - threeDaysInMs),
+        }),
+        userDAO.updateUser(newUsers[2]._id, { lastConnection: new Date() }),
+      ])
+
+      // Test delete inactive users
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const response = await requester
+        .delete('/api/users')
+        .set('Cookie', headers['set-cookie'])
+        .send()
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('message').to.be.equal('Users deleted')
+      expect(response.body).to.have.property('payload').to.be.an('object')
+      expect(response.body.payload).to.have.property('deletedCount').to.be.equal(1)
+      expect(response.body.payload).to.have.property('successfulOp').to.be.equal(true)
     })
   })
 })

@@ -84,3 +84,5 @@ export const MAILS_TEMPLATES = {
   //   html: `<b>Ha ocurrido un error al resetear la contraseña de ${name}</b>`,
   // }),
 }
+
+export const INACTIVE_CONNECTION_PARAM = 1000 * 60 * 60 * 24 * 2 // 2 days

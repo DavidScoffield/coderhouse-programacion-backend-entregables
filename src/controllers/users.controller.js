@@ -1,4 +1,8 @@
-import { ALL_USER_ROLES_WITHOUT_ADMIN, USER_ROLES } from '../constants/constants.js'
+import {
+  ALL_USER_ROLES_WITHOUT_ADMIN,
+  INACTIVE_CONNECTION_PARAM,
+  USER_ROLES,
+} from '../constants/constants.js'
 import { MULTER_DEST } from '../constants/envVars.js'
 import CurrentUserDTO from '../dto/CurrentUserDTO.js'
 import EErrors from '../errors/EErrors.js'
@@ -16,6 +20,20 @@ const getAll = async (req, res) => {
   res.sendSuccessWithPayload({
     message: 'Users found',
     payload: usersDTO,
+  })
+}
+
+const deleteInactiveUsers = async (req, res) => {
+  const { acknowledged: successfulOp, deletedCount } = await userRepository.deleteInactiveUsers(
+    INACTIVE_CONNECTION_PARAM
+  )
+
+  res.sendSuccessWithPayload({
+    message: 'Users deleted',
+    payload: {
+      deletedCount,
+      successfulOp,
+    },
   })
 }
 
@@ -121,4 +139,5 @@ export default {
   getAll,
   switchPremiumRole,
   uploadFiles,
+  deleteInactiveUsers,
 }

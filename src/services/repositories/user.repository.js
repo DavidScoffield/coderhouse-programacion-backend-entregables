@@ -41,4 +41,8 @@ export default class UserRepository {
   addDocuments = (userId, documents = []) => {
     return this.dao.addDocuments(userId, documents)
   }
+
+  deleteInactiveUsers = (inactiveTime) => {
+    return this.dao.deleteInactiveUsers(inactiveTime)
+  }
 }

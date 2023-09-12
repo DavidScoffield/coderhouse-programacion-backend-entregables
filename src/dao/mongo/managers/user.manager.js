@@ -23,6 +23,12 @@ export default class UserManager {
     }
   )
 
+  deleteInactiveUsers = tryCatchWrapperMongo(async (inactiveTime) => {
+    return Users.deleteMany({
+      lastConnection: { $lt: new Date(Date.now() - inactiveTime) },
+    })
+  })
+
   getUserByEmail = tryCatchWrapperMongo(async (email, { lean = false } = {}) => {
     return Users.findOne({ email }, null, { lean })
   })
