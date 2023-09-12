@@ -6,6 +6,10 @@ export default class UserRepository {
     this.dao = dao
   }
 
+  getAllUsers = ({ lean } = {}) => {
+    return this.dao.getAllUsers({ lean })
+  }
+
   addUser = ({ firstName, lastName, email, age, password, cart, role }) => {
     return this.dao.addUser({ firstName, lastName, email, age, password, cart, role })
   }

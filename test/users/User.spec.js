@@ -11,8 +11,9 @@ import {
   MULTER_DEST,
   MULTER_MAX_FILE_SIZE_MB,
 } from '../../src/constants/envVars.js'
-import { createRandomFilesInMemory, deleteRandomFiles, dropAllCollections } from '../helpers.js'
 import UserManager from '../../src/dao/mongo/managers/user.manager.js'
+import { generateUser } from '../../src/mocks/users.mocks.js'
+import { createRandomFilesInMemory, deleteRandomFiles, dropAllCollections } from '../helpers.js'
 const requester = supertest(app)
 
 describe('/api/users - Tests User endpoints', function () {
@@ -444,6 +445,41 @@ describe('/api/users - Tests User endpoints', function () {
       expect(response.body.payload).to.have.property('age').to.be.equal(mockPremiumUser.age)
       expect(response.body.payload).to.have.property('role').to.be.equal('USER')
       expect(response.body.payload).to.have.property('cart')
+    })
+  })
+
+  describe('/api/users - GET - Get all users', function () {
+    let userMocks
+
+    beforeEach(async () => {
+      const userDAO = new UserManager()
+      userMocks = Array.from({ length: 3 }, () => generateUser())
+
+      await Promise.all(userMocks.map((user) => userDAO.addUser(user)))
+    })
+
+    it('should return 200 and return all users', async function () {
+      const response = await requester.get('/api/users').send()
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').to.be.equal('success')
+      expect(response.body).to.have.property('message').to.be.equal('Users found')
+      expect(response.body).to.have.property('payload').to.be.an('array')
+      expect(response.body.payload).to.have.lengthOf(4)
+
+      const users = response.body.payload
+
+      users.forEach((user) => {
+        expect(user).not.have.property('id')
+        expect(user).to.have.property('name')
+        expect(user).to.have.property('email')
+        expect(user).to.have.property('age')
+        expect(user).to.have.property('role')
+        expect(user).to.have.property('cart')
+
+        // expect(user).to.have.property('last_connection')
+        // expect(user).to.have.property('documents')
+      })
     })
   })
 })

@@ -8,6 +8,17 @@ import { castToMongoId } from '../utils/casts.utils.js'
 import { extractOriginalName, extractToRelativePath } from '../utils/multer.js'
 import { isValidRole } from '../utils/validations/users.validation.util.js'
 
+const getAll = async (req, res) => {
+  const users = await userRepository.getAllUsers()
+
+  const usersDTO = users.map((user) => new CurrentUserDTO(user))
+
+  res.sendSuccessWithPayload({
+    message: 'Users found',
+    payload: usersDTO,
+  })
+}
+
 const switchPremiumRole = async (req, res) => {
   const { uid } = req.params
 
@@ -107,6 +118,7 @@ const uploadFiles = async (req, res) => {
 }
 
 export default {
+  getAll,
   switchPremiumRole,
   uploadFiles,
 }

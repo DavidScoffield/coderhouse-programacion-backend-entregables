@@ -3,6 +3,10 @@ import { hashPassword } from '../../../utils/bcrypt.js'
 import Users from '../models/Users.js'
 
 export default class UserManager {
+  getAllUsers = tryCatchWrapperMongo(async ({ lean = false } = {}) => {
+    return Users.find({}, null, { lean })
+  })
+
   addUser = tryCatchWrapperMongo(
     async ({ firstName, lastName, email, age, password, cart, role }) => {
       const user = {
