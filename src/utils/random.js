@@ -14,3 +14,5 @@ export const generateCodeString = (length = 15) => {
 
   return codeArray.join('')
 }
+
+export const generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min
