@@ -13,5 +13,6 @@ export default class CurrentUserDTO {
     this.age = data.age
     this.role = data.role
     this.cart = data.cart
+    this.lastConnection = data.lastConnection
   }
 }
