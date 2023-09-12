@@ -1,4 +1,4 @@
-import { generateCodeString } from '../../utils/randomString.js'
+import { generateCodeString } from '../../utils/random.js'
 
 export default class TicketRepository {
   constructor(dao) {

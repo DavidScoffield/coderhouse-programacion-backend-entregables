@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { generateCodeString } from '../../src/utils/randomString.js'
+import { generateCodeString } from '../../src/utils/random.js'
 import { describe, it } from 'mocha'
 import { cookieExtractor, generateToken, verifyToken } from '../../src/utils/jwt.utils.js'
 import jwt from 'jsonwebtoken'
