@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/es'
 import { USER_ROLES } from '../constants/constants.js'
 
-export const generateUser = ({ lastConnection = null }) => {
+export const generateUser = ({ lastConnection = null } = {}) => {
   return {
     id: faker.database.mongodbObjectId(),
     firstName: faker.person.firstName(),
