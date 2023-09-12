@@ -70,4 +70,11 @@ export default class MailService {
       template: MAILS_TEMPLATES.RESTORE_PASSWORD({ token }),
     })
   }
+
+  sendDeletedAccountMail = async ({ to, name, reason = "Don't specify" }) => {
+    return await this.sendMail({
+      to,
+      template: MAILS_TEMPLATES.DELETED_ACCOUNT({ name, reason }),
+    })
+  }
 }

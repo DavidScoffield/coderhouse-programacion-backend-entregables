@@ -7,6 +7,7 @@ import { MULTER_DEST } from '../constants/envVars.js'
 import CurrentUserDTO from '../dto/CurrentUserDTO.js'
 import EErrors from '../errors/EErrors.js'
 import ErrorService from '../services/error.service.js'
+import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { extractOriginalName, extractToRelativePath } from '../utils/multer.js'
@@ -24,15 +25,38 @@ const getAll = async (req, res) => {
 }
 
 const deleteInactiveUsers = async (req, res) => {
-  const { acknowledged: successfulOp, deletedCount } = await userRepository.deleteInactiveUsers(
-    INACTIVE_CONNECTION_PARAM
+  const inactiveUsers = await userRepository.getInactiveUsers(INACTIVE_CONNECTION_PARAM)
+
+  if (inactiveUsers.length === 0) {
+    return res.sendSuccessWithPayload({
+      message: 'No inactive users found',
+      payload: [],
+    })
+  }
+
+  // send emails
+  inactiveUsers.forEach(async (user) => {
+    await mailService.sendDeletedAccountMail({
+      to: user.email,
+      name: user.firstName,
+      reason: 'inactividad',
+    })
+  })
+
+  const inactiveUsersIds = inactiveUsers.map((user) => user._id)
+
+  // delete users
+  const deletedUsers = await Promise.all(
+    inactiveUsersIds.map((userId) => userRepository.removeUser(userId))
   )
 
+  const formatedDeletedUsers = deletedUsers.map((user) => new CurrentUserDTO(user))
+
   res.sendSuccessWithPayload({
-    message: 'Users deleted',
+    message: 'Inactive users deleted',
     payload: {
-      deletedCount,
-      successfulOp,
+      deletedCount: deletedUsers.length,
+      deletedUsers: formatedDeletedUsers,
     },
   })
 }

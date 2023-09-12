@@ -42,7 +42,11 @@ export default class UserRepository {
     return this.dao.addDocuments(userId, documents)
   }
 
-  deleteInactiveUsers = (inactiveTime) => {
-    return this.dao.deleteInactiveUsers(inactiveTime)
+  getInactiveUsers = (inactiveTime, { lean } = {}) => {
+    return this.dao.getInactiveUsers(inactiveTime, { lean })
+  }
+
+  removeUser = (userId) => {
+    return this.dao.removeUser(userId)
   }
 }

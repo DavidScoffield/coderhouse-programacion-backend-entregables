@@ -75,6 +75,12 @@ export const MAILS_TEMPLATES = {
     `,
     }
   },
+  DELETED_ACCOUNT: ({ name, reason }) => ({
+    subject: 'Cuenta eliminada',
+    html: `<p>
+    <b>Hola ${name}</b>, queríamos informarte que tu <b>cuenta</b> ha sido <b>eliminada</b> por el siguiente motivo: <b>"${reason}"</b>
+    </p>`,
+  }),
   // RESET_PASSWORD_SUCCESS: ({ name }) => ({
   //   subject: 'Contraseña reseteada',
   //   html: `<b>La contraseña de ${name} se ha reseteado correctamente</b>`,
