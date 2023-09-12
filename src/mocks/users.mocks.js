@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker/locale/es'
 import { USER_ROLES } from '../constants/constants.js'
 
-export const generateUser = () => {
+export const generateUser = ({ lastConnection = null }) => {
   return {
     id: faker.database.mongodbObjectId(),
     firstName: faker.person.firstName(),
@@ -11,7 +11,7 @@ export const generateUser = () => {
     password: faker.internet.password(),
     role: [USER_ROLES.USER, USER_ROLES.PREMIUM][faker.number.int({ min: 0, max: 1 })],
     cart: faker.database.mongodbObjectId(),
-    last_connection: faker.date.past(),
+    lastConnection: lastConnection || faker.date.past(),
     documents: Array.from({ length: faker.number.int({ min: 0, max: 6 }) }, () => ({
       name: faker.commerce.productName(),
       reference: faker.image.url(),
