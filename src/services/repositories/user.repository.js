@@ -35,7 +35,7 @@ export default class UserRepository {
   }
 
   updateLastConnectionForUser = (userId, { lean } = {}) => {
-    return this.updateUser(userId, { last_connection: new Date() }, { lean })
+    return this.updateUser(userId, { lastConnection: new Date() }, { lean })
   }
 
   addDocuments = (userId, documents = []) => {

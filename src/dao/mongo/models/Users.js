@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
     ref: Carts,
     default: null,
   },
-  last_connection: {
+  lastConnection: {
     type: Date,
     default: null,
   },

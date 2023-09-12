@@ -202,7 +202,7 @@ describe('/api/sessions - Tests Session', function () {
         password: mockUser.password,
       })
 
-      const { last_connection: userLastConnection } = await this.userDao.getUserById(
+      const { lastConnection: userLastConnection } = await this.userDao.getUserById(
         response.body.payload.id
       )
 
@@ -286,7 +286,7 @@ describe('/api/sessions - Tests Session', function () {
         password: mockUser.password,
       })
 
-      const { last_connection: userLastConnectionLogin } = await this.userDao.getUserById(
+      const { lastConnection: userLastConnectionLogin } = await this.userDao.getUserById(
         loginResponse.body.payload.id
       )
 
@@ -294,7 +294,7 @@ describe('/api/sessions - Tests Session', function () {
         .get('/api/sessions/logout')
         .set('Cookie', loginResponse.headers['set-cookie'])
 
-      const { last_connection: userLastConnectionLogout } = await this.userDao.getUserById(
+      const { lastConnection: userLastConnectionLogout } = await this.userDao.getUserById(
         loginResponse.body.payload.id
       )
 
