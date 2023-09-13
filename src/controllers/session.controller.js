@@ -1,12 +1,12 @@
 import httpStatus from 'http-status'
-import { COOKIES_OPTIONS, COOKIE_AUTH } from '../constants/constants.js'
+import { COOKIES_OPTIONS, COOKIE_AUTH, USER_ROLES } from '../constants/constants.js'
+import RestoreTokenDTO from '../dto/RestoreTokenDTO.js'
+import EErrors from '../errors/EErrors.js'
 import ErrorService from '../services/error.service.js'
 import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken, verifyToken } from '../utils/jwt.utils.js'
-import EErrors from '../errors/EErrors.js'
-import RestoreTokenDTO from '../dto/RestoreTokenDTO.js'
 
 const register = async (req, res, next) => {
   const { user } = req
@@ -31,7 +31,8 @@ const login = async (req, res, next) => {
 }
 
 const logout = async (req, res, next) => {
-  await userRepository.updateLastConnectionForUser(req.user.id)
+  if (req.user.role !== USER_ROLES.ADMIN)
+    await userRepository.updateLastConnectionForUser(req.user.id)
 
   res.clearCookie(COOKIE_AUTH)
   res.sendSuccess('Sesión cerrada correctamente')
