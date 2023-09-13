@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "test.js",
+  "engines": {
+    "node": ">=14 <=18"
+  },
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
