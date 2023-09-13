@@ -10,5 +10,5 @@ const ENVS = {
 
 const envFilePath = ENVS[process.env.NODE_ENV] || '.env'
 
-dotenv.config({ path: envFilePath, override: true })
+dotenv.config({ path: envFilePath })
 dotenv.config({ path: `.env.local`, override: true })
