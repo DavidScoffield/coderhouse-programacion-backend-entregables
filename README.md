@@ -187,6 +187,8 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | GET              | /loggerTest                    |          |                         |                                     |                                 | Object     |
 | PUT              | /api/users/premium/:uid        |          |                         |                                     | uid: User ID                    | Object     |
 | POST             | /api/users/:uid/documents      |          | documents, profiles     |                                     | uid: User ID                    | Object     |
+| GET              | /api/users/                    |          |                         |                                     |                                 | Object     |
+| DELETE           | /api/users/                    |          |                         |                                     |                                 | Object     |
 
 ### + GET /healthcheck
 
@@ -510,6 +512,14 @@ profiles: Array((length = 1)) | Required
   profile: File | Required
 }
 ```
+
+### + GET /api/users/
+
+Retorna un array de objetos asociados a los usuarios existentes. Solo puede ser ejecutado por un ADMIN. Retorna un array de objetos asociados a los usuarios existentes.
+
+### + DELETE /api/users/
+
+Elimina todos los usuarios inactivos. Solo puede ser ejecutado por un ADMIN. Retorna un objeto con la cantidad de usuarios eliminados y la cantidad de los mismos.
 
 ## Tests
 
