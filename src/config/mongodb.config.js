@@ -42,6 +42,10 @@ class MongoSingleton {
     }
     return this.#instance
   }
+
+  close() {
+    mongoose.connection.close()
+  }
 }
 
 const connection = MongoSingleton.getInstance()
