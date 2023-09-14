@@ -7,6 +7,7 @@
     "node": ">=14 <=18"
   },
   "scripts": {
+    "db:init": "node scripts/db/init.js",
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
     "lint": "eslint . ",
