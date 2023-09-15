@@ -1,13 +1,39 @@
 <div>
   <h1>Perfil de {{user.name}}</h1>
 
-  <section>
-    <h2>Información personal</h2>
-    <ul>
-      <li>Nombre: {{user.name}}</li>
-      <li>Correo electrónico: {{user.email}}</li>
-      <li>Edad: {{user.age}}</li>
-    </ul>
-  </section>
+  {{#if (isAdmin user.role)}}
+    <section>
+      <h2>Información personal</h2>
+      <ul>
+        <li>Nombre: {{user.name}}</li>
+        <li>Correo electrónico: {{user.email}}</li>
+        <li>Edad: {{user.age}}</li>
+      </ul>
+    </section>
+
+  {{else}}
+
+    <section class='form-section form-update-profile'>
+      <form id='update-profile' class='form'>
+        <h2 class='form-title'>Información personal</h2>
+
+        <div class='form-body'>
+
+          <label for='name'>Nombre:</label>
+          <input type='text' name='name' value='{{user.name}}' disabled />
+
+          <label for='email'>Correo electrónico:</label>
+          <input type='email' name='email' value='{{user.email}}' />
+
+          <label for='age'>Edad:</label>
+          <input type='number' name='age' value='{{user.age}}' min='1' />
+
+          <input type='submit' value='Actualizar' />
+
+        </div>
+      </form>
+
+    </section>
+  {{/if}}
 
 </div>

@@ -114,9 +114,9 @@ const profile = async (req, res) => {
   res.render('profile', {
     user: {
       ...userData,
-      name: req.user.name,
-      email: req.user.email,
     },
+    css: ['profile'],
+    js: ['profile'],
   })
 }
 
