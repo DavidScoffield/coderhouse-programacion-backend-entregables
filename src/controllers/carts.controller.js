@@ -218,7 +218,7 @@ const purchaseCart = async (req, res, next) => {
 
   // Validate if cart has products
   if (requiredCart.products.length === 0) {
-    res.sendBadRequest({ error: `Cart with id "${cartId}" has no products` })
+    return res.sendBadRequest({ error: `Cart with id "${cartId}" has no products` })
   }
 
   const { ticket, productIdsWithInvalidStock } = await cartRepository.purchaseCart({
