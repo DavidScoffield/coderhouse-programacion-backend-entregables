@@ -4,6 +4,7 @@ import { cartRepository, productRepository } from '../services/repositories/inde
 import { castToMongoId } from '../utils/casts.utils.js'
 import { validateProductArray } from '../utils/validations/carts.validation.util.js'
 import { isCommonParamsValid } from '../utils/validations/products.validations.util.js'
+import { isEmail } from '../utils/validations/users.validation.util.js'
 
 const createCart = async (req, res) => {
   const cart = await cartRepository.addCart()
@@ -220,6 +221,11 @@ const purchaseCart = async (req, res, next) => {
   if (requiredCart.products.length === 0) {
     return res.sendBadRequest({ error: `Cart with id "${cartId}" has no products` })
   }
+
+  if (!isEmail(user.email))
+    return res.sendBadRequest({
+      error: `Your loaded email is not valid. Please update your profile`,
+    })
 
   const { ticket, productIdsWithInvalidStock } = await cartRepository.purchaseCart({
     cartId,
