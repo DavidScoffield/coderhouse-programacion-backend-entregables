@@ -26,6 +26,8 @@ const hbs = create({
     notEqual: (a, b) => a !== b,
     json: (n) => JSON.stringify(n),
     isAdmin: (role) => role === USER_ROLES.ADMIN,
+    fixed: (value, decimals) => Number(value).toFixed(decimals),
+    sum: (a, b) => Number(a) + Number(b),
   },
 })
 
