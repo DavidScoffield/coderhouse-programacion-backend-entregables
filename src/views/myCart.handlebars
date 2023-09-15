@@ -15,8 +15,13 @@
         <p class='description'>{{this._id.description}}</p>
         <p class='price'>${{this._id.price}}</p>
         <p class='code'>Código {{this._id.code}}</p>
-        <p class='thumbnail'>{{this._id.thumbnail.length}}
+        <p class='thumbnail'>{{sum this._id.thumbnail.length this._id.images.length}}
           {{#if (equal this._id.thumbnail.length 1)}}foto{{else}}fotos{{/if}}</p>
+        <div class='slider'>
+          {{#each this._id.thumbnail}}
+            <img src='{{this}}' alt='Image of product' />
+          {{/each}}
+        </div>
         <p class='stock'>{{this._id.stock}} en stock</p>
       </div>
 
@@ -39,7 +44,7 @@
 </section>
 
 <div class='buy'>
-  <p class='buy-total'>TOTAL: ${{this.totalAmount}}</p>
+  <p class='buy-total'>TOTAL: ${{fixed this.totalAmount 2}}</p>
   <button class='buy-button' id='buy-button'>Comprar</button>
 </div>
 

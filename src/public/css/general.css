@@ -72,3 +72,35 @@ input[type='number'] {
   color: red;
   font-size: 1.2rem;
 }
+
+.slider {
+  aspect-ratio: 16/9;
+  width: 100%;
+  position: relative;
+  display: flex;
+  overflow-x: scroll;
+  scroll-snap-type: x mandatory;
+}
+
+.slider img {
+  width: 100%;
+  left: 0;
+  position: sticky;
+  object-fit: fill;
+  border-radius: 5px;
+  scroll-snap-align: center;
+}
+
+.slider::-webkit-scrollbar {
+  height: 8px;
+}
+
+/* Track */
+.slider::-webkit-scrollbar-track {
+  background: #ffffff2d;
+}
+
+/* Handle on hover */
+.slider::-webkit-scrollbar-thumb:hover {
+  background: #222b3e;
+}
