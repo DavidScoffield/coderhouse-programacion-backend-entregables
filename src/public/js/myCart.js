@@ -76,8 +76,10 @@ buyButton.addEventListener('click', async () => {
         } `,
         confirmButtonText: 'Cerrar y volver a la tienda',
       }).then((result) => {
+        if (result.isDismissed) return window.location.reload()
+
         if (result.isConfirmed) {
-          window.location.replace('/products')
+          return window.location.replace('/products')
         }
       })
     } else {
