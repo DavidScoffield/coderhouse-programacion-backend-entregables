@@ -8,6 +8,7 @@ import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken, verifyToken } from '../utils/jwt.utils.js'
 import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
+import SessionUserDTO from '../dto/SessionUserDTO.js'
 
 const register = async (req, res, next) => {
   const { user } = req
@@ -134,9 +135,13 @@ const updateProfile = async (req, res, next) => {
     age,
   })
 
-  res.sendSuccessWithPayload({
+  const updatedUserDTO = new SessionUserDTO(updatedUser)
+
+  const accessToken = generateToken(updatedUserDTO.toObject())
+
+  res.cookie(COOKIE_AUTH, accessToken, COOKIES_OPTIONS).sendSuccessWithPayload({
     message: 'Usuario actualizado correctamente',
-    payload: updatedUser,
+    payload: updatedUserDTO,
   })
 }
 
