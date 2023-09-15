@@ -7,6 +7,7 @@ import { mailService } from '../services/index.js'
 import { userRepository } from '../services/repositories/index.js'
 import { hashPassword, isValidPassword } from '../utils/bcrypt.js'
 import { generateToken, verifyToken } from '../utils/jwt.utils.js'
+import { isUsersDataValid } from '../utils/validations/users.validation.util.js'
 
 const register = async (req, res, next) => {
   const { user } = req
@@ -122,4 +123,30 @@ const current = async (req, res, next) => {
   })
 }
 
-export default { register, login, logout, restoreRequest, restorePassword, githubCallback, current }
+const updateProfile = async (req, res, next) => {
+  const { user } = req
+  const { email, age } = req.body
+
+  isUsersDataValid({ email, age })
+
+  const updatedUser = await userRepository.updateUser(user.id, {
+    email,
+    age,
+  })
+
+  res.sendSuccessWithPayload({
+    message: 'Usuario actualizado correctamente',
+    payload: updatedUser,
+  })
+}
+
+export default {
+  register,
+  login,
+  logout,
+  restoreRequest,
+  restorePassword,
+  githubCallback,
+  current,
+  updateProfile,
+}

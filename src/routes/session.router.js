@@ -1,4 +1,9 @@
-import { ALL_USER_ROLES, PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
+import {
+  ALL_USER_ROLES,
+  ALL_USER_ROLES_WITHOUT_ADMIN,
+  PRIVACY_TYPES,
+  USER_ROLES,
+} from '../constants/constants.js'
 import sessionController from '../controllers/session.controller.js'
 import checkAdminLogin from '../middlewares/checkAdminLogin.middleware.js'
 import protectRoleRegistration from '../middlewares/session.middleware.js'
@@ -51,5 +56,7 @@ export default class SessionRouter extends BaseRouter {
     this.put('/restorePassword', [PRIVACY_TYPES.PUBLIC], sessionController.restorePassword)
 
     this.get('/current', [...ALL_USER_ROLES], sessionController.current)
+
+    this.put('/updateProfile', [...ALL_USER_ROLES_WITHOUT_ADMIN], sessionController.updateProfile)
   }
 }

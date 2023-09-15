@@ -2,7 +2,7 @@ import { ALL_USER_ROLES } from '../../constants/constants.js'
 import ErrorService from '../../services/error.service.js'
 import { isInvalidNumber, validateData } from './generic.validations.util.js'
 
-const isEmail = (value) => {
+export const isEmail = (value) => {
   const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g
   return emailRegex.test(value)
 }
