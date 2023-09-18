@@ -13,6 +13,7 @@ const home = async (req, res) => {
   const products = await productRepository.getProducts()
 
   res.render('home', {
+    title: 'Inicio',
     products: products.docs,
   })
 }
@@ -20,6 +21,7 @@ const home = async (req, res) => {
 const realTimeProducts = async (req, res) => {
   res.render('realtimeproducts', {
     css: ['realTimeProducts'],
+    title: 'Productos en tiempo real',
   })
 }
 
@@ -29,6 +31,7 @@ const chat = async (req, res) => {
   res.render('chat', {
     user,
     js: ['chat'],
+    title: 'Chat',
   })
 }
 
@@ -69,6 +72,7 @@ const products = async (req, res, next) => {
       ...response,
       css: ['pagination', 'filterProducts'],
       js: ['products', 'filterProducts', 'pagination'],
+      title: 'Productos',
       listCategories,
       limit,
       sort,
@@ -94,12 +98,14 @@ const cart = async (req, res) => {
 const register = async (req, res) => {
   res.render('register', {
     js: ['register'],
+    title: 'Registro',
   })
 }
 const login = async (req, res) => {
   res.render('login', {
     js: ['login'],
     css: ['login'],
+    title: 'Iniciar sesión',
   })
 }
 
@@ -117,6 +123,7 @@ const profile = async (req, res) => {
     },
     css: ['profile'],
     js: ['profile'],
+    title: 'Perfil',
   })
 }
 
@@ -127,6 +134,7 @@ const restorePassword = async (req, res) => {
     verifyToken(token)
     res.render('restorePassword', {
       js: ['restorePassword'],
+      title: 'Restaurar contraseña',
     })
   } catch (e) {
     LoggerService.error(e)
@@ -143,6 +151,7 @@ const restoreRequest = async (req, res) => {
 
   res.render('restoreRequest', {
     js: ['restoreRequest'],
+    title: 'Solicitar restauración de contraseña',
     error: e,
   })
 }
@@ -162,6 +171,7 @@ const myCart = async (req, res) => {
     totalAmount,
     css: ['myCart'],
     js: ['myCart'],
+    title: 'Mi carrito',
   })
 }
 
