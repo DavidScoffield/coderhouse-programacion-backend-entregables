@@ -11,7 +11,7 @@ import { createImagesInMemory, deleteRandomFiles, dropAllCollections } from '../
 
 const requester = supertest(app)
 
-describe('/api/products - Tests Session', () => {
+describe('/api/products - Tests Products', () => {
   beforeEach(function (done) {
     dropAllCollections().then(async () => {
       await deleteRandomFiles(MULTER_PATH_FOLDER)
@@ -1144,6 +1144,176 @@ describe('/api/products - Tests Session', () => {
       // Check if the file was removed of the folder
       expect(filesAfterDelete).to.have.lengthOf(1)
       expect(filesAfterDelete[0]).to.be.match(new RegExp(this.product.images[1].name))
+    })
+  })
+
+  describe('/:pid - DELETE - Delete a product', function () {
+    const mockUser = {
+      firstName: 'premium',
+      lastName: 'premium',
+      email: 'premium@test.com',
+      password: 'premium',
+      role: 'PREMIUM',
+      age: 20,
+    }
+    const mockProduct = {
+      title: 'title',
+      description: 'description',
+      price: 123,
+      thumbnail: ['thumbnail'],
+      code: 'code',
+      stock: 1,
+      category: 'category',
+      status: true,
+    }
+
+    beforeEach(async function () {
+      const { headers: adminHeaders } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      await requester
+        .post('/api/sessions/registerUsers')
+        .send(mockUser)
+        .set('Cookie', adminHeaders['set-cookie'])
+
+      const { body } = await requester
+        .post('/api/products')
+        .send(mockProduct)
+        .set('Cookie', adminHeaders['set-cookie'])
+
+      this.productId = body.payload._id
+    })
+
+    it('should return 401 if no token is provided', async function () {
+      const response = await requester.delete(`/api/products/${this.productId}`)
+
+      expect(response.statusCode).to.be.equal(401)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('No auth token')
+    })
+
+    it('should return 403 if is not an admin o premium user', async function () {
+      const mockRegularUser = {
+        firstName: 'john',
+        lastName: 'basic',
+        email: 'john@test.com',
+        password: 'joshaps',
+        age: 20,
+      }
+
+      await requester.post('/api/sessions/register').send(mockRegularUser)
+
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: mockRegularUser.email,
+        password: mockRegularUser.password,
+      })
+
+      const response = await requester
+        .delete(`/api/products/${this.productId}`)
+        .set('Cookie', headers['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(403)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body).to.have.property('error').and.be.equal('Forbidden')
+    })
+
+    it('should return 401 if a premium user try to delete a product that is not yours', async function () {
+      const { headers: headersPremium } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const response = await requester
+        .delete(`/api/products/${this.productId}`)
+        .set('Cookie', headersPremium['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(401)
+      expect(response.body).to.have.property('status').and.be.equal('error')
+      expect(response.body)
+        .to.have.property('error')
+        .and.be.equal(`You are not authorized to perform this action`)
+    })
+
+    it('should return 200 and the product deleted - by admin', async function () {
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const response = await requester
+        .delete(`/api/products/${this.productId}`)
+        .set('Cookie', headers['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').and.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .and.be.equal(`Product "${this.productId}" was successfully deleted`)
+
+      const responseGet = await requester.get(`/api/products/${this.productId}`)
+      expect(responseGet.statusCode).to.be.equal(404)
+      expect(responseGet.body).to.have.property('status').and.be.equal('error')
+      expect(responseGet.body)
+        .to.have.property('error')
+        .and.be.equal(`Product with id "${this.productId}" not found`)
+
+      const responseGetAll = await requester.get(`/api/products`)
+      expect(responseGetAll.statusCode).to.be.equal(200)
+      expect(responseGetAll.body).to.have.property('status').and.be.equal('success')
+      expect(responseGetAll.body).to.have.property('message').and.be.equal('Products found')
+      expect(responseGetAll.body).to.have.property('payload').and.be.an('object')
+      expect(responseGetAll.body.payload).to.have.property('totalPages').and.be.equal(1)
+      expect(responseGetAll.body.payload).to.have.property('page').and.be.equal(1)
+      expect(responseGetAll.body.payload).to.have.property('hasNextPage').to.be.false
+      expect(responseGetAll.body.payload).to.have.property('nextPage').and.be.null
+      expect(responseGetAll.body.payload)
+        .to.have.property('products')
+        .and.be.an('array')
+        .and.have.lengthOf(0)
+    })
+
+    it('should return 200 and the product deleted - by premium user', async function () {
+      const mockProductOfPremium = {
+        title: 'title',
+        description: 'description',
+        price: 123,
+        thumbnail: ['thumbnail'],
+        code: 'code99',
+        stock: 1,
+        category: 'category',
+        status: true,
+      }
+
+      const { headers: headersPremium } = await requester.post('/api/sessions/login').send({
+        email: mockUser.email,
+        password: mockUser.password,
+      })
+
+      const {
+        body: { payload: newProduct },
+      } = await requester
+        .post('/api/products')
+        .send(mockProductOfPremium)
+        .set('Cookie', headersPremium['set-cookie'])
+
+      const response = await requester
+        .delete(`/api/products/${newProduct._id}`)
+        .set('Cookie', headersPremium['set-cookie'])
+
+      expect(response.statusCode).to.be.equal(200)
+      expect(response.body).to.have.property('status').and.be.equal('success')
+      expect(response.body)
+        .to.have.property('message')
+        .and.be.equal(`Product "${newProduct._id}" was successfully deleted`)
+
+      const responseGet = await requester.get(`/api/products/${newProduct._id}`)
+      expect(responseGet.statusCode).to.be.equal(404)
+      expect(responseGet.body).to.have.property('status').and.be.equal('error')
+      expect(responseGet.body)
+        .to.have.property('error')
+        .and.be.equal(`Product with id "${newProduct._id}" not found`)
     })
   })
 })
