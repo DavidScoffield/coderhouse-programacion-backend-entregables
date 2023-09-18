@@ -1,5 +1,5 @@
 import httpStatus from 'http-status'
-import { DEFAULT_ADMIN_DATA } from '../constants/constants.js'
+import { DEFAULT_ADMIN_DATA, USER_ROLES } from '../constants/constants.js'
 import { MULTER_DEST } from '../constants/envVars.js'
 import FileSystemPromises from '../dao/fileSystem/utils/FileSystemPromises.js'
 import EErrors from '../errors/EErrors.js'
@@ -9,6 +9,7 @@ import {
   productErrorIncompleteValues,
 } from '../errors/constants/productsErrors.js'
 import ErrorService from '../services/error.service.js'
+import { mailService } from '../services/index.js'
 import { productRepository } from '../services/repositories/index.js'
 import { castToMongoId } from '../utils/casts.utils.js'
 import { __root } from '../utils/dirname.utils.js'
@@ -160,12 +161,21 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   const { pid } = req.params
+  const { user } = req
 
   const id = castToMongoId(pid)
 
   const deletedProduct = await productRepository.deleteProduct(id)
 
   if (deletedProduct) {
+    if (user.role === USER_ROLES.PREMIUM) {
+      mailService.sendDeletedProductMail({
+        to: user.email,
+        name: user.name,
+        productName: deletedProduct.title,
+      })
+    }
+
     res.sendSuccess(`Product "${deletedProduct.id}" was successfully deleted`)
     req.io.emit('realTimeProducts:storedProducts', await productRepository.getProducts())
   } else {

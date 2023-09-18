@@ -77,4 +77,11 @@ export default class MailService {
       template: MAILS_TEMPLATES.DELETED_ACCOUNT({ name, reason }),
     })
   }
+
+  sendDeletedProductMail = async ({ to, name, productName }) => {
+    return await this.sendMail({
+      to,
+      template: MAILS_TEMPLATES.DELETED_PRODUCT({ name, productName }),
+    })
+  }
 }
