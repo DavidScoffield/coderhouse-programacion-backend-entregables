@@ -4,10 +4,10 @@ import mongoose from 'mongoose'
 import path from 'path'
 import '../src/config/env.config.js'
 
+import { createCanvas } from 'canvas'
 import { MongoSingleton } from '../src/config/mongodb.config.js'
 import { MULTER_PATH_FOLDER } from '../src/constants/constants.js'
 import { __root } from '../src/utils/dirname.utils.js'
-import { createCanvas } from 'canvas'
 
 // MONGO HELPERS --------------------------------->
 
