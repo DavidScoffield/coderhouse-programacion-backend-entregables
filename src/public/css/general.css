@@ -25,6 +25,13 @@ body {
   align-items: center;
 }
 
+.flex-end {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+}
+
 .form-section {
   min-width: fit-content;
   max-width: fit-content;
@@ -103,4 +110,22 @@ input[type='number'] {
 /* Handle on hover */
 .slider::-webkit-scrollbar-thumb:hover {
   background: #222b3e;
+}
+
+.delete-button {
+  background-color: #ff2525 !important;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  /* font-size: 1rem; */
+  float: right;
+  transition: all 0.3s ease-in-out;
+  border: 0.5px solid #ff0000;
+}
+
+.delete-button:hover {
+  background-color: #fff !important;
+  color: #ff0000 !important;
+  border: 0.5px solid #ff0000;
 }

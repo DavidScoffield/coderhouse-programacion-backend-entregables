@@ -20,7 +20,6 @@ const home = async (req, res) => {
 
 const realTimeProducts = async (req, res) => {
   res.render('realtimeproducts', {
-    css: ['realTimeProducts'],
     title: 'Productos en tiempo real',
   })
 }
