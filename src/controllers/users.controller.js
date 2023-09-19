@@ -30,7 +30,10 @@ const deleteInactiveUsers = async (req, res) => {
   if (inactiveUsers.length === 0) {
     return res.sendSuccessWithPayload({
       message: 'No inactive users found',
-      payload: [],
+      payload: {
+        deletedCount: 0,
+        deletedUsers: [],
+      },
     })
   }
 
