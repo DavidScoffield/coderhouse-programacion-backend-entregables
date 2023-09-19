@@ -27,5 +27,7 @@ export default class ViewRouter extends BaseRouter {
     this.get('/restoreRequest', [PRIVACY_TYPES.PUBLIC], viewsController.restoreRequest)
 
     this.get('/restorePassword', [PRIVACY_TYPES.NO_AUTH_VIEW], viewsController.restorePassword)
+
+    this.get('/users', [USER_ROLES.ADMIN], viewsController.users)
   }
 }

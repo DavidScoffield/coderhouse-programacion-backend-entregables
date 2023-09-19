@@ -1,3 +1,4 @@
+import { USER_ROLES } from '../constants/constants.js'
 import LoggerService from '../services/logger.service.js'
 import {
   cartRepository,
@@ -174,6 +175,23 @@ const myCart = async (req, res) => {
   })
 }
 
+const users = async (req, res) => {
+  const { user } = req
+
+  const users = await userRepository.getAllUsers({ lean: true })
+
+  const { ADMIN, ...rolesWithoutAdmin } = USER_ROLES
+
+  res.render('users', {
+    css: ['users'],
+    js: ['users'],
+    title: 'Usuarios',
+    user,
+    users,
+    roles: rolesWithoutAdmin,
+  })
+}
+
 export default {
   home,
   realTimeProducts,
@@ -186,4 +204,5 @@ export default {
   restorePassword,
   restoreRequest,
   myCart,
+  users,
 }

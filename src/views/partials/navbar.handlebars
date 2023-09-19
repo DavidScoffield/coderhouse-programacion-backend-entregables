@@ -2,10 +2,12 @@
   <nav class='navbar'>
     <ul class='navbar-links'>
       <li><a href='/products'>Productos</a></li>
-      {{#unless (isAdmin user.role)}}
+      {{#if (isAdmin user.role)}}
+        <li><a href='/users'>Usuarios</a></li>
+      {{else}}
         <li><a href='/chat'>Chat</a></li>
         <li><a href='/myCart'>Carrito</a></li>
-      {{/unless}}
+      {{/if}}
     </ul>
     <div class='navbar-buttons'>
       <a href='/profile' class='profile-button'>

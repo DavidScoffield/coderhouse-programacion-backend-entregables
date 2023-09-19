@@ -28,6 +28,7 @@ const hbs = create({
     isAdmin: (role) => role === USER_ROLES.ADMIN,
     fixed: (value, decimals) => Number(value).toFixed(decimals),
     sum: (a, b) => Number(a) + Number(b),
+    formatDate: (date) => new Date(date).toLocaleString(),
   },
 })
 
