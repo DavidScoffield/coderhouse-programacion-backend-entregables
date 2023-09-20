@@ -1,4 +1,4 @@
-import { PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
+import { ALL_USER_ROLES_WITHOUT_ADMIN, PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import viewsController from '../controllers/views.controller.js'
 import BaseRouter from './BaseRouter.js'
 
@@ -8,7 +8,7 @@ export default class ViewRouter extends BaseRouter {
 
     this.get('/realtimeproducts', [PRIVACY_TYPES.PUBLIC], viewsController.realTimeProducts)
 
-    this.get('/chat', [USER_ROLES.USER], viewsController.chat)
+    this.get('/chat', [...ALL_USER_ROLES_WITHOUT_ADMIN], viewsController.chat)
 
     this.get('/products', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.products)
 
@@ -22,7 +22,7 @@ export default class ViewRouter extends BaseRouter {
 
     this.get('/profile', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.profile)
 
-    this.get('/myCart', [USER_ROLES.USER], viewsController.myCart)
+    this.get('/myCart', [USER_ROLES.USER, USER_ROLES.PREMIUM], viewsController.myCart)
 
     this.get('/restoreRequest', [PRIVACY_TYPES.PUBLIC], viewsController.restoreRequest)
 
