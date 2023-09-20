@@ -100,7 +100,7 @@ export default class BaseRouter {
 
   logRequest = (req, res, next) => {
     LoggerService.http(
-      `[${req.method}] - ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`
+      `|API| [${req.method}] - ${req.originalUrl} - ${req.ip} - ${req.headers['user-agent']}`
     )
     next()
   }
