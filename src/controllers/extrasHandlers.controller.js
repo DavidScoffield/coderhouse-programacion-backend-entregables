@@ -3,7 +3,18 @@ import LoggerService from '../services/logger.service.js'
 import { httpStatusResponse } from '../utils/response.utils.js'
 
 const unknownEndpoint = (req, res) => {
-  res.status(httpStatus.NOT_FOUND).send({ error: 'unknown endpoint' })
+  LoggerService.error(`Unknown endpoint: ${req.method} ${req.originalUrl}`)
+
+  if (req.isBrowser) {
+    res.render('404', {
+      title: '404',
+      css: ['404'],
+    })
+  } else {
+    res
+      .status(httpStatus.NOT_FOUND)
+      .json({ status: httpStatusResponse.ERROR, error: 'unknown endpoint' })
+  }
 }
 
 const errorHandler = (err, req, res, next) => {

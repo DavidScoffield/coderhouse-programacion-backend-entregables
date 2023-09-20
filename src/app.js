@@ -21,9 +21,11 @@ import ioMiddleware from './middlewares/io.middleware.js'
 
 import swaggerUiExpress from 'swagger-ui-express'
 import { swaggerOptions, swaggerSpecs, swaggerUiOptions } from './config/swagger.config.js'
+import { checkAgent } from './middlewares/checkAgent.middleware.js'
 
 // Middlewares
 app.use(ioMiddleware)
+app.use(checkAgent)
 
 // Routes
 app.use('/', viewRouter)
