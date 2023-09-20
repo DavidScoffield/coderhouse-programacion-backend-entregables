@@ -1,8 +1,8 @@
 import { ALL_USER_ROLES_WITHOUT_ADMIN, PRIVACY_TYPES, USER_ROLES } from '../constants/constants.js'
 import viewsController from '../controllers/views.controller.js'
-import BaseRouter from './BaseRouter.js'
+import BaseViewRouter from './BaseViewRouter.js'
 
-export default class ViewRouter extends BaseRouter {
+export default class ViewRouter extends BaseViewRouter {
   init() {
     this.get('/', [PRIVACY_TYPES.PRIVATE_VIEW], viewsController.home)
 
