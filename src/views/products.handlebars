@@ -26,7 +26,9 @@
       <th>Precio</th>
       <th>Stock</th>
       <th>Estado</th>
-      <th>Acciones</th>
+      {{#unless (isAdmin user.role)}}
+        <th>Acciones</th>
+      {{/unless}}
     </tr>
   </thead>
   <tbody id="table-body">
@@ -43,9 +45,11 @@
         {{else}}
           <td>No disponible</td>
         {{/if}}
-        <td>
-          <button product-id={{this._id}} class="btn-add-to-cart" style="font-size: small; padding: 5px 8px">Agregar en carrito</button> 
-        </td>
+        {{#unless (isAdmin ../user.role)}}
+          <td>
+            <button product-id={{this._id}} class="btn-add-to-cart" style="font-size: small; padding: 5px 8px">Agregar en carrito</button> 
+          </td>
+        {{/unless}}
       </tr>
     {{/each}}
 
