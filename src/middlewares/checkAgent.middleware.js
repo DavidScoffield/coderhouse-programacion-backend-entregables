@@ -2,6 +2,8 @@ export const checkAgent = (req, res, next) => {
   const userAgent = req.headers['user-agent']
   const acceptHeader = req.headers.accept
 
+  if (!userAgent) return next()
+
   const isMobile = userAgent.match(
     /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
   )
@@ -16,6 +18,8 @@ export const checkAgent = (req, res, next) => {
   } else if (isTablet) {
     req.isTablet = true
   }
+
+  if (!acceptHeader) return next()
 
   if (acceptHeader.includes('text/html')) {
     req.isBrowser = true
