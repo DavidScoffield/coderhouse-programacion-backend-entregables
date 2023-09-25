@@ -459,7 +459,12 @@ describe('/api/users - Tests User endpoints', function () {
     })
 
     it('should return 200 and return all users', async function () {
-      const response = await requester.get('/api/users').send()
+      const { headers } = await requester.post('/api/sessions/login').send({
+        email: ADMIN_USER,
+        password: ADMIN_PASS,
+      })
+
+      const response = await requester.get('/api/users').set('Cookie', headers['set-cookie']).send()
 
       expect(response.statusCode).to.be.equal(200)
       expect(response.body).to.have.property('status').to.be.equal('success')
