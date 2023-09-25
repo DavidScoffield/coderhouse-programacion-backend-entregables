@@ -55,7 +55,7 @@ btnRemoveInactives.addEventListener('click', async () => {
 })
 
 tableBody.addEventListener('click', async (e) => {
-  if (e.target.className === 'btn-update-user') {
+  if (e.target.tagName === 'BUTTON' && e.target.className === 'btn-update-user') {
     const uid = e.target.getAttribute('user-id')
 
     try {
@@ -89,6 +89,46 @@ tableBody.addEventListener('click', async (e) => {
         text: error.message,
         icon: 'error',
       })
+    }
+  }
+
+  if (e.target.tagName === 'BUTTON' && e.target.className === 'delete-button') {
+    const result = window.confirm('¿Está seguro de eliminar al usuario?')
+    if (result) {
+      const uid = e.target.getAttribute('id')
+
+      try {
+        const response = await fetch(`/api/users/${uid}`, {
+          method: 'DELETE',
+        })
+
+        const { error, status } = await response.json()
+
+        if (!response.ok || status === 'error') {
+          throw new Error(error)
+        }
+
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          title: `Se eliminó al usuario`,
+          icon: 'success',
+        })
+
+        window.location.reload()
+      } catch (error) {
+        Swal.fire({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3000,
+          title: `Error`,
+          text: error.message,
+          icon: 'error',
+        })
+      }
     }
   }
 })

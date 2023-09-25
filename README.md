@@ -189,6 +189,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 | POST             | /api/users/:uid/documents      |          | documents, profiles     |                                     | uid: User ID                    | Object     |
 | GET              | /api/users/                    |          |                         |                                     |                                 | Object     |
 | DELETE           | /api/users/                    |          |                         |                                     |                                 | Object     |
+| DELETE           | /api/users/:uid                |          |                         |                                     | uid: User ID                    | Object     |
 
 ### + GET /healthcheck
 
@@ -520,6 +521,14 @@ Retorna un array de objetos asociados a los usuarios existentes. Solo puede ser 
 ### + DELETE /api/users/
 
 Elimina todos los usuarios inactivos. Solo puede ser ejecutado por un ADMIN. Retorna un objeto con la cantidad de usuarios eliminados y la cantidad de los mismos.
+
+### + DELETE /api/users/:uid
+
+Elimina un usuario a partir de un ID de Usuario dado. Solo puede ser ejecutado por un ADMIN.
+
+#### Path variables
+
+- **uid**: ID del usuario
 
 ## Tests
 

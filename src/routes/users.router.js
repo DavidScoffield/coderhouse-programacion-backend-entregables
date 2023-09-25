@@ -8,6 +8,7 @@ export default class UserRouter extends BaseRouter {
   init() {
     this.get('/', [USER_ROLES.ADMIN], usersController.getAll)
     this.delete('/', [USER_ROLES.ADMIN], usersController.deleteInactiveUsers)
+    this.delete('/:uid', [USER_ROLES.ADMIN], usersController.deleteUser)
 
     this.put('/premium/:uid', [USER_ROLES.ADMIN], usersController.switchPremiumRole)
     this.post(

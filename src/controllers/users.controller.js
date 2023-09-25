@@ -162,9 +162,37 @@ const uploadFiles = async (req, res) => {
   })
 }
 
+const deleteUser = async (req, res) => {
+  const { uid } = req.params
+
+  const userId = castToMongoId(uid)
+
+  const user = await userRepository.getUserById(userId)
+
+  if (!user) {
+    res.sendNotFound({
+      error: `User with id "${userId}" not found`,
+    })
+  }
+
+  await userRepository.removeUser(userId)
+
+  res.sendSuccess({
+    message: `User with id "${userId}" deleted`,
+  })
+
+  // send email
+  await mailService.sendDeletedAccountMail({
+    to: user.email,
+    name: user.firstName,
+    reason: 'eliminación de cuenta por parte del administrador',
+  })
+}
+
 export default {
   getAll,
   switchPremiumRole,
   uploadFiles,
   deleteInactiveUsers,
+  deleteUser,
 }
