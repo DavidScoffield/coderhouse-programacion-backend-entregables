@@ -4,6 +4,10 @@ const btnRemoveInactives = document.getElementById('btn-rm-inactives')
 const tableBody = document.getElementById('table-body')
 
 btnRemoveInactives.addEventListener('click', async () => {
+  const result = window.confirm('¿Está seguro de eliminar a los usuarios inactivos?')
+
+  if (!result) return
+
   try {
     const response = await fetch('/api/users/', {
       method: 'DELETE',
