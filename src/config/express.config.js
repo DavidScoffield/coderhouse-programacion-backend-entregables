@@ -8,6 +8,7 @@ import { HOST, PORT } from '../constants/envVars.js'
 import LoggerService from '../services/logger.service.js'
 import { __src } from '../utils/dirname.utils.js'
 import initializePassportStrategies from './passport.config.js'
+import { MongoSingleton } from './mongodb.config.js'
 
 const app = express()
 
@@ -18,6 +19,9 @@ app.use(express.static(`${__src}/public`))
 app.use('/uploads', express.static(MULTER_PATH_FOLDER))
 app.use(cookieParser())
 app.use(serveFavicon(`${__src}/public/assets/favicon.ico`))
+
+// Connect to DB
+MongoSingleton.getInstance()
 
 // Handlebars
 const hbs = create({

@@ -19,9 +19,9 @@ const MONGO_URIS = {
   test: `mongodb+srv://${MONGO_USER}:${MONGO_PASS}@${MONGO_HOST}/${MONGO_DB_NAME}-test?retryWrites=true&w=majority`,
 }
 
-const MONGO_URI = MONGO_URIS[NODE_ENV]
+export const MONGO_URI = MONGO_URIS[NODE_ENV]
 
-class MongoSingleton {
+export class MongoSingleton {
   static #instance
 
   constructor() {
@@ -47,7 +47,3 @@ class MongoSingleton {
     mongoose.connection.close()
   }
 }
-
-const connection = MongoSingleton.getInstance()
-
-export { connection as mongooseConnection, MongoSingleton }
