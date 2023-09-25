@@ -207,6 +207,7 @@ try {
     return pm.addProduct(product)
   })
 
+  // eslint-disable-next-line no-unused-vars
   const newProducts = await Promise.all(addProductsPromises)
 
   console.log('✅️✅️ Products created successfully')
