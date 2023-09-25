@@ -66,7 +66,7 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 > #### Nota:
 >
 > Para modificar el ambiente de ejecución, modificar la variable de entorno `NODE_ENV` en el archivo _.env_.
-> Las posibles opciones son: `development` y `production`.
+> Las posibles opciones son: `development` y `production`. Los test se ejecutan en un ambiente de testeo `test`.
 
 ## Estructura de carpetas
 
