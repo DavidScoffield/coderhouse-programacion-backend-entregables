@@ -43,6 +43,10 @@ Desarrollar el backend de un ecommerce totalmente funcional aplicando los conoci
 - <u>**IMPORTANTE:**</u> Agregar en el archivo _.env_ las variables de entorno faltantes
 
   ```.bash
+    # Admin credentials
+    ADMIN_USER=
+    ADMIN_PASS=
+
     # Mongo credentials
     MONGO_USER=
     MONGO_PASS=
