@@ -1,5 +1,5 @@
 import { __root } from '../utils/dirname.utils.js'
-import { HOST, MULTER_DEST, PORT } from './envVars.js'
+import { BASE_URL, MULTER_DEST } from './envVars.js'
 
 // Server
 export const PATH_OF_PRODUCTS = './productos.json'
@@ -69,8 +69,8 @@ export const MAILS_TEMPLATES = {
   RESTORE_PASSWORD: ({ token }) => {
     return {
       subject: 'Reestablece tu contraseña',
-      html: `<b>Para resetear tu contraseña haz click <a href="${HOST}:${PORT}/restorePassword?token=${token}">aquí</a></b>
-    <p>Si el link no funciona, copia y pega la siguiente dirección en tu navegador: ${HOST}:${PORT}/restorePassword?token=${token}</p>
+      html: `<b>Para resetear tu contraseña haz click <a href="${BASE_URL}/restorePassword?token=${token}">aquí</a></b>
+    <p>Si el link no funciona, copia y pega la siguiente dirección en tu navegador: ${BASE_URL}/restorePassword?token=${token}</p>
     <b>Si no has solicitado el cambio de contraseña, ignora este email</b>
     `,
     }
